@@ -118,7 +118,7 @@ public class DefaultAttributesHandler
 
     @Inject
     public DefaultAttributesHandler( ApplicationConfiguration applicationConfiguration,
-                                     @Named( "ls" ) AttributeStorage attributeStorage,
+                                     @Named( "leveldb" ) AttributeStorage attributeStorage,
                                      @Named( "legacy" ) AttributeStorage legacyAttributeStorage,
                                      List<StorageItemInspector> itemInspectorList,
                                      List<StorageFileItemInspector> fileItemInspectorList )
