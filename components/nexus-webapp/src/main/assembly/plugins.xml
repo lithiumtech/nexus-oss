@@ -37,6 +37,7 @@
       <includes>
         <include>*:nexus-crypto-plugin</include>
         <include>*:nexus-h2-plugin</include>
+        <include>*:nexus-leveldb-plugin</include>
         <include>*:nexus-restlet1x-plugin</include>
         <include>*:nexus-siesta-plugin</include>
         <include>*:nexus-lvo-plugin</include>

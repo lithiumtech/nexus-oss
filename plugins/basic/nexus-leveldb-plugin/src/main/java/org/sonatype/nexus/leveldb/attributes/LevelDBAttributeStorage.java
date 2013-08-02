@@ -10,7 +10,7 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-package org.sonatype.nexus.proxy.attributes;
+package org.sonatype.nexus.leveldb.attributes;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
@@ -27,28 +27,26 @@ import javax.inject.Singleton;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBException;
 import org.iq80.leveldb.Options;
-import org.iq80.leveldb.impl.Iq80DBFactory;
-import org.sonatype.nexus.configuration.application.ApplicationConfiguration;
+import org.sonatype.nexus.leveldb.LevelDbManager;
 import org.sonatype.nexus.proxy.access.Action;
-import org.sonatype.nexus.proxy.events.NexusStoppedEvent;
+import org.sonatype.nexus.proxy.attributes.AbstractAttributeStorage;
+import org.sonatype.nexus.proxy.attributes.AttributeStorage;
+import org.sonatype.nexus.proxy.attributes.Attributes;
+import org.sonatype.nexus.proxy.attributes.JacksonJSONMarshaller;
+import org.sonatype.nexus.proxy.attributes.Marshaller;
 import org.sonatype.nexus.proxy.item.RepositoryItemUid;
 import org.sonatype.nexus.proxy.item.RepositoryItemUidLock;
-import org.sonatype.sisu.goodies.eventbus.EventBus;
-
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.Subscribe;
 
 /**
- * AttributeStorage implementation that uses LevelDB to store attributes.
+ * {@link AttributeStorage} implementation that uses LevelDB to store attributes.
  * 
  * @author cstamas
- * @see <a href="https://github.com/dain/leveldb">LevelDB in Java</a>
  * @since 2.7.0
  */
 @Typed( AttributeStorage.class )
 @Named( "leveldb" )
 @Singleton
-public class DefaultLevelDBAttributeStorage
+public class LevelDBAttributeStorage
     extends AbstractAttributeStorage
     implements AttributeStorage
 {
@@ -57,45 +55,29 @@ public class DefaultLevelDBAttributeStorage
     private final DB levelDb;
 
     /**
-     * Instantiates a new LevelDB stream attribute storage.
+     * Instantiates a new LevelDB attribute storage.
      */
     @Inject
-    public DefaultLevelDBAttributeStorage( final EventBus eventBus,
-                                           final ApplicationConfiguration applicationConfiguration )
+    public LevelDBAttributeStorage( final LevelDbManager levelDbManager )
         throws IOException
     {
-        this( eventBus, applicationConfiguration, new JacksonJSONMarshaller() );
+        this( levelDbManager, new JacksonJSONMarshaller() );
     }
 
     /**
-     * Instantiates a new LevelDB stream attribute storage.
+     * Instantiates a new LevelDB attribute storage.
      */
-    public DefaultLevelDBAttributeStorage( final EventBus eventBus,
-                                           final ApplicationConfiguration applicationConfiguration,
-                                           final Marshaller marshaller )
+    public LevelDBAttributeStorage( final LevelDbManager levelDbManager, final Marshaller marshaller )
         throws IOException
     {
-        checkNotNull( eventBus ).register( this );
-        this.marshaller = Preconditions.checkNotNull( marshaller );
-        final Options options = new Options();
-        options.createIfMissing( true );
-        levelDb = Iq80DBFactory.factory.open( applicationConfiguration.getWorkingDirectory( "attributes" ), options );
-        getLogger().info( "Default LevelDB AttributeStorage in place, using {} marshaller.", marshaller );
+        checkNotNull( levelDbManager );
+        this.marshaller = checkNotNull( marshaller );
+        // we obtain a managed DB instance, as we need it throughout whole Nx lifecycle, and manager will close it out for us
+        levelDb = levelDbManager.openManaged( "nx-attributes", new Options().createIfMissing( true ) );
+        getLogger().info( "LevelDB AttributeStorage in place, using {} marshaller.", marshaller );
     }
 
-    @Subscribe
-    public void on( final NexusStoppedEvent evt )
-    {
-        try
-        {
-            levelDb.close();
-        }
-        catch ( IOException e )
-        {
-            getLogger().warn( "Could not close attribute LevelDB!", e );
-        }
-    }
-
+    @Override
     public boolean deleteAttributes( final RepositoryItemUid uid )
         throws IOException
     {
@@ -103,10 +85,7 @@ public class DefaultLevelDBAttributeStorage
         uidLock.lock( Action.delete );
         try
         {
-            if ( getLogger().isDebugEnabled() )
-            {
-                getLogger().debug( "Deleting attributes on UID=" + uid.toString() );
-            }
+            getLogger().debug( "Deleting attribute on UID={}", uid );
             try
             {
                 levelDb.delete( bytes( uid.getKey() ) );
@@ -124,6 +103,7 @@ public class DefaultLevelDBAttributeStorage
         }
     }
 
+    @Override
     public Attributes getAttributes( final RepositoryItemUid uid )
         throws IOException
     {
@@ -131,10 +111,7 @@ public class DefaultLevelDBAttributeStorage
         uidLock.lock( Action.read );
         try
         {
-            if ( getLogger().isDebugEnabled() )
-            {
-                getLogger().debug( "Loading attributes on UID=" + uid.toString() );
-            }
+            getLogger().debug( "Loading attribute on UID={}", uid );
             final byte[] attributeContent = levelDb.get( bytes( uid.getKey() ) );
             if ( attributeContent != null )
             {
@@ -166,17 +143,16 @@ public class DefaultLevelDBAttributeStorage
         return null;
     }
 
+    @Override
     public void putAttributes( final RepositoryItemUid uid, Attributes attributes )
         throws IOException
     {
+        checkNotNull( attributes );
         final RepositoryItemUidLock uidLock = uid.getLock();
         uidLock.lock( Action.create );
         try
         {
-            if ( getLogger().isDebugEnabled() )
-            {
-                getLogger().debug( "Storing attributes on UID=" + uid.toString() );
-            }
+            getLogger().debug( "Storing attribute on UID={}", uid );
             try
             {
                 final Attributes onDisk = getAttributes( uid );

@@ -118,7 +118,7 @@ public class DefaultAttributesHandler
 
     @Inject
     public DefaultAttributesHandler( ApplicationConfiguration applicationConfiguration,
-                                     @Named( "leveldb" ) AttributeStorage attributeStorage,
+                                     @Named( "${org.sonatype.nexus.proxy.attributes.DefaultAttributesHandler.attributeStorage:-ls}" ) AttributeStorage attributeStorage,
                                      @Named( "legacy" ) AttributeStorage legacyAttributeStorage,
                                      List<StorageItemInspector> itemInspectorList,
                                      List<StorageFileItemInspector> fileItemInspectorList )
