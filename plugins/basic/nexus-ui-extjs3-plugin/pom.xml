@@ -30,10 +30,6 @@
   <properties>
     <pluginName>Nexus ExtJS3 UI</pluginName>
     <pluginDescription>Provides a Nexus user interface based on ExtJS3.</pluginDescription>
-
-    <!-- build.timestamp is used for mapping the js/css files to a timestamped URL -->
-    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-    <build.timestamp>${maven.build.timestamp}</build.timestamp>
   </properties>
 
   <dependencies>
@@ -117,8 +113,10 @@
               <!-- do not fail the build, new version of jslint used by sonatype yuicompress plugin is too thorough -->
               <fail>false</fail>
               <jslintOptions>
-                <white>true</white> <!-- true, if sloppy whitespace is tolerated -->
-                <sloppy>true</sloppy> <!-- true, if the 'use strict'; pragma is optional -->
+                <white>true</white>
+                <!-- true, if sloppy whitespace is tolerated -->
+                <sloppy>true</sloppy>
+                <!-- true, if the 'use strict'; pragma is optional -->
               </jslintOptions>
               <includes>
                 <include>js/nexus/**/*.js</include>

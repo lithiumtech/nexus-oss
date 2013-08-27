@@ -10,6 +10,7 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
+
 package org.sonatype.nexus.rest;
 
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
@@ -17,34 +18,57 @@ import org.sonatype.nexus.proxy.repository.Repository;
 
 public interface RepositoryURLBuilder
 {
-    /**
-     * Builds the content URL of a repository identified by Id. See {@link #getRepositoryContentUrl(Repository)} for
-     * full description.
-     * 
-     * @param repositoryId
-     * @return the content URL.
-     */
-    String getRepositoryContentUrl( String repositoryId )
-        throws NoSuchRepositoryException;
+  /**
+   * @see #getRepositoryContentUrl(String, boolean) where forceBaseURL is FALSE.
+   */
+  String getRepositoryContentUrl(String repositoryId)
+      throws NoSuchRepositoryException;
 
-    /**
-     * Builds the content URL of a repository. Under some circumstances, it is impossible to build the URL for
-     * Repository (example: this call does not happen in a HTTP Request context and baseUrl is not set), in such cases
-     * this method returns {@code null}. Word of warning: the fact that a content URL is returned for a Repository does
-     * not imply that the same repository is reachable over that repository! It still depends is the Repository exposed
-     * or not {@link Repository#isExposed()}.
-     * 
-     * @param repository
-     * @return the content URL or {@code null}.
-     */
-    String getRepositoryContentUrl( Repository repository );
+  /**
+   * Builds the content URL of a repository identified by Id. See {@link #getRepositoryContentUrl(Repository)} for
+   * full description.
+   *
+   * @return the content URL.
+   * @since 2.7
+   */
+  String getRepositoryContentUrl(String repositoryId, boolean forceBaseURL )
+      throws NoSuchRepositoryException;
 
-    /**
-     * Builds the exposed content URL of a repository. Same as {@link #getRepositoryContentUrl(Repository)} but honors
-     * {@link Repository#isExposed()}, by returning {@code null} when repository is not exposed.
-     * 
-     * @param repository
-     * @return the content URL or {@code null}.
-     */
-    String getExposedRepositoryContentUrl( Repository repository );
+  /**
+   * @see #getRepositoryContentUrl(Repository, boolean) where forceBaseURL is FALSE.
+   */
+  String getRepositoryContentUrl(Repository repository, boolean forceBaseURL);
+
+  /**
+   * Builds the content URL of a repository. Under some circumstances, it is impossible to build the URL for
+   * Repository (example: this call does not happen in a HTTP Request context and baseUrl is not set), in such cases
+   * this method returns {@code null}. Word of warning: the fact that a content URL is returned for a Repository does
+   * not imply that the same repository is reachable over that repository! It still depends is the Repository exposed
+   * or not {@link Repository#isExposed()}.
+   *
+   * If "forceBaseURL" is TRUE, the returned url will use server based URL even if the call happens in an HTTP request,
+   * regardless of the value of forceBaseURL in server settings.
+   *
+   * @return the content URL or {@code null}.
+   * @since 2.7
+   */
+  String getRepositoryContentUrl(Repository repository);
+
+  /**
+   * @see #getExposedRepositoryContentUrl(Repository, boolean) where forceBaseURL is FALSE.
+   */
+  String getExposedRepositoryContentUrl(Repository repository);
+
+  /**
+   * Builds the exposed content URL of a repository. Same as {@link #getRepositoryContentUrl(Repository)} but honors
+   * {@link Repository#isExposed()}, by returning {@code null} when repository is not exposed.
+   *
+   * If "forceBaseURL" is TRUE, the returned url will use server based URL even if the call happens in an HTTP request,
+   * regardless of the value of forceBaseURL in server settings.
+   *
+   * @return the content URL or {@code null}.
+   * @since 2.7
+   */
+  String getExposedRepositoryContentUrl(Repository repository, boolean forceBaseURL);
+
 }
