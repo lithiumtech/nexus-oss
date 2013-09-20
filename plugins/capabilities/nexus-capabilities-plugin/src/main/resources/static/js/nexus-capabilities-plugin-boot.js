@@ -12,5 +12,8 @@
  */
 /*global Ext, Sonatype, Nexus*/
 define('nexus-capabilities-plugin-boot', [
-    'Sonatype/repoServer/CapabilitiesPanel'
-]);
+    'Nexus/capabilities/CapabilitiesView',
+    'nexus/siesta'
+], function() {
+     NX.log.debug('Main nexus-capabilities-plugin modules loaded');
+});

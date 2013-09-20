@@ -58,95 +58,114 @@ Sonatype.repoServer.CapabilitiesPanel = function(cfg) {
 
   this.stores = {},
 
-  // A record to hold details of each capability type
-  this.capabilityTypeRecordConstructor = Ext.data.Record.create([{
-        name : 'id',
-        sortType : Ext.data.SortTypes.asUCString
-      }, {
-        name : 'name'
-      }, {
-        name : 'about'
-      }, {
-        name : 'formFields'
-      }]);
+  this.capabilityTypeRecordConstructor = Ext.data.Record.create([
+    {
+      name : 'id',
+      sortType : Ext.data.SortTypes.asUCString
+    }, {
+      name : 'name'
+    }, {
+      name : 'about'
+    }, {
+      name : 'formFields'
+    }
+  ]);
 
-  // A record that holds the data for each configured capability in the system
-  this.capabilityRecordConstructor = Ext.data.Record.create([{
-        name : 'resourceURI',
-        convert : function(newValue, rec) {
-          return CAPABILITIES_SERVICE_PATH + '/' + rec.capability.id;
-        }
-      }, {
-        name : 'id',
-        mapping: 'capability.id'
-      }, {
-        name : 'description',
-        sortType : Ext.data.SortTypes.asUCString
-      }, {
-        name : 'notes',
-        mapping: 'capability.notes',
-        sortType : Ext.data.SortTypes.asUCString
-      }, {
-        name : 'enabled',
-        mapping: 'capability.enabled'
-      }, {
-        name : 'active'
-      }, {
-        name : 'error'
-      }, {
-        name : 'typeName'
-      }, {
-        name : 'typeId',
-        mapping: 'capability.typeId'
-      }, {
-        name : 'stateDescription'
-      }, {
-        name : 'status'
-      }]);
+  this.capabilityTypeReader = new Ext.data.JsonReader(
+    {
+      id : 'id'
+    },
+    this.capabilityTypeRecordConstructor
+    );
 
-  // Reader and datastore that queries the server for the list of capabilities
-  // types
-  this.capabilityTypeReader = new Ext.data.JsonReader({
-        id : 'id'
-      }, this.capabilityTypeRecordConstructor);
-  this.capabilityTypeDataStore = new Ext.data.Store({
-        url : CAPABILITY_TYPES_SERVICE_PATH,
-        reader : this.capabilityTypeReader,
-        sortInfo : {
-          field : 'id',
-          direction : 'ASC'
-        },
-        autoLoad : true,
-        listeners : {
-          'load' : {
-            fn : function(store, records, options) {
-              var addBtn = Ext.getCmp('capability-add-btn');
-              if(addBtn.hasPermission && records.length > 0) {
-                addBtn.enable();
-              }
-              else {
-                addBtn.disable();
-              }
+  this.capabilityTypeDataStore = new Ext.data.Store(
+    {
+      url : CAPABILITY_TYPES_SERVICE_PATH,
+      reader : this.capabilityTypeReader,
+      sortInfo : {
+        field : 'id',
+        direction : 'ASC'
+      },
+      autoLoad : true,
+      listeners : {
+        'load' : {
+          fn : function(store, records, options) {
+            var addBtn = Ext.getCmp('capability-add-btn');
+            if(addBtn.hasPermission && records.length > 0) {
+              addBtn.enable();
             }
-            },
-            scope : this
+            else {
+              addBtn.disable();
+            }
           }
-      });
-
-  // Reader and datastore that queries the server for the list of currently
-  // defined capabilities
-  this.capabilitiesReader = new Ext.data.JsonReader({
-        id : 'capability.id'
-      }, this.capabilityRecordConstructor);
-  this.capabilitiesDataStore = new Ext.data.Store({
-        url : CAPABILITIES_SERVICE_PATH,
-        reader : this.capabilitiesReader,
-        sortInfo : {
-          field : 'typeName',
-          direction : 'ASC'
         },
-        autoLoad : true
-      });
+        scope : this
+      }
+    }
+  );
+
+
+  this.capabilityRecordConstructor = Ext.data.Record.create([
+    {
+      name : 'resourceURI',
+      convert : function(newValue, rec) {
+        return CAPABILITIES_SERVICE_PATH + '/' + rec.capability.id;
+      }
+    }, {
+      name : 'id',
+      mapping: 'capability.id'
+    }, {
+      name : 'description',
+      sortType : Ext.data.SortTypes.asUCString
+    }, {
+      name : 'notes',
+      mapping: 'capability.notes',
+      sortType : Ext.data.SortTypes.asUCString
+    }, {
+      name : 'enabled',
+      mapping: 'capability.enabled'
+    }, {
+      name : 'active'
+    }, {
+      name : 'error'
+    }, {
+      name : 'typeName'
+    }, {
+      name : 'typeId',
+      mapping: 'capability.typeId'
+    }, {
+      name : 'stateDescription'
+    }, {
+      name : 'status'
+    }
+  ]);
+
+  this.capabilitiesReader = new Ext.data.JsonReader(
+    {
+      id : 'capability.id'
+    },
+    this.capabilityRecordConstructor
+  );
+  
+  this.capabilitiesStore = new Ext.data.Store(
+    {
+      url : CAPABILITIES_SERVICE_PATH,
+      reader : this.capabilitiesReader,
+      sortInfo : {
+        field : 'typeName',
+        direction : 'ASC'
+      },
+      autoLoad : true,
+      listeners : {
+        'load' : {
+          fn : function(store, records, options) {
+            this.reselectCurrentRow()
+          }
+        },
+        scope : this
+      }
+    }
+  );
 
   this.COMBO_WIDTH = 300;
 
@@ -353,7 +372,7 @@ Sonatype.repoServer.CapabilitiesPanel = function(cfg) {
 
         // FIXME: Extjs 3.4 has no ds or sortInfo configuration, where does this come from and how does it work?
         // FIXME: In the case of sorting this configuration does nothing AFAICT, the config is on the store
-        ds : this.capabilitiesDataStore,
+        ds : this.capabilitiesStore,
         sortInfo : {
           field : 'typeName',
           direction : "ASC"
@@ -429,81 +448,61 @@ Sonatype.repoServer.CapabilitiesPanel = function(cfg) {
         autoScroll : false,
         width : '100%',
         height : '100%',
-        items : [this.capabilitiesGridPanel, {
+        items : [
+          this.capabilitiesGridPanel,
+          {
+            xtype : 'panel',
+            id : 'capability-config-forms',
+            title : 'No Selection',
+            iconCls : Nexus.capabilities.Icons.get('warning').cls,
+            layout : 'card',
+            region : 'center',
+            activeItem : 0,
+            deferredRender : false,
+            autoScroll : false,
+            frame : false,
+            items : [{
               xtype : 'panel',
-              id : 'capability-config-forms',
-              title : 'No Selection',
-              iconCls : Nexus.capabilities.Icons.get('warning').cls,
-              layout : 'card',
-              region : 'center',
-              activeItem : 0,
-              deferredRender : false,
-              autoScroll : false,
-              frame : false,
-              items : [{
-                    xtype : 'panel',
-                    layout : 'fit',
-                    html : '<div class="little-padding">Select a capability to edit it, or click "Add" to configure a new one.</div>'
-                  }]
+              layout : 'fit',
+              html : '<div class="little-padding">Select a capability to edit it, or click "Add" to configure a new one.</div>'
             }]
+          }
+        ]
       });
 
   this.formCards = this.findById('capability-config-forms');
 };
 
 Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
-      customFieldTypes : {},
 
-      // Dump the currently stored data and requery for everything
-      reloadAll : function() {
-        Ext.getCmp('capability-add-btn').disable();
+  customFieldTypes : {},
 
-        var
-              selectId, grid = this.capabilitiesGridPanel,
-              selected = grid.getSelectionModel().getSelected();
-
-        if ( selected ) {
-          selectId = selected.id;
+  reselectCurrentRow : function() {
+    grid = this.capabilitiesGridPanel;
+    grid.getSelectionModel().clearSelections();
+    this.formCards.getLayout().setActiveItem(0);
+    this.formCards.setTitle('No Selection',Nexus.capabilities.Icons.get('warning').cls);
+    if( this.lastSelected ){
+      rowIdx = this.capabilitiesStore.find('id', this.lastSelected);
+      if( rowIdx >= 0 ) {
+        grid.getSelectionModel().selectRow(rowIdx);
+        gridRow = grid.getView().getRow(rowIdx);
+        if( gridRow ) {
+         gridRow.scrollIntoView();
         }
+      }
+    }
+  },
 
-        this.stores = {};
-        this.capabilityTypeDataStore.removeAll();
-        this.capabilitiesDataStore.removeAll();
-        this.capabilityTypeDataStore.reload();
-        this.capabilitiesDataStore.reload();
+  reloadAll : function() {
+    Ext.getCmp('capability-add-btn').disable();
 
-        this.formCards.items.each(
-            function(item, i, len) {
-              if (i > 0) {
-                this.remove(item, true);
-              }
-            },
-            this.formCards
-        );
-
-        this.formCards.getLayout().setActiveItem(0);
-
-        if (selectId) {
-          this.capabilitiesDataStore.on('load',
-                // listener
-                function(store, records, options) {
-                  grid.getSelectionModel().selectRecords(records.filter(function(rec) {
-                    return rec.id === selectId;
-                  }));
-                },
-                // scope
-                this,
-                // options
-                {
-                  single : true,
-                  // need to delay listener execution, because although records are already there,
-                  // store.getById, store.findRecord etc. won't work immediately
-                  delay : 100
-                }
-          );
-        }
-
-      },
+    this.stores = {};
+    this.capabilityTypeDataStore.removeAll();
+    this.capabilitiesStore.removeAll();
+    this.capabilityTypeDataStore.reload();
+    this.capabilitiesStore.reload();
+  },
 
       markTreeInvalid : function(tree) {
         var elp = tree.getEl();
@@ -573,34 +572,39 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
               gridSelectModel = this.capabilitiesGridPanel.getSelectionModel(),
               store = this.capabilitiesGridPanel.getStore();
 
-        this.formCards.remove(formInfoObj.formPanel.id, true);
+        this.formCards.remove(1, true);
 
-        if (this.formCards.items.length > 1)
-        {
-          formLayout.setActiveItem(this.formCards.items.length - 1);
-          // select the coordinating row in the grid, or none if back to default
-          i = store.indexOfId(formLayout.activeItem.id);
-          if (i >= 0)
-          {
-            gridSelectModel.selectRow(i);
-          }
-          else
-          {
-            gridSelectModel.clearSelections();
-          }
-        }
-        else
-        {
-          formLayout.setActiveItem(0);
-          gridSelectModel.clearSelections();
-          this.formCards.setTitle('Configuration');
-        }
+        //if (this.formCards.items.length > 1)
+        //{
+        //  formLayout.setActiveItem(this.formCards.items.length - 1);
+        //  // select the coordinating row in the grid, or none if back to default
+        //  i = store.indexOfId(formLayout.activeItem.id);
+        //  if (i >= 0)
+        //  {
+        //    gridSelectModel.selectRow(i);
+        //  }
+        //  else
+        //  {
+        //    gridSelectModel.clearSelections();
+        //  }
+        //}
+        //else
+        //{
+        //  formLayout.setActiveItem(0);
+        //  gridSelectModel.clearSelections();
+        //  this.formCards.setTitle('Configuration');
+        //}
+
+        this.formCards.getLayout().setActiveItem(0);
+        this.formCards.setTitle('No Selection',Nexus.capabilities.Icons.get('warning').cls);
 
         // delete row from grid if canceling a new repo form
         if (formInfoObj.isNew)
         {
           store.remove(store.getById(formInfoObj.formPanel.id));
         }
+
+        this.reselectCurrentRow();
       },
 
       addResourceHandler : function() {
@@ -640,7 +644,7 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
         // cancel button event handler
         formPanel.buttons[1].on('click', this.cancelHandler.createDelegate(this, [buttonInfoObj]));
 
-        if (sp.checkPermission('nexus:tasks', sp.EDIT))
+        if (sp.checkPermission('nexus:capabilities', sp.EDIT))
         {
           formPanel.buttons[0].disabled = false;
         }
@@ -654,7 +658,7 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
               resourceURI : 'new'
             }, id); // use "new_capability_" id instead of resourceURI like the
         // reader does
-        this.capabilitiesDataStore.insert(0, [newRec]);
+        this.capabilitiesStore.insert(0, [newRec]);
         this.capabilitiesGridPanel.getSelectionModel().selectRow(0);
       },
 
@@ -732,45 +736,46 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
       deleteCallback : function(options, isSuccess, response) {
         if (isSuccess)
         {
-          var
-                i,
-                resourceId = options.cbPassThru.resourceId,
-                formLayout = this.formCards.getLayout(),
-                gridSelectModel = this.capabilitiesGridPanel.getSelectionModel(),
-                store = this.capabilitiesGridPanel.getStore();
+          //var
+          //      i,
+          //      resourceId = options.cbPassThru.resourceId,
+          //      formLayout = this.formCards.getLayout(),
+          //      gridSelectModel = this.capabilitiesGridPanel.getSelectionModel(),
+          //      store = this.capabilitiesGridPanel.getStore();
+          //
+          //if (formLayout.activeItem.id === resourceId)
+          //{
+          //  this.formCards.remove(resourceId, true);
+          //  if (this.formCards.items.length > 0)
+          //  {
+          //    formLayout.setActiveItem(this.formCards.items.length - 1);
+          //    // select the coordinating row in the grid, or none if back to
+          //    // default
+          //    i = store.indexOfId(formLayout.activeItem.id);
+          //    if (i >= 0)
+          //    {
+          //      gridSelectModel.selectRow(i);
+          //    }
+          //    else
+          //    {
+          //      gridSelectModel.clearSelections();
+          //    }
+          //  }
+          //  else
+          //  {
+          //    formLayout.setActiveItem(0);
+          //    gridSelectModel.clearSelections();
+          //  }
+          //}
+          //else
+          //{
+          //  this.formCards.remove(resourceId, true);
+          //}
+          //
+          //store.remove(store.getById(resourceId));
 
-          if (formLayout.activeItem.id === resourceId)
-          {
-            this.formCards.remove(resourceId, true);
-            if (this.formCards.items.length > 0)
-            {
-              formLayout.setActiveItem(this.formCards.items.length - 1);
-              // select the coordinating row in the grid, or none if back to
-              // default
-              i = store.indexOfId(formLayout.activeItem.id);
-              if (i >= 0)
-              {
-                gridSelectModel.selectRow(i);
-              }
-              else
-              {
-                gridSelectModel.clearSelections();
-              }
-            }
-            else
-            {
-              formLayout.setActiveItem(0);
-              gridSelectModel.clearSelections();
-            }
-          }
-          else
-          {
-            this.formCards.remove(resourceId, true);
-          }
-
-          store.remove(store.getById(resourceId));
-
-          this.capabilitiesDataStore.reload();
+          this.lastSelected = -1;
+          this.capabilitiesStore.reload();
         }
         else
         {
@@ -786,41 +791,19 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
           var receivedData = action.handleResponse(action.response);
 
           if ( action.options.isNew ) {
-            // successful create
-            dataObj = {
-              id:receivedData.capability.id,
-              description:receivedData.description,
-              notes:receivedData.capability.notes,
-              enabled:receivedData.capability.enabled,
-              active:receivedData.active,
-              resourceURI:CAPABILITIES_SERVICE_PATH + '/' + receivedData.capability.id,
-              typeId:receivedData.capability.typeId,
-              typeName:receivedData.typeName,
-              stateDescription:receivedData.stateDescription,
-              status:receivedData.status
-            };
-
-            rec = new this.capabilityRecordConstructor( dataObj, receivedData.capability.id);
-
-            this.capabilitiesDataStore.remove( this.capabilitiesDataStore.getById( action.options.fpanel.id ) );
-            this.capabilitiesDataStore.addSorted( rec );
-          }
-          else {
-            rec = this.capabilitiesDataStore.getById( receivedData.capability.id );
+            this.capabilitiesStore.remove( this.capabilitiesStore.getById( action.options.fpanel.id ) );
+            this.lastSelected = receivedData.capability.id;
           }
 
-          this.capabilitiesDataStore.reload();
+          this.capabilitiesStore.reload();
 
-          this.formCards.items.each(
-              function ( item, i, len ) {
-                if ( i > 0 ) {
-                  this.remove( item, true );
-                }
-              },
-              this.formCards
+          this.formCards.items.each( function ( item, i, len ) {
+              if ( i > 0 ) {
+                this.remove( item, true );
+              }
+            },
+            this.formCards
           );
-
-          this.capabilitiesGridPanel.getSelectionModel().selectRecords( [rec], false );
         }
       },
 
@@ -863,15 +846,18 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
       },
 
       rowSelect : function(selectionModel, index, rec) {
+        this.lastSelected = rec.id;
+
+        // set details title
         if (rec.data.typeName) {
-            var title = rec.data.typeName;
-            if (rec.data.description) {
-                title = title + ' - ' + rec.data.description;
-            }
-            this.formCards.setTitle(title, Nexus.capabilities.Icons.get('capability').cls);
+          title = rec.data.typeName;
+          if (rec.data.description) {
+            title = title + ' - ' + rec.data.description;
+          }
+          this.formCards.setTitle(title, Nexus.capabilities.Icons.get('capability').cls);
         }
         else {
-            this.formCards.setTitle(rec.data.description, Nexus.capabilities.Icons.get('capability_new').cls);
+          this.formCards.setTitle(rec.data.description, Nexus.capabilities.Icons.get('capability_new').cls);
         }
 
         var
@@ -1157,7 +1143,7 @@ Ext.extend(Sonatype.repoServer.CapabilitiesPanel, Ext.Panel, {
         options.statusWaitBox.hide();
         if (isSuccess)
         {
-          this.capabilitiesDataStore.reload();
+          this.capabilitiesStore.reload();
           this.formCards.items.each(
               function ( item, i, len ) {
                 if ( i > 0 ) {
