@@ -38,17 +38,29 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
         self.loadMask = {
             msg: 'Loading...',
             msgCls: 'loading-indicator'
-        }
+        };
 
         // FIXME: This does not appear to function
         self.emptyText = 'No capabilities';
 
+        self.viewConfig = {
+            emptyText : 'Click "Add" to configure a capability.',
+            deferEmptyText: false
+        };
+
         self.stripeRows = true;
 
-        var columns = [
-            // checkbox
-            self.sm,
+        self.sm = NX.create('Ext.grid.RowSelectionModel', {
+            singleSelect: true,
+            listeners: {
+                selectionchange: {
+                    fn: self.selectionChanged,
+                    scope: self
+                }
+            }
+        });
 
+        var columns = [
             // icon
             {
                 width: 30,
@@ -58,29 +70,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 hideable: false,
                 menuDisabled: true,
                 renderer: function (value, metaData, record) {
-                    var typeName = record.get('typeName'),
-                        enabled = record.get('enabled'),
-                        active = record.get('active'),
-                        error = record.get('error'),
-                        iconName;
-
-                    if (!typeName) {
-                        iconName = 'capability_new';
-                    }
-                    else if (enabled && error) {
-                        iconName = 'capability_error';
-                    }
-                    else if (enabled && active) {
-                        iconName = 'capability_active';
-                    }
-                    else if (enabled && !active) {
-                        iconName = 'capability_passive';
-                    }
-                    else {
-                        iconName = 'capability_disabled';
-                    }
-
-                    return icons.get(iconName).img;
+                    return mediator.iconFor(record.data).img;
                 }
             },
             {
@@ -105,8 +95,6 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 sortable: true
             }
         ];
-        // Allow contributors to add to the view.
-        Nexus.capabilities.CapabilitiesMediator.fireEvent('capabilities.capabilitiesGrid.configureColumns', columns);
 
         self.cm = NX.create('Ext.grid.ColumnModel', {
             columns: columns
@@ -142,9 +130,38 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 iconCls: icons.get('capability_delete').cls,
                 tooltip: 'Delete selected capability',
                 handler: function () {
-                    mediator.deleteHandler(self.getSelectionModel().getSelections());
+                    selections = self.getSelectionModel().getSelections();
+                    if (selections.length > 0) {
+                        mediator.deleteHandler(selections[0].data);
+                    }
                 },
                 disabled: true
+            },
+            {
+               text: 'Enable',
+               itemId: 'enable',
+               iconCls: icons.get('enable').cls,
+               tooltip: 'Enable selected capability',
+               handler: function () {
+                   selections = self.getSelectionModel().getSelections();
+                   if (selections.length > 0) {
+                       mediator.enableHandler(selections[0].data);
+                   }
+               },
+               disabled: true
+            },
+            {
+              text: 'Disable',
+              itemId: 'disable',
+              iconCls: icons.get('disable').cls,
+              tooltip: 'Disable selected capability',
+              handler: function () {
+                  selections = self.getSelectionModel().getSelections();
+                  if (selections.length > 0) {
+                      mediator.disableHandler(selections[0].data);
+                  }
+              },
+              disabled: true
             }
         ];
 
@@ -156,19 +173,22 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
      */
     selectionChanged: function (sm) {
         var self = this,
-            records,
-            provider,
-            i,
-            mediator = Nexus.capabilities.CapabilitiesMediator,
-            sp = Sonatype.lib.Permissions;
+            sp = Sonatype.lib.Permissions,
+            deleteButton = self.getTopToolbar().getComponent('delete'),
+            enableButton = self.getTopToolbar().getComponent('enable'),
+            disableButton = self.getTopToolbar().getComponent('disable');
+
+        deleteButton.disable();
+        enableButton.disable();
+        disableButton.disable();
 
         if (sm.getCount() !== 0) {
-            var deleteButton = self.getTopToolbar().getComponent('delete');
             if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
                 deleteButton.enable();
             }
-            else {
-                deleteButton.disable();
+            if (sp.checkPermission('nexus:capabilities', sp.EDIT)) {
+                enableButton.enable();
+                disableButton.enable();
             }
         }
     },
@@ -209,4 +229,5 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
         self.getSelectionModel().selectRecords(toSelect);
     }
+
 });

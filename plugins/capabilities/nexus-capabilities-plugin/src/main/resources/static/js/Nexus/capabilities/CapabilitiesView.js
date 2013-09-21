@@ -32,10 +32,11 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
      */
     initComponent: function () {
         var self = this,
-            icons = Nexus.capabilities.Icons;
+            icons = Nexus.capabilities.Icons,
+            mediator = Nexus.capabilities.CapabilitiesMediator;
 
         // force all data stores to refresh when the main capabilities view loads
-        Nexus.capabilities.CapabilitiesMediator.refreshHandler();
+        mediator.refreshHandler();
 
         self.masterPanel = NX.create('Nexus.capabilities.CapabilitiesGrid', {
             region: 'center'
@@ -45,7 +46,7 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
             cls: 'nx-capabilities-CapabilitiesView-messagePanel',
             title: 'Empty Selection',
             iconCls: icons.get('selectionEmpty').cls,
-            html: '<span class="lnx-capabilities-CapabilitiesView-messagePanel-text">Select a capability to edit it, or click "Add" to configure a new one.</span>'
+            html: '<span class="nx-capabilities-CapabilitiesView-messagePanel-text">Please select a capability</span>'
         });
 
         self.capabilityView = NX.create('Nexus.capabilities.CapabilityView');
@@ -64,7 +65,16 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
                 self.emptySelectionPanel, // 0
                 self.capabilityView       // 1
             ],
-            activeItem: 0
+            activeItem: 0,
+            listeners: {
+                // resize detail panel height to 50% of parent on first render
+                afterrender: {
+                    single: true,
+                    fn: function() {
+                        self.detailPanel.setHeight(self.getHeight() / 2);
+                    }
+                }
+            }
         });
 
         Ext.apply(self, {
@@ -123,4 +133,4 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
 
         NX.log.debug('Registered global view: ' + type.$className);
     });
-})
+});

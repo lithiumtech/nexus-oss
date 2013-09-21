@@ -31,16 +31,19 @@ NX.define('Nexus.capabilities.Icons', {
             stylePrefix: 'nx-capabilities-icon-',
 
             icons: {
-                capability: 'brick.png',
-                capability_add: 'brick_add.png',
-                capability_delete: 'brick_delete.png',
-                capability_new: 'brick_edit.png',
-                capability_active: 'brick_valid.png',
-                capability_passive: 'brick_error.png',
-                capability_disabled: 'brick_grey.png',
-                capability_error: 'brick_error.png',
-                warning: 'error.png',
-                refresh: 'arrow_refresh.png'
+                capability:           'brick.png',
+                capability_add:       'brick_add.png',
+                capability_delete:    'brick_delete.png',
+                capability_new:       'brick_edit.png',
+                capability_active:    'brick_valid.png',
+                capability_passive:   'brick_error.png',
+                capability_disabled:  'brick_grey.png',
+                capability_error:     'brick_error.png',
+                warning:              'error.png',
+                refresh:              'arrow_refresh.png',
+                selectionEmpty:       '@warning',
+                enable:               '@capability_active',
+                disable:              '@capability_disabled'
             }
         });
     }

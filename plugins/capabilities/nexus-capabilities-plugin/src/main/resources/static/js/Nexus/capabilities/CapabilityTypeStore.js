@@ -12,7 +12,7 @@
  *
  * @since 2.7
  */
-NX.define('Nexus.capability.CapabilityTypeStore', {
+NX.define('Nexus.capabilities.CapabilityTypeStore', {
     extend: 'Ext.data.JsonStore',
 
     constructor: function (config) {

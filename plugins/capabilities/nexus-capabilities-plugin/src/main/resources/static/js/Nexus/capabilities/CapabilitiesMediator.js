@@ -17,6 +17,7 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     singleton: true,
 
     mixins: [
+        'Nexus.capabilities.Icons',
         'Nexus.LogAwareMixin'
     ],
 
@@ -26,33 +27,101 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     ],
 
     /**
-     * @constructor
-     */
+    * @constructor
+    */
     constructor: function () {
-        this.capabilityStore = NX.create('Nexus.capabilities.CapabilityStore');
-        this.capabilityTypeStore = NX.create('Nexus.capabilities.CapabilityTypeStore');
+        var self = this;
 
-        // provided centralized event management allowing for dynamic enhancement of UI's depending on this class
-        this.addEvents(
-            /**
-             * Fires when repositoriesGrid columns are being defined.
-             *
-             * @event capabilities.capabilitiesGrid.configureColumns
-             * @param {Array} Column configuration objects for Ext.grid.ColumnModel.
-             */
-            'capabilities.capabilitiesGrid.configureColumns'
-        );
+        self.capabilityStore = NX.create('Nexus.capabilities.CapabilityStore');
+        self.capabilityTypeStore = NX.create('Nexus.capabilities.CapabilityTypeStore');
     },
 
     refreshHandler: function () {
-        this.logDebug('Refreshing');
+        var self = this;
 
-        this.capabilityStore.reload();
-        this.capabilityTypeStore.reload();
+        self.logDebug('Refreshing');
+
+        self.capabilityStore.reload();
+        self.capabilityTypeStore.reload();
     },
 
-    deleteHandler: function (selected) {
-        this.displayConfirmWindow('close', selected);
+    deleteHandler: function (capability) {
+        var self = this;
+
+        if (capability) {}
+            description = capability.description ? ' - ' + capability.description : '';
+
+            Sonatype.utils.defaultToNo();
+            Sonatype.MessageBox.show({
+                //animEl : this.capabilitiesGridPanel.getEl(),
+                title : 'Delete Capability?',
+                msg : 'Delete the "' + capability.typeName + description + '" capability?',
+                buttons : Sonatype.MessageBox.YESNO,
+                scope : this,
+                icon : Sonatype.MessageBox.QUESTION,
+                fn : function(btnName) {
+                    if (btnName === 'yes' || btnName === 'ok') {
+                        Ext.Ajax.request({
+                              callback : self.refreshHandler,
+                              scope : self,
+                              method : 'DELETE',
+                              url : capability.url
+                        });
+                    }
+                }
+            });
+    },
+
+    enableHandler: function (capability) {
+        var self = this;
+
+        if (capability) {
+            Ext.Ajax.request({
+                  callback : self.refreshHandler,
+                  scope : self,
+                  method : 'PUT',
+                  url : capability.url + "/enable"
+            });
+         }
+    },
+
+    disableHandler: function (capability) {
+        var self = this;
+
+        if (capability) {
+            Ext.Ajax.request({
+                  callback : self.refreshHandler,
+                  scope : self,
+                  method : 'PUT',
+                  url : capability.url + "/disable"
+            });
+         }
+    },
+
+    iconFor: function(capability) {
+        var icons = Nexus.capabilities.Icons,
+            typeName = capability.typeName,
+            enabled = capability.enabled,
+            active = capability.active,
+            error = capability.error,
+            iconName;
+
+        if (!typeName) {
+            iconName = 'capability_new';
+        }
+        else if (enabled && error) {
+            iconName = 'capability_error';
+        }
+        else if (enabled && active) {
+            iconName = 'capability_active';
+        }
+        else if (enabled && !active) {
+            iconName = 'capability_passive';
+        }
+        else {
+            iconName = 'capability_disabled';
+        }
+        return icons.get(iconName);
     }
 
 });

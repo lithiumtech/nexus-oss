@@ -1189,9 +1189,9 @@ Sonatype.Events.addListener('nexusNavigationInit', function(nexusPanel) {
   nexusPanel.add({
         enabled : Sonatype.lib.Permissions.checkPermission('nexus:capabilities', Sonatype.lib.Permissions.READ),
         sectionId : 'st-nexus-config',
-        title : 'Capabilities',
-        tabTitle : 'Capabilities',
-        tabId : 'capabilities',
+        title : 'Capabilities Legacy',
+        tabTitle : 'Capabilities Legacy',
+        tabId : 'capabilities-legacy',
         tabCode : Sonatype.repoServer.CapabilitiesPanel
       });
 });
