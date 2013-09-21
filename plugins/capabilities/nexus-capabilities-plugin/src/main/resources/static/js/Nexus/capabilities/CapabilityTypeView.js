@@ -24,6 +24,15 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
         'Nexus.LogAwareMixin'
     ],
 
+    requires: [
+        'Nexus.capabilities.CapabilitySettingsView'
+    ],
+
+    /**
+     * @property
+     */
+    settingsView: undefined,
+
     /**
      * @override
      */
@@ -92,6 +101,12 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
                                 fn: function(combo, record) {
                                    var about = self.find('name','about')[0];
                                    about.body.update(record.data.about);
+                                   if (self.settingsView) {
+                                      self.items.remove(self.settingsView);
+                                   }
+                                   self.settingsView = NX.create('Nexus.capabilities.CapabilitySettingsView', record.data);
+                                   self.add(self.settingsView);
+                                   self.doLayout();
                                 }
                             }
                         }
@@ -158,7 +173,7 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
             typeIdCombo = self.find('name','typeId')[0];
 
         if (capability) {
-            typeIdCombo.disable();
+            //typeIdCombo.disable();
             self.getForm().setValues(capability);
             if (capability.typeId) {
                 var capabilityTypeRecord = mediator.capabilityTypeStore.getById(capability.typeId);
@@ -168,7 +183,7 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
             }
         }
         else {
-            typeIdCombo.disable();
+            typeIdCombo.enable();
         }
     }
 

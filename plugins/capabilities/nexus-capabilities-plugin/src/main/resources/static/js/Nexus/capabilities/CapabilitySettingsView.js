@@ -18,24 +18,63 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitySettingsView', {
-    extend: 'Ext.Panel',
+    extend: 'Ext.FormPanel',
 
     mixins: [
         'Nexus.LogAwareMixin'
     ],
 
+    ///**
+    // * @override
+    // */
+    //initComponent: function () {
+    //
+    //},
+
     /**
-     * @override
+     * @property
      */
-    initComponent: function () {
-        var self = this;
+    capabilityType: undefined,
+
+    /**
+     * @constructor
+     */
+    constructor: function (capabilityType) {
+        NX.assert(capabilityType, 'Missing capabilityType');
+        this.capabilityType = capabilityType;
+
+var self = this;
 
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilitySettingsView',
-            layout: 'border',
-            hideMode: 'offsets',
-            items: [
-            ]
+            layout : 'card',
+            region : 'center',
+            activeItem : 0,
+            bodyStyle : 'padding:0px 15px 0px 15px',
+            deferredRender : false,
+            autoScroll : false,
+            autoHeight : true,
+            border: false,
+            //frame : false,
+            //visible : false,
+            hidden: true,
+            items : {
+                xtype : 'fieldset',
+                autoHeight : true,
+                checkboxToggle : false,
+                title : 'Settings',
+                anchor : Sonatype.view.FIELDSET_OFFSET,
+                collapsible : false,
+                layoutConfig : {
+                    labelSeparator : ''
+                },
+                items : {
+                    xtype : 'panel',
+                    name : 'status',
+                    layout : 'fit',
+                    border: false
+                }
+            }
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
