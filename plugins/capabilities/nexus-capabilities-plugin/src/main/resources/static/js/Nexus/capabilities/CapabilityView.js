@@ -39,23 +39,10 @@ NX.define('Nexus.capabilities.CapabilityView', {
         self.capabilityTypeView = NX.create('Nexus.capabilities.CapabilityTypeView');
         self.capabilityStatusView = NX.create('Nexus.capabilities.CapabilityStatusView');
 
-        //self.panel = NX.create('Ext.Panel', {
-        //    //layout: 'column',
-        //    items: self.capabilityTypeView
-        //});
-
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilityView',
             title: 'Capability',
-            //header: true,
             border: false,
-            //layout: 'fit',
-            //layout: {
-            //    type: 'vbox'
-            //    align : 'stretch',
-            //    pack  : 'start',
-            //},
-            //layout: 'vbox',
             autoScroll : true,
             items: [
                 self.capabilityTypeView,
@@ -79,13 +66,23 @@ NX.define('Nexus.capabilities.CapabilityView', {
 
     updateRecord: function (capability) {
         var self = this,
-            mediator = Nexus.capabilities.CapabilitiesMediator;
+            mediator = Nexus.capabilities.CapabilitiesMediator,
+            title = capability.typeName;
 
-        self.setTitle(capability.typeName, mediator.iconFor(capability).cls);
+        if (!capability.active && capability.stateDescription) {
+            title += ' (inactive because ';
+            if (!capability.enabled) {
+                title += 'has been disabled'
+            }
+            else {
+                title +=  capability.stateDescription;
+            }
+            title += ')';
+         }
+        self.setTitle(title, mediator.iconFor(capability).cls);
+
         self.capabilityTypeView.updateRecord(capability);
         self.capabilityStatusView.updateRecord(capability);
-        //self.capabilityTypeView.fireEvent('show', self.capabilityTypeView);
-        //self.capabilityStatusView.fireEvent('show', self.capabilityStatusView);
     }
 
 });

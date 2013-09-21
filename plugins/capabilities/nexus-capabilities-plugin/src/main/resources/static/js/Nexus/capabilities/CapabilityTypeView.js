@@ -154,15 +154,21 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
     updateRecord: function (capability) {
         var self = this,
             mediator = Nexus.capabilities.CapabilitiesMediator,
+            active = self.find('name','active')[0],
             typeIdCombo = self.find('name','typeId')[0];
 
-        self.getForm().setValues(capability);
-
-        if (capability.typeId) {
-            var capabilityTypeRecord = mediator.capabilityTypeStore.getById(capability.typeId);
-            if (capabilityTypeRecord) {
-              typeIdCombo.fireEvent('select', typeIdCombo, capabilityTypeRecord);
+        if (capability) {
+            typeIdCombo.disable();
+            self.getForm().setValues(capability);
+            if (capability.typeId) {
+                var capabilityTypeRecord = mediator.capabilityTypeStore.getById(capability.typeId);
+                if (capabilityTypeRecord) {
+                  typeIdCombo.fireEvent('select', typeIdCombo, capabilityTypeRecord);
+                }
             }
+        }
+        else {
+            typeIdCombo.disable();
         }
     }
 
