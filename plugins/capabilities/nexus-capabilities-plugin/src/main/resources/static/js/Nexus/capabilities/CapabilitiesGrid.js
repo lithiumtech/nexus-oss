@@ -186,9 +186,14 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
             if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
                 deleteButton.enable();
             }
+            capability = sm.selections.items[0].data;
             if (sp.checkPermission('nexus:capabilities', sp.EDIT)) {
-                enableButton.enable();
-                disableButton.enable();
+                if (capability.enabled) {
+                    disableButton.enable();
+                }
+                else {
+                    enableButton.enable();
+                }
             }
         }
     },

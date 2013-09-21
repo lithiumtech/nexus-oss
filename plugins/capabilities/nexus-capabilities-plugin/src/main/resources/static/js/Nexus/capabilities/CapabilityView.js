@@ -33,6 +33,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
         self.capabilityTypeView = NX.create('Nexus.capabilities.CapabilityTypeView');
 
         self.panel = NX.create('Ext.Panel', {
+            //layout: 'column',
             items: self.capabilityTypeView
         });
 
@@ -41,7 +42,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
             title: 'Capability',
             header: true,
             border: false,
-            layout: 'fit',
+            //layout: 'fit',
 
             items: self.panel
         });
@@ -64,6 +65,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
 
         self.setTitle(capability.typeName, mediator.iconFor(capability).cls);
         self.capabilityTypeView.updateRecord(capability);
+        self.capabilityTypeView.fireEvent('show', self.capabilityTypeView);
     }
 
 });

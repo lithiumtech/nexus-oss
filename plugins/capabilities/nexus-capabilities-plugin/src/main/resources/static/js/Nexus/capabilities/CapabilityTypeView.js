@@ -27,8 +27,8 @@ NX.define('Nexus.capabilities.CapabilityTypeView', {
 
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilityTypeView',
-            layout: 'border',
-            hideMode: 'offsets',
+            //layout: 'column',
+            //hideMode: 'offsets',
             items: [{
                 xtype : 'checkbox',
                 fieldLabel : 'Enabled',
