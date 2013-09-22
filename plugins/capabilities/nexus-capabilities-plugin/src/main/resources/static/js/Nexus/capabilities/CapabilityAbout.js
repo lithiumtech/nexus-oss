@@ -13,22 +13,16 @@
 /*global NX, Ext, Nexus*/
 
 /**
- * Capability detail view.
+ * Capability Settings View.
  *
  * @since 2.7
  */
-NX.define('Nexus.capabilities.CapabilityView', {
+NX.define('Nexus.capabilities.CapabilityAbout', {
     extend: 'Ext.Panel',
 
     mixins: [
-        'Nexus.LogAwareMixin'
-    ],
-
-    requires: [
-        'Nexus.capabilities.Icons',
-        'Nexus.capabilities.CapabilitySummary',
-        'Nexus.capabilities.CapabilityStatus',
-        'Nexus.capabilities.CapabilityAbout'
+        'Nexus.LogAwareMixin',
+        'Nexus.capabilities.CapabilitiesMediator'
     ],
 
     /**
@@ -37,29 +31,11 @@ NX.define('Nexus.capabilities.CapabilityView', {
     initComponent: function () {
         var self = this;
 
-        self.summaryView = NX.create('Nexus.capabilities.CapabilitySummary');
-        self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
-        self.aboutView = NX.create('Nexus.capabilities.CapabilityAbout');
-
-        self.allViews = [
-            self.summaryView,
-            self.statusView,
-            self.aboutView
-        ];
-
-        self.tabPanel = NX.create('Ext.TabPanel', {
-            items: self.allViews,
-            activeTab: 0,
-            layoutOnTabChange: true
-        });
-
         Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilityView',
-            header: true,
+            cls: 'nx-capabilities-CapabilityAbout',
             border: false,
-            layout: 'fit',
-
-            items: self.tabPanel
+            title: 'About',
+            html: ''
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
@@ -71,11 +47,18 @@ NX.define('Nexus.capabilities.CapabilityView', {
      * @param capability
      */
     updateRecord: function (capability) {
-        var self = this;
+        var self = this,
+            about = '',
+            mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        self.summaryView.updateRecord(capability);
-        self.statusView.updateRecord(capability);
-        self.aboutView.updateRecord(capability);
+        var capabilityTypeRecord = mediator.capabilityTypeStore.getById(capability.typeId);
+        if (capabilityTypeRecord) {
+            about = capabilityTypeRecord.data.about;
+        }
+        self.html = about;
+        if (self.body) {
+            self.body.update(about);
+        }
     }
 
 });

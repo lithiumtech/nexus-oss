@@ -1,4 +1,4 @@
-/**
+/*
  * Sonatype Nexus (TM) Open Source Version
  * Copyright (c) 2007-2013 Sonatype, Inc.
  * All rights reserved. Includes the third-party code listed at http://links.sonatype.com/products/nexus/oss/attributions.
@@ -10,31 +10,40 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
+/*global NX, Ext, Nexus*/
+
+
 /**
- * Nexus.capabilities.CapabilitiesView
- * =========================================
+ * Master/detail empty selection.
+ *
+ * @since 2.7
  */
+NX.define('Nexus.masterdetail.EmptySelection', {
+    extend: 'Ext.Panel',
 
-.nx-masterdetail-EmptySelection .x-panel-body {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
+    mixins: [
+        'Nexus.LogAwareMixin'
+    ],
 
-    font: bold 13px arial,tahoma,verdana,helvetica;
-    text-align: center;
-}
+    /**
+     * @override
+     */
+    initComponent: function () {
+        var self = this,
+            text = self.emptyText;
 
-.nx-masterdetail-EmptySelection-text {
-    padding-top: 20px;
-}
+        if (!text) {
+          text = 'Please select a ' + self.entityType;
+        }
 
-.nx-capabilities-CapabilityTypeView .x-fieldset {
-    border-width: 1px 0 0 0;
-}
+        Ext.apply(self, {
+            cls: 'nx-masterdetail-EmptySelection',
+            title: 'Empty Selection',
+            iconCls: self.iconCls,
+            html: '<span class="nx-masterdetail-EmptySelection-text">' + text + '</span>'
+        });
 
-.nx-capabilities-CapabilityStatusView .x-fieldset {
-    border-width: 1px 0 0 0;
-}
+        self.constructor.superclass.initComponent.apply(self, arguments);
+    },
 
-.nx-capabilities-CapabilitySettingsView .x-fieldset {
-    border-width: 1px 0 0 0;
-}
+});

@@ -27,9 +27,11 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
 
     requires: [
         'Nexus.capabilities.Icons',
+        'Nexus.capabilities.CapabilitiesMediator',
+        'Nexus.masterdetail.MasterDetail',
+        'Nexus.masterdetail.EmptySelection',
         'Nexus.capabilities.CapabilitiesGrid',
-        'Nexus.capabilities.CapabilityView',
-        'Nexus.capabilities.CapabilitiesMediator'
+        'Nexus.capabilities.CapabilityView'
     ],
 
     /**
@@ -43,81 +45,24 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
         // force all data stores to refresh when the main capabilities view loads
         mediator.refreshHandler();
 
-        self.masterPanel = NX.create('Nexus.capabilities.CapabilitiesGrid', {
-            region: 'center'
-        });
-
-        self.emptySelectionPanel = NX.create('Ext.Panel', {
-            cls: 'nx-capabilities-CapabilitiesView-messagePanel',
-            title: 'Empty Selection',
-            iconCls: icons.get('selectionEmpty').cls,
-            html: '<span class="nx-capabilities-CapabilitiesView-messagePanel-text">Please select a capability</span>'
-        });
-
-        self.capabilityView = NX.create('Nexus.capabilities.CapabilityView');
-
-        self.detailPanel = NX.create('Ext.Panel', {
-            region: 'south',
-            minHeight: 25, // height of panel title
-            split: true,
-            autoDestroy: false,
-
-            layout: 'card',
-            defaults: {
-                border: false
-            },
-            items: [
-                self.emptySelectionPanel, // 0
-                self.capabilityView       // 1
-            ],
-            activeItem: 0,
-            listeners: {
-                // resize detail panel height to 50% of parent on first render
-                afterrender: {
-                    single: true,
-                    fn: function() {
-                        self.detailPanel.setHeight(self.getHeight() / 2);
-                    }
-                }
-            }
-        });
+        var masterDetail = NX.create('Nexus.masterdetail.MasterDetail',
+            NX.create('Nexus.capabilities.CapabilitiesGrid', {
+                region: 'center'
+            }),
+            NX.create('Nexus.capabilities.CapabilityView'),
+            NX.create('Nexus.masterdetail.EmptySelection', {
+                iconCls: icons.get('selectionEmpty').cls,
+                entityType: 'capability'
+            })
+        );
 
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilitiesView',
             layout: 'border',
-            items: [
-                self.masterPanel,
-                self.detailPanel
-            ]
+            items: masterDetail
         });
 
-        self.masterPanel.getSelectionModel().on('selectionchange', self.selectionChanged, self);
-
         self.constructor.superclass.initComponent.apply(self, arguments);
-    },
-
-    /**
-     * Update detail panel when grid selection changes.
-     *
-     * @param sm    grid selection model
-     *
-     * @private
-     */
-    selectionChanged: function(sm) {
-        var self = this,
-            cardLayout = self.detailPanel.getLayout(),
-            selections = sm.getSelections();
-
-        self.logDebug('Selection changed:', selections.length);
-
-        if (selections.length === 0) {
-            cardLayout.setActiveItem(0); // empty-selection
-        }
-        else if (selections.length === 1) {
-            cardLayout.setActiveItem(1);
-            // update after layout changed, so that tabs can properly [un]hide
-            self.capabilityView.updateRecord(selections[0].data);
-        }
     }
 
 }, function () {
@@ -132,7 +77,7 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
             enabled: sp.checkPermission('nexus:capabilities', sp.READ),
             sectionId: 'st-nexus-config',
             title: 'Capabilities',
-            tabId: 'Capabilities',
+            tabId: 'capabilities',
             tabCode: type
         });
 

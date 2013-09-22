@@ -17,7 +17,7 @@
  *
  * @since 2.7
  */
-NX.define('Nexus.capabilities.CapabilityStatusView', {
+NX.define('Nexus.capabilities.CapabilityStatus', {
     extend: 'Ext.Panel',
 
     mixins: [
@@ -31,35 +31,10 @@ NX.define('Nexus.capabilities.CapabilityStatusView', {
         var self = this;
 
         Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilityStatusView',
-            layout : 'card',
-            region : 'center',
-            activeItem : 0,
-            bodyStyle : 'padding:0px 15px 0px 15px',
-            deferredRender : false,
-            autoScroll : false,
-            autoHeight : true,
+            cls: 'nx-capabilities-CapabilityStatus',
             border: false,
-            //frame : false,
-            //visible : false,
-            hidden: true,
-            items : {
-                xtype : 'fieldset',
-                autoHeight : true,
-                checkboxToggle : false,
-                title : 'Status',
-                anchor : Sonatype.view.FIELDSET_OFFSET,
-                collapsible : false,
-                layoutConfig : {
-                    labelSeparator : ''
-                },
-                items : {
-                    xtype : 'panel',
-                    name : 'status',
-                    layout : 'fit',
-                    border: false
-                }
-            }
+            title: 'Status',
+            html: ''
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
@@ -72,17 +47,15 @@ NX.define('Nexus.capabilities.CapabilityStatusView', {
      */
     updateRecord: function (capability) {
         var self = this,
-            status = self.find('name','status')[0];
+            status = '';
 
         if (capability.status) {
-            status.body.update(capability.status);
-            self.show();
+            status = capability.status;
         }
-        else {
-            self.hide();
-            status.body.update('');
+        self.html = status;
+        if(self.body) {
+          self.body.update(status);
         }
-
     }
 
 });
