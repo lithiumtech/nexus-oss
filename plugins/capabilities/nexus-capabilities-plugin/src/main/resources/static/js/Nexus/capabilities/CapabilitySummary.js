@@ -84,7 +84,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 autoHeight: true,
                 collapsed: false,
                 items: [{
-                    xtype: 'textfield',
+                    xtype: 'textarea',
                     htmlDecode: true,
                     fieldLabel: 'Notes',
                     itemCls: '',

@@ -27,14 +27,18 @@
     padding-top: 20px;
 }
 
-.nx-capabilities-CapabilityTypeView .x-fieldset {
+.nx-capabilities-CapabilitySummary .x-fieldset {
     border-width: 1px 0 0 0;
 }
 
-.nx-capabilities-CapabilityStatusView .x-fieldset {
-    border-width: 1px 0 0 0;
+.nx-capabilities-CapabilityAbout .x-panel-body {
+    padding: 10px 10px 10px 10px;
+
+    font: bold 13px arial,tahoma,verdana,helvetica;
 }
 
-.nx-capabilities-CapabilitySettingsView .x-fieldset {
-    border-width: 1px 0 0 0;
+.nx-capabilities-CapabilityStatus .x-panel-body {
+    padding: 10px 10px 10px 10px;
+
+    font: bold 13px arial,tahoma,verdana,helvetica;
 }
