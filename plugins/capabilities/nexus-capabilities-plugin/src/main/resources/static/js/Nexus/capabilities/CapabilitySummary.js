@@ -39,63 +39,61 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
             border: false,
             collapsible: false,
             collapsed: false,
-            labelWidth: 75,
             layoutConfig: {
                 labelSeparator: ''
             },
-            items: {
+            items: [{
                 xtype: 'fieldset',
                 autoHeight: true,
                 collapsed: false,
                 border: false,
-                width: '400px',
+                items: [{
+                    xtype: 'displayfield',
+                    fieldLabel: 'Type',
+                    itemCls: '',
+                    name: 'type',
+                }, {
+                    xtype: 'displayfield',
+                    htmlDecode: true,
+                    fieldLabel: 'Description',
+                    itemCls: '',
+                    name: 'description',
+                }, {
+                   xtype: 'displayfield',
+                   htmlDecode: true,
+                   fieldLabel: 'State',
+                   itemCls: '',
+                   name: 'stateDescription',
+                }]
+            }, {
+                xtype: 'fieldset',
+                title : 'Settings',
+                autoHeight: true,
+                collapsed: false,
                 items: [{
                     xtype: 'checkbox',
                     fieldLabel: 'Enabled',
-                    labelStyle: 'margin-left: 15px; width: 60px',
                     helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
                     name: 'enabled',
                     allowBlank: false,
                     checked: true
-                }, {
-                    xtype: 'checkbox',
-                    fieldLabel: 'Active',
-                    labelStyle: 'margin-left: 15px; width: 60px',
-                    helpText: 'Shows if the capability is current active or not. If not active, a text will be displayed explaining why.',
-                    name: 'active',
-                    allowBlank: false,
-                    checked: false,
-                    disabled: true
-                }, {
-                    xtype: 'combo',
-                    fieldLabel: 'Type',
-                    labelStyle: 'margin-left: 15px; width: 60px',
-                    itemCls: 'required-field',
-                    helpText: "Type of configured capability",
-                    name: 'typeId',
-                    store: mediator.capabilityTypeStore,
-                    displayField: 'name',
-                    valueField: 'id',
-                    editable: false,
-                    forceSelection: true,
-                    mode: 'local',
-                    triggerAction: 'all',
-                    emptyText: 'Select...',
-                    selectOnFocus: true,
-                    allowBlank: false,
-                    width: 300
-                }, {
+                }]
+            },{
+                xtype: 'fieldset',
+                title : 'Notes',
+                autoHeight: true,
+                collapsed: false,
+                items: [{
                     xtype: 'textfield',
                     htmlDecode: true,
                     fieldLabel: 'Notes',
-                    labelStyle: 'margin-left: 15px; width: 60px; margin-bottom:10px',
                     itemCls: '',
                     helpText: "Optional notes about configured capability",
                     name: 'notes',
                     width: 300,
                     allowBlank: true
                 }]
-            }
+            }            ]
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
