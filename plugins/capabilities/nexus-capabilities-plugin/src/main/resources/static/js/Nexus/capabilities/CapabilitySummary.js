@@ -51,19 +51,19 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     xtype: 'displayfield',
                     fieldLabel: 'Type',
                     itemCls: '',
-                    name: 'type',
+                    name: 'typeName'
                 }, {
                     xtype: 'displayfield',
                     htmlDecode: true,
                     fieldLabel: 'Description',
                     itemCls: '',
-                    name: 'description',
+                    name: 'description'
                 }, {
                    xtype: 'displayfield',
                    htmlDecode: true,
                    fieldLabel: 'State',
                    itemCls: '',
-                   name: 'stateDescription',
+                   name: 'stateDescription'
                 }]
             }, {
                 xtype: 'fieldset',
