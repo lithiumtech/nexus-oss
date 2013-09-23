@@ -50,7 +50,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
         };
         if (formField.initialValue) {
             item.value = formField.initialValue;
-        };
+        }
         if (formField.storePath) {
             var store = self.stores[formField.storePath];
             if (!store) {

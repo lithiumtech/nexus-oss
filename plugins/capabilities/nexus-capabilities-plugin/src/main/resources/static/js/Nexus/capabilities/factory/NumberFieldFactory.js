@@ -33,7 +33,7 @@ NX.define('Nexus.capabilities.factory.NumberFieldFactory', {
         };
         if (formField.initialValue) {
             item.value = Number(formField.initialValue);
-        };
+        }
         return item;
     }
 

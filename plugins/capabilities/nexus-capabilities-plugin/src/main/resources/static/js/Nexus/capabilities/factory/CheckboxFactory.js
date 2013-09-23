@@ -29,7 +29,7 @@ NX.define('Nexus.capabilities.factory.CheckboxFactory', {
         };
         if (formField.initialValue) {
             item.checked = Boolean('true' === formField.initialValue);
-        };
+        }
         return item;
     }
 

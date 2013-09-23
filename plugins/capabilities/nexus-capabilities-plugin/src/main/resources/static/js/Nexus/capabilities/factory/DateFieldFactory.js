@@ -35,7 +35,7 @@ NX.define('Nexus.capabilities.factory.DateFieldFactory', {
       };
       if (formField.initialValue) {
           item.value = new Date(Number(formField.initialValue));
-      };
+      }
       return item;
     }
 
