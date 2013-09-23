@@ -20,8 +20,15 @@
 NX.define('Nexus.capabilities.CapabilityStore', {
     extend: 'Ext.data.JsonStore',
 
+    /**
+     * @property {String}
+     * URL of capability store.
+     */
     url: Nexus.siesta.basePath + '/capabilities',
 
+    /**
+    * @constructor
+    */
     constructor: function (config) {
         var self = this,
             config = config || {},
@@ -31,7 +38,7 @@ NX.define('Nexus.capabilities.CapabilityStore', {
             url: self.url,
             id: 'capability.id',
 
-            fields : [
+            fields: [
                 { name: 'id', mapping: 'capability.id' },
                 { name: 'description', sortType: ST.asUCString },
                 { name: 'notes',  mapping: 'capability.notes', sortType: ST.asUCString },
@@ -56,10 +63,11 @@ NX.define('Nexus.capabilities.CapabilityStore', {
         self.constructor.superclass.constructor.call(self, config);
     },
 
+    /**
+     * Returns the url of a capability given its ID.
+     */
     urlOf: function(id) {
-        var self = this;
-
-        return self.url + '/' + id;
+        return this.url + '/' + id;
     }
 
 });

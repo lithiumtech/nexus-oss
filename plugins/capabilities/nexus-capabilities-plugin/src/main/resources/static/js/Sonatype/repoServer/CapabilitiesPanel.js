@@ -33,26 +33,26 @@ Sonatype.repoServer.CapabilitiesPanel = function(cfg) {
 
 
   this.actions = {
-    doRefresh : new Ext.Action({
-          text : 'Refresh',
-          iconCls : 'st-icon-refresh',
-          scope : this,
-          handler : this.reloadAll
+    doRefresh: new Ext.Action({
+          text: 'Refresh',
+          iconCls: 'st-icon-refresh',
+          scope: this,
+          handler: this.reloadAll
         }),
-    doEnable : {
-      text : 'Enable',
-      scope : this,
-      handler : this.enableHandler
+    doEnable: {
+      text: 'Enable',
+      scope: this,
+      handler: this.enableHandler
     },
-    doDisable : {
-      text : 'Disable',
-      scope : this,
-      handler : this.disableHandler
+    doDisable: {
+      text: 'Disable',
+      scope: this,
+      handler: this.disableHandler
     },
-    doDelete : new Ext.Action({
-          text : 'Delete',
-          scope : this,
-          handler : this.deleteHandler
+    doDelete: new Ext.Action({
+          text: 'Delete',
+          scope: this,
+          handler: this.deleteHandler
         })
   };
 
@@ -60,8 +60,8 @@ Sonatype.repoServer.CapabilitiesPanel = function(cfg) {
 
   this.capabilityTypeRecordConstructor = Ext.data.Record.create([
     {
-      name : 'id',
-      sortType : Ext.data.SortTypes.asUCString
+      name: 'id',
+      sortType: Ext.data.SortTypes.asUCString
     }, {
       name : 'name'
     }, {

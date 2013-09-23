@@ -21,15 +21,15 @@ NX.define('Nexus.capabilities.factory.TextFieldFactory', {
 
     supports: ['textfield','string','password'],
 
-    create : function(formField) {
+    create: function(formField) {
       var item =  {
-          xtype : 'textfield',
-          htmlDecode : true,
-          fieldLabel : formField.label,
-          itemCls : formField.required ? 'required-field' : '',
-          helpText : formField.helpText,
-          allowBlank : formField.required ? false : true,
-          regex : formField.regexValidation ? new RegExp(formField.regexValidation) : null,
+          xtype: 'textfield',
+          htmlDecode: true,
+          fieldLabel: formField.label,
+          itemCls: formField.required ? 'required-field' : '',
+          helpText: formField.helpText,
+          allowBlank: formField.required ? false : true,
+          regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
           anchor: '96%'
       };
       if (formField.type === 'password') {

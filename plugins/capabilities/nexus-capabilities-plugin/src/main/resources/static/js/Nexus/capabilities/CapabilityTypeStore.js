@@ -20,16 +20,25 @@
 NX.define('Nexus.capabilities.CapabilityTypeStore', {
     extend: 'Ext.data.JsonStore',
 
+    /**
+     * @property {String}
+     * URL of capability type store.
+     */
+    url: Nexus.siesta.basePath + '/capabilities/types',
+
+    /**
+    * @constructor
+    */
     constructor: function (config) {
         var self = this,
             config = config || {},
             ST = Ext.data.SortTypes;
 
         Ext.apply(config, {
-            url: Nexus.siesta.basePath + '/capabilities/types',
+            url: self.url,
             id: 'id',
 
-            fields : [
+            fields: [
                 { name: 'id' },
                 { name: 'name' },
                 { name: 'about' },
@@ -45,9 +54,11 @@ NX.define('Nexus.capabilities.CapabilityTypeStore', {
         self.constructor.superclass.constructor.call(self, config);
     },
 
+    /**
+     * Returns capability type given its ID.
+     */
     getTypeById: function (id) {
-        var self = this,
-            record = self.getById(id);
+        var record = this.getById(id);
 
         if (record) {
             return record.data;

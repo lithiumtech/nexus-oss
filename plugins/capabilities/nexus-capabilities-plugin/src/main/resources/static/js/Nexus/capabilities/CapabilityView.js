@@ -42,27 +42,23 @@ NX.define('Nexus.capabilities.CapabilityView', {
         self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
         self.aboutView = NX.create('Nexus.capabilities.CapabilityAbout');
 
-        self.allViews = [
-            self.summaryView,
-            self.statusView,
-            self.aboutView
-        ];
-
-        self.tabPanel = NX.create('Ext.TabPanel', {
-            title: 'Capability',
-            iconCls: icons.get('capability'),
-            items: self.allViews,
-            activeTab: 0,
-            layoutOnTabChange: true
-        });
-
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilityView',
             header: true,
             border: false,
             layout: 'fit',
-
-            items: self.tabPanel
+            items: {
+                xtype: 'tabpanel',
+                title: 'Capability',
+                iconCls: icons.get('capability'),
+                items: [
+                    self.summaryView,
+                    self.statusView,
+                    self.aboutView
+                ],
+                activeTab: 0,
+                layoutOnTabChange: true
+            }
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);

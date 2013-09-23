@@ -50,7 +50,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
 
         self.settings = {
             xtype: 'fieldset',
-            title : 'Settings',
+            title: 'Settings',
             autoHeight: false,
             autoScroll: true,
             collapsed: false,
@@ -96,7 +96,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 self.settings
             , {
                 xtype: 'fieldset',
-                title : 'Notes',
+                title: 'Notes',
                 autoHeight: true,
                 collapsed: false,
                 hideLabels: true,
@@ -138,6 +138,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.settingsCmp = self.getComponent(1);
 
         self.factories = NX.create('Ext.util.MixedCollection');
+
         self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
         self.addFactory('Nexus.capabilities.factory.ComboFactory');
         self.addFactory('Nexus.capabilities.factory.DateFieldFactory');
@@ -158,7 +159,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
             mediator = Nexus.capabilities.CapabilitiesMediator,
             capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
 
-        this.currentRecord = capability;
+        self.currentRecord = capability;
 
         self.removeFields();
         if (capabilityType) {
@@ -169,7 +170,35 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.togglePermission(self.items, editable);
     },
 
-    updateCapability : function(capability) {
+    /**
+     * @private
+     */
+    currentRecord: undefined,
+
+    /**
+     * @private
+     */
+    factories: undefined,
+
+    /**
+     * @private
+     */
+    enabled: undefined,
+
+    /**
+     * @private
+     */
+    settings: undefined,
+
+    /**
+     * @private
+     */
+    settingsComp: undefined,
+
+    /**
+     * @private
+     */
+    updateCapability: function(capability) {
         var self = this,
             mediator = Nexus.capabilities.CapabilitiesMediator,
             capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId),
@@ -224,6 +253,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         );
     },
 
+    /**
+     * @private
+     */
     setValues: function (capability) {
         var self = this,
             formObject = Ext.apply({},capability),
@@ -245,6 +277,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.getForm().setValues(formObject);
     },
 
+    /**
+     * @private
+     */
     togglePermission: function (items, enabled) {
       var self = this;
 
@@ -269,6 +304,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
       }
     },
 
+    /**
+     * @private
+     */
     addFactory: function (factoryName) {
       var self = this,
           factory = NX.create(factoryName);
@@ -278,6 +316,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
       });
     },
 
+    /**
+     * @private
+     */
     removeFields: function () {
         var self = this;
 
@@ -285,6 +326,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.settings.items = [];
     },
 
+    /**
+     * @private
+     */
     createFields: function (capabilityType) {
        var self = this;
 

@@ -32,6 +32,16 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     ],
 
     /**
+     * @property
+     */
+    capabilityStore : undefined,
+
+    /**
+     * @property
+     */
+    capabilityTypeStore : undefined,
+
+    /**
     * @constructor
     */
     constructor: function () {
@@ -41,7 +51,10 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         self.capabilityTypeStore = NX.create('Nexus.capabilities.CapabilityTypeStore');
     },
 
-    updateCapability : function(capability, successHandler, failureHandler) {
+    /**
+     * Updates a capability via REST.
+     */
+    updateCapability: function(capability, successHandler, failureHandler) {
         var self = this;
 
         self.logDebug('Saving capability');
@@ -52,50 +65,62 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
             scope: self,
             suppressStatus: 400,
             jsonData: capability,
-            success : successHandler,
+            success: successHandler,
             failure: failureHandler
         });
     },
 
+    /**
+     * Enables a capability via REST.
+     */
     enableCapability: function (capability, successHandler, failureHandler) {
         var self = this;
 
         Ext.Ajax.request({
               url: self.capabilityStore.urlOf(capability.id) + "/enable",
-              method : 'PUT',
-              callback : self.refresh(),
-              scope : self,
-              success : successHandler,
+              method: 'PUT',
+              callback: self.refresh(),
+              scope: self,
+              success: successHandler,
               failure: failureHandler
         });
     },
 
+    /**
+     * Disables a capability via REST.
+     */
     disableCapability: function (capability, successHandler, failureHandler) {
         var self = this;
 
         Ext.Ajax.request({
               url: self.capabilityStore.urlOf(capability.id) + "/disable",
-              method : 'PUT',
-              callback : self.refresh(),
-              scope : self,
-              success : successHandler,
+              method: 'PUT',
+              callback: self.refresh(),
+              scope: self,
+              success: successHandler,
               failure: failureHandler
         });
     },
 
+    /**
+     * Deletes a capability via REST.
+     */
     deleteCapability: function (capability, successHandler, failureHandler) {
         var self = this;
 
         Ext.Ajax.request({
               url: self.capabilityStore.urlOf(capability.id),
-              method : 'DELETE',
-              scope : self,
-              success : successHandler,
+              method: 'DELETE',
+              scope: self,
+              success: successHandler,
               failure: failureHandler
         });
     },
 
-    describeCapability : function(capability) {
+    /**
+     * Returns a description of capability suitable to be displayed.
+     */
+    describeCapability: function(capability) {
         var description = capability.typeName;
         if (capability.description) {
             description += ' - ' + capability.description;
@@ -103,10 +128,16 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         return description;
     },
 
-    showMessage : function(title, message) {
+    /**
+     * Shows a message.
+     */
+    showMessage: function(title, message) {
          Nexus.messages.show(title,message);
     },
 
+    /**
+     * Refreshes data stores.
+     */
     refresh: function () {
         var self = this;
 

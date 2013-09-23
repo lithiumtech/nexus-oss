@@ -27,25 +27,25 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
 
     stores: {},
 
-    create : function(formField) {
+    create: function(formField) {
         var self = this,
             ST = Ext.data.SortTypes;
 
         var item = {
-            xtype : 'combo',
-            fieldLabel : formField.label,
-            itemCls : formField.required ? 'required-field' : '',
-            helpText : formField.helpText,
-            name : formField.id,
-            displayField : 'name',
-            valueField : 'id',
-            editable : false,
-            forceSelection : true,
-            mode : 'local',
-            triggerAction : 'all',
-            emptyText : 'Select...',
-            selectOnFocus : true,
-            allowBlank : formField.required ? false : true,
+            xtype: 'combo',
+            fieldLabel: formField.label,
+            itemCls: formField.required ? 'required-field' : '',
+            helpText: formField.helpText,
+            name: formField.id,
+            displayField: 'name',
+            valueField: 'id',
+            editable: false,
+            forceSelection: true,
+            mode: 'local',
+            triggerAction: 'all',
+            emptyText: 'Select...',
+            selectOnFocus: true,
+            allowBlank: formField.required ? false : true,
             anchor: '96%'
         };
         if (formField.initialValue) {
@@ -60,15 +60,15 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
 
                     fields: [
                       { name: 'id', mapping: formField.idMapping ? formField.idMapping : 'id' },
-                      { name: 'name', mapping: formField.nameMapping ? formField.nameMapping : 'name', sortType : ST.asUCString },
+                      { name: 'name', mapping: formField.nameMapping ? formField.nameMapping : 'name', sortType: ST.asUCString },
                     ],
 
-                    sortInfo : {
-                     field : 'name',
-                     direction : 'ASC'
+                    sortInfo: {
+                     field: 'name',
+                     direction: 'ASC'
                     },
 
-                    autoLoad : true
+                    autoLoad: true
                 });
                 self.stores[formField.storePath] = store;
             }

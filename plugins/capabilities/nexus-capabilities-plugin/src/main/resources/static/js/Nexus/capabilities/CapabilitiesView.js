@@ -45,21 +45,19 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
         // force all data stores to refresh when the main capabilities view loads
         mediator.refresh();
 
-        var masterDetail = NX.create('Nexus.masterdetail.MasterDetail',
-            NX.create('Nexus.capabilities.CapabilitiesGrid', {
-                region: 'center'
-            }),
-            NX.create('Nexus.capabilities.CapabilityView'),
-            NX.create('Nexus.masterdetail.EmptySelection', {
-                iconCls: icons.get('selectionEmpty').cls,
-                entityType: 'capability'
-            })
-        );
-
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilitiesView',
             layout: 'border',
-            items: masterDetail
+            items: NX.create('Nexus.masterdetail.MasterDetail',
+                NX.create('Nexus.capabilities.CapabilitiesGrid', {
+                   region: 'center'
+                }),
+                NX.create('Nexus.capabilities.CapabilityView'),
+                NX.create('Nexus.masterdetail.EmptySelection', {
+                   iconCls: icons.get('selectionEmpty').cls,
+                   entityType: 'capability'
+                })
+            )
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);

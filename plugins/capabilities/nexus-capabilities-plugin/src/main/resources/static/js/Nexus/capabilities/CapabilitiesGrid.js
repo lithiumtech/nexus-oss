@@ -25,6 +25,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     ],
 
     requires: [
+        'Nexus.capabilities.Icons',
         'Nexus.capabilities.CapabilitiesMediator'
     ],
 
@@ -36,90 +37,70 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
             mediator = Nexus.capabilities.CapabilitiesMediator,
             icons = Nexus.capabilities.Icons;
 
-        self.ds = mediator.capabilityStore;
         mediator.capabilityStore.on('beforeload', self.rememberSelection, self);
         mediator.capabilityStore.on('load', self.recallSelection, self);
 
-        self.loadMask = {
-            msg: 'Loading...',
-            msgCls: 'loading-indicator'
-        };
-
-        // FIXME: This does not appear to function
-        self.emptyText = 'No capabilities';
-
-        self.viewConfig = {
-            emptyText : 'Click "Add" to configure a capability.',
-            deferEmptyText: false
-        };
-
-        self.stripeRows = true;
-
-        self.sm = NX.create('Ext.grid.RowSelectionModel', {
-            singleSelect: true,
-            listeners: {
-                selectionchange: {
-                    fn: self.selectionChanged,
-                    scope: self
+        Ext.apply(self, {
+            cls: 'nx-capabilities-CapabilityGrid',
+            ds: mediator.capabilityStore,
+            stripeRows: true,
+            loadMask: {
+                msg: 'Loading...',
+                msgCls: 'loading-indicator'
+            },
+            viewConfig: {
+                emptyText: 'Click "Add" to configure a capability.',
+                deferEmptyText: false
+            },
+            sm: NX.create('Ext.grid.RowSelectionModel', {
+                singleSelect: true,
+                listeners: {
+                    selectionchange: {
+                        fn: self.selectionChanged,
+                        scope: self
+                    }
                 }
-            }
-        });
+            }),
 
-        var columns = [
-            // icon
-            {
-                width: 30,
-                resizable: false,
-                sortable: false,
-                fixed: true,
-                hideable: false,
-                menuDisabled: true,
-                renderer: function (value, metaData, record) {
-                    return icons.iconFor(record.data).img;
-                }
-            },
-            {
-                id: 'typeName',
-                width: 175,
-                header: 'Type',
-                dataIndex: 'typeName',
-                sortable: true
-            },
-            {
-                id: 'description',
-                width: 250,
-                header: 'Description',
-                dataIndex: 'description',
-                sortable: true
-            },
-            {
-                id: 'notes',
-                width: 175,
-                header: 'Notes',
-                dataIndex: 'notes',
-                sortable: true
-            }
-        ];
+            columns: [{
+                 width: 30,
+                 resizable: false,
+                 sortable: false,
+                 fixed: true,
+                 hideable: false,
+                 menuDisabled: true,
+                 renderer: function (value, metaData, record) {
+                     return icons.iconFor(record.data).img;
+                 }
+            }, {
+                 id: 'typeName',
+                 width: 175,
+                 header: 'Type',
+                 dataIndex: 'typeName',
+                 sortable: true
+            }, {
+                 id: 'description',
+                 width: 250,
+                 header: 'Description',
+                 dataIndex: 'description',
+                 sortable: true
+            }, {
+                 id: 'notes',
+                 width: 175,
+                 header: 'Notes',
+                 dataIndex: 'notes',
+                 sortable: true
+            }],
+            autoExpandColumn: 'notes',
 
-        self.cm = NX.create('Ext.grid.ColumnModel', {
-            columns: columns
-        });
-        self.autoExpandColumn = 'notes';
-
-        // FIXME: Toolbar, and actions for them should really be handled by another class
-        // FIXME: Should try to avoid using component ids here, a field ref would be preferable, or itemId instead.
-
-        self.tbar = [
-            {
+            tbar: [{
                 text: 'Refresh',
                 tooltip: 'Refresh capabilities',
                 iconCls: icons.get('refresh').cls,
                 handler: function () {
-                    //mediator.refresh();
+                    mediator.refresh();
                 }
-                // always enabled
-            },
-            {
+            }, {
                 text: 'New',
                 itemId: 'add',
                 iconCls: icons.get('capability_add').cls,
@@ -197,8 +178,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                     }
                 },
                 disabled: true
-            }
-        ];
+            }]
+        });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
     },

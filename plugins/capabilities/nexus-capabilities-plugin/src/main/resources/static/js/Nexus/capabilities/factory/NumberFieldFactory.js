@@ -21,14 +21,14 @@ NX.define('Nexus.capabilities.factory.NumberFieldFactory', {
 
     supports: ['numberfield','number'],
 
-    create : function(formField) {
+    create: function(formField) {
         var item =  {
-            xtype : 'numberfield',
-            fieldLabel : formField.label,
-            itemCls : formField.required ? 'required-field' : '',
-            helpText : formField.helpText,
-            allowBlank : formField.required ? false : true,
-            regex : formField.regexValidation ? new RegExp(formField.regexValidation) : null,
+            xtype: 'numberfield',
+            fieldLabel: formField.label,
+            itemCls: formField.required ? 'required-field' : '',
+            helpText: formField.helpText,
+            allowBlank: formField.required ? false : true,
+            regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
             anchor: '96%'
         };
         if (formField.initialValue) {

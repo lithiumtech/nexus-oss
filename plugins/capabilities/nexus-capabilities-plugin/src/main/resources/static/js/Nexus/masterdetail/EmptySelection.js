@@ -44,6 +44,6 @@ NX.define('Nexus.masterdetail.EmptySelection', {
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
-    },
+    }
 
 });
