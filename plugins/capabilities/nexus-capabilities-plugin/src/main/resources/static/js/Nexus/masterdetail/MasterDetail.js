@@ -79,11 +79,11 @@ NX.define('Nexus.masterdetail.MasterDetail', {
             ],
             activeItem: 0,
             listeners: {
-                // resize detail panel height to 50% of parent on first render
+                // resize detail panel height to 75% of parent on first render
                 afterrender: {
                     single: true,
                     fn: function() {
-                        self.detailPanel.setHeight(self.getHeight() / 2);
+                        self.detailPanel.setHeight(self.getHeight() * .6);
                     }
                 }
             }

@@ -94,7 +94,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 }]
             },
                 self.settings
-            ,{
+            , {
                 xtype: 'fieldset',
                 title : 'Notes',
                 autoHeight: true,
@@ -109,7 +109,26 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     allowBlank: true,
                     editable: true
                 }]
-            }            ]
+            }],
+
+            buttonAlign: 'left',
+            buttons: [
+                {
+                    text: 'Save',
+                    formBind: true,
+                    scope: self,
+                    handler: self.updateCapability
+                },
+                {
+                    xtype: 'link-button',
+                    text: 'Discard',
+                    formBind: false,
+                    scope: self,
+                    handler: function() {
+                        self.setValues(self.currentRecord);
+                    }
+                }
+            ]
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
@@ -137,6 +156,8 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
             mediator = Nexus.capabilities.CapabilitiesMediator,
             capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
 
+        this.currentRecord = capability;
+
         self.removeFields();
         if (capabilityType) {
             self.createFields(capabilityType);
@@ -148,11 +169,21 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
 
     setValues: function (capability) {
         var self = this,
-            formObject = Ext.apply({},capability);
+            formObject = Ext.apply({},capability),
+            mediator = Nexus.capabilities.CapabilitiesMediator,
+            capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
 
-        Ext.each(capability.properties,function(property) {
-            formObject['property.' + property.key] = property.value;
-        });
+        if (capabilityType.formFields) {
+            Ext.each(capabilityType.formFields,function(formField) {
+                formObject['property.' + formField.id] = '';
+            });
+        }
+
+        if (capability.properties) {
+            Ext.each(capability.properties,function(property) {
+                formObject['property.' + property.key] = property.value;
+            });
+        }
 
         self.getForm().setValues(formObject);
     },
