@@ -75,7 +75,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 hideable: false,
                 menuDisabled: true,
                 renderer: function (value, metaData, record) {
-                    return mediator.iconFor(record.data).img;
+                    return icons.iconFor(record.data).img;
                 }
             },
             {

@@ -114,32 +114,6 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
 
         self.capabilityStore.reload();
         self.capabilityTypeStore.reload();
-    },
-
-    iconFor: function(capability) {
-        var icons = Nexus.capabilities.Icons,
-            typeName = capability.typeName,
-            enabled = capability.enabled,
-            active = capability.active,
-            error = capability.error,
-            iconName;
-
-        if (!typeName) {
-            iconName = 'capability_new';
-        }
-        else if (enabled && error) {
-            iconName = 'capability_error';
-        }
-        else if (enabled && active) {
-            iconName = 'capability_active';
-        }
-        else if (enabled && !active) {
-            iconName = 'capability_passive';
-        }
-        else {
-            iconName = 'capability_disabled';
-        }
-        return icons.get(iconName);
     }
 
 });

@@ -46,5 +46,32 @@ NX.define('Nexus.capabilities.Icons', {
                 disable:              '@capability_disabled'
             }
         });
+    },
+
+    iconFor: function(capability) {
+        var self = this,
+            typeName = capability.typeName,
+            enabled = capability.enabled,
+            active = capability.active,
+            error = capability.error,
+            iconName;
+
+        if (!typeName) {
+            iconName = 'capability_new';
+        }
+        else if (enabled && error) {
+            iconName = 'capability_error';
+        }
+        else if (enabled && active) {
+            iconName = 'capability_active';
+        }
+        else if (enabled && !active) {
+            iconName = 'capability_passive';
+        }
+        else {
+            iconName = 'capability_disabled';
+        }
+        return self.get(iconName);
     }
+
 });
