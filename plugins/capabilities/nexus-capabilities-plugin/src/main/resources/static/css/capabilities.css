@@ -27,10 +27,8 @@
     padding-top: 20px;
 }
 
-.nx-capabilities-CapabilityStatus .x-panel-body {
-    padding: 10px 10px 10px 10px;
-
-    font: bold 13px arial,tahoma,verdana,helvetica;
+.nx-capabilities-CapabilityAbout .x-panel-body {
+    font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
 .nx-capabilities-CapabilitySummary .x-fieldset {
@@ -40,11 +38,11 @@
 .nx-capabilities-CapabilityAbout .x-panel-body {
     padding: 10px 10px 10px 10px;
 
-    font: 13px arial,tahoma,verdana,helvetica;
+    font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
 .nx-capabilities-CapabilityStatus .x-panel-body {
     padding: 10px 10px 10px 10px;
 
-    font: 13px arial,tahoma,verdana,helvetica;
+    font: normal 11px arial,tahoma,verdana,helvetica;
 }

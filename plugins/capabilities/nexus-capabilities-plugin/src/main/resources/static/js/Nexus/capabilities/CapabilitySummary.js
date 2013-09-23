@@ -43,7 +43,6 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
            name: 'enabled',
            allowBlank: false,
            checked: true,
-           disabled: false,
            editable: true
         };
 
@@ -98,17 +97,14 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 title : 'Notes',
                 autoHeight: true,
                 collapsed: false,
-                labelWidth: 175,
+                hideLabels: true,
                 items: [{
                     xtype: 'textarea',
                     htmlDecode: true,
-                    fieldLabel: 'Notes',
-                    itemCls: '',
                     helpText: "Optional notes about configured capability",
                     name: 'notes',
                     anchor: '96%',
                     allowBlank: true,
-                    disabled: true,
                     editable: true
                 }]
             }            ]
