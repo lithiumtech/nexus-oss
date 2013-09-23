@@ -76,7 +76,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
                     name: 'enabled',
                     allowBlank: false,
-                    checked: true
+                    checked: true,
+                    disabled: false,
+                    editable: true
                 }]
             },{
                 xtype: 'fieldset',
@@ -91,7 +93,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     helpText: "Optional notes about configured capability",
                     name: 'notes',
                     width: 300,
-                    allowBlank: true
+                    allowBlank: true,
+                    disabled: true,
+                    editable: true
                 }]
             }            ]
         });
@@ -105,9 +109,37 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
      * @param capability
      */
     updateRecord: function (capability) {
-        var self = this;
+        var self = this,
+            sp = Sonatype.lib.Permissions,
+            editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
         self.getForm().setValues(capability);
+
+        self.togglePermission(self.items, editable);
+    },
+
+    togglePermission: function (items, enabled) {
+      var self = this;
+
+      if (items) {
+          var iterable = items.items;
+          if (!iterable) {
+              iterable = items;
+          }
+          Ext.each(iterable, function(item) {
+            if (item) {
+              if (item.editable) {
+                if (enabled) {
+                    item.enable();
+                }
+                else {
+                    item.disable();
+                }
+              }
+              self.togglePermission(item.items, enabled)
+            }
+          });
+      }
     }
 
 });
