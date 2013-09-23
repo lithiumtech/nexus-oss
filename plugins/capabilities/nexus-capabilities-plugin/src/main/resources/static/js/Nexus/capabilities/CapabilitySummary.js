@@ -117,7 +117,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     text: 'Save',
                     formBind: true,
                     scope: self,
-                    handler: self.updateCapability
+                    handler: function() {
+                        self.updateCapability(self.currentRecord);
+                    }
                 },
                 {
                     xtype: 'link-button',
@@ -165,6 +167,60 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.doLayout();
         self.setValues(capability);
         self.togglePermission(self.items, editable);
+    },
+
+    updateCapability : function(capability) {
+        var self = this,
+            mediator = Nexus.capabilities.CapabilitiesMediator,
+            capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId),
+            capability = Ext.apply({}, self.currentRecord.$capability),
+            form = self.getForm();
+
+        if (!form.isValid()) {
+          return;
+        }
+
+        var values = form.getFieldValues();
+
+        capability.enabled = values.enabled;
+        capability.notes = values.notes;
+        capability.properties = [];
+
+        if (capabilityType.formFields) {
+            Ext.each(capabilityType.formFields,function(formField) {
+                var value = values['property.' + formField.id];
+                if (value) {
+                    capability.properties[capability.properties.length] = {
+                        key: formField.id,
+                        value: String(value)
+                    };
+                }
+            });
+        }
+
+        mediator.updateCapability(capability,
+            function() {
+                form.items.each( function(item){
+                    item.clearInvalid();
+                });
+            },
+            function(response, opts) {
+                if (response.siestaValidationError) {
+                    Ext.each(response.siestaValidationError, function (error) {
+                        var field = form.findField('property.' + error.id);
+                        if (!field) {
+                            field = form.findField(error.id);
+                        }
+                        if (field) {
+                            field.markInvalid(error.message);
+                        }
+                        else {
+                            // TODO show message box
+                        }
+                    });
+                }
+            }
+        );
     },
 
     setValues: function (capability) {

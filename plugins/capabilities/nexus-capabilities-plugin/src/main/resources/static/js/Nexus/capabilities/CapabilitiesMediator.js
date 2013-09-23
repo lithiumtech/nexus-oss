@@ -41,6 +41,22 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         self.capabilityTypeStore = NX.create('Nexus.capabilities.CapabilityTypeStore');
     },
 
+    updateCapability : function(capability, successHandler, failureHandler) {
+        var self = this;
+
+        self.logDebug('Saving capability');
+
+        Ext.Ajax.request({
+            url: self.capabilityStore.urlOf(capability.id),
+            method: 'PUT',
+            scope: self,
+            suppressStatus: 400,
+            jsonData: capability,
+            success : successHandler,
+            failure: failureHandler
+        });
+    },
+
     refreshHandler: function () {
         var self = this;
 

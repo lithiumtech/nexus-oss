@@ -20,14 +20,15 @@
 NX.define('Nexus.capabilities.CapabilityStore', {
     extend: 'Ext.data.JsonStore',
 
+    url: Nexus.siesta.basePath + '/capabilities',
+
     constructor: function (config) {
         var self = this,
             config = config || {},
-            ST = Ext.data.SortTypes,
-            storeUrl = Nexus.siesta.basePath + '/capabilities';
+            ST = Ext.data.SortTypes;
 
         Ext.apply(config, {
-            url: storeUrl,
+            url: self.url,
             id: 'capability.id',
 
             fields : [
@@ -42,7 +43,8 @@ NX.define('Nexus.capabilities.CapabilityStore', {
                 { name: 'stateDescription' },
                 { name: 'status' },
                 { name: 'properties', mapping: 'capability.properties' },
-                { name: 'url', convert: function(newValue, rec) { return storeUrl + '/' + rec.capability.id; }},
+                { name: '$capability', mapping: 'capability' },
+                { name: 'url', convert: function(newValue, rec) { return self.urlOf(rec.capability.id); } },
             ],
 
             sortInfo: {
@@ -52,6 +54,12 @@ NX.define('Nexus.capabilities.CapabilityStore', {
         });
 
         self.constructor.superclass.constructor.call(self, config);
+    },
+
+    urlOf: function(id) {
+        var self = this;
+
+        return self.url + '/' + id;
     }
 
 });
