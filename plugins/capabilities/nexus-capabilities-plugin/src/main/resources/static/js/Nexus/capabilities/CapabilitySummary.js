@@ -203,6 +203,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 form.items.each( function(item){
                     item.clearInvalid();
                 });
+                mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
             },
             function(response, opts) {
                 if (response.siestaValidationError) {

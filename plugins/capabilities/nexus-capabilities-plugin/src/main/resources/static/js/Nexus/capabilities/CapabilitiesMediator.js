@@ -57,6 +57,18 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         });
     },
 
+    describeCapability : function(capability) {
+        var description = capability.typeName;
+        if (capability.description) {
+            description += ' - ' + capability.description;
+        }
+        return description;
+    },
+
+    showMessage : function(title, message) {
+         Nexus.messages.show(title,message);
+    },
+
     refreshHandler: function () {
         var self = this;
 
