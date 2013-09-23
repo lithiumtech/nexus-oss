@@ -35,7 +35,8 @@ NX.define('Nexus.capabilities.CapabilityView', {
      * @override
      */
     initComponent: function () {
-        var self = this;
+        var self = this,
+            icons = Nexus.capabilities.Icons;
 
         self.summaryView = NX.create('Nexus.capabilities.CapabilitySummary');
         self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
@@ -48,6 +49,8 @@ NX.define('Nexus.capabilities.CapabilityView', {
         ];
 
         self.tabPanel = NX.create('Ext.TabPanel', {
+            title: 'Capability',
+            iconCls: icons.get('capability'),
             items: self.allViews,
             activeTab: 0,
             layoutOnTabChange: true
@@ -71,7 +74,11 @@ NX.define('Nexus.capabilities.CapabilityView', {
      * @param capability
      */
     updateRecord: function (capability) {
-        var self = this;
+        var self = this,
+            icons = Nexus.capabilities.Icons,
+            mediator = Nexus.capabilities.CapabilitiesMediator;
+
+        self.setTitle(mediator.describeCapability(capability), icons.iconFor(capability).cls);
 
         self.summaryView.updateRecord(capability);
         self.statusView.updateRecord(capability);

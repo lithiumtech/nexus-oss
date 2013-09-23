@@ -47,7 +47,7 @@ NX.define('Nexus.capabilities.CapabilityStatus', {
      */
     updateRecord: function (capability) {
         var self = this,
-            status = '';
+            status = 'Capability does not provide any status.';
 
         if (capability.status) {
             status = capability.status;
