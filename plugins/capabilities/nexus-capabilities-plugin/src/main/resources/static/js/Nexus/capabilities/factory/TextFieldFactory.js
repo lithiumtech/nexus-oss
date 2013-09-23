@@ -31,7 +31,7 @@ NX.define('Nexus.capabilities.factory.TextFieldFactory', {
               helpText : formField.helpText,
               allowBlank : formField.required ? false : true,
               regex : formField.regexValidation ? new RegExp(formField.regexValidation) : null,
-              anchor: '50%',
+              anchor: '96%',
               factory: self
           };
       if (formField.type === 'password') {

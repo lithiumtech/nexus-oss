@@ -106,7 +106,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     itemCls: '',
                     helpText: "Optional notes about configured capability",
                     name: 'notes',
-                    anchor: '98%',
+                    anchor: '96%',
                     allowBlank: true,
                     disabled: true,
                     editable: true
@@ -119,9 +119,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.settingsCmp = self.getComponent(1);
 
         self.factories = NX.create('Ext.util.MixedCollection');
-        self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
+        //self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
         self.addFactory('Nexus.capabilities.factory.ComboFactory');
-        self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
+        //self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
         self.addFactory('Nexus.capabilities.factory.TextFieldFactory');
     },
 
@@ -204,6 +204,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           self.settings.items[0] = self.enabled;
           Ext.each(capabilityType.formFields, function(formField) {
               var factory = self.factories.get(formField.type);
+              if (!factory) {
+                  factory = self.factories.get('string');
+              }
               if (factory) {
                   var item = Ext.apply(factory.create(formField),{
                       editable: true,

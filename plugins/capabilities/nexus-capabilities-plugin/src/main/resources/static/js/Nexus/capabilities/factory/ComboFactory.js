@@ -45,7 +45,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
               emptyText : 'Select...',
               selectOnFocus : true,
               allowBlank : formField.required ? false : true,
-              anchor: '98%'
+              anchor: '96%'
       };
       if (formField.initialValue) {
         item.value = formField.initialValue;
