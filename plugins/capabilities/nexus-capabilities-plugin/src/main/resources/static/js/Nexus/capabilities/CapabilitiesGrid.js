@@ -143,30 +143,38 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 disabled: true
             },
             {
-               text: 'Enable',
-               itemId: 'enable',
-               iconCls: icons.get('enable').cls,
-               tooltip: 'Enable selected capability',
-               handler: function () {
-                   selections = self.getSelectionModel().getSelections();
-                   if (selections.length > 0) {
-                       mediator.enableHandler(selections[0].data);
-                   }
-               },
-               disabled: true
+                text: 'Enable',
+                itemId: 'enable',
+                iconCls: icons.get('enable').cls,
+                tooltip: 'Enable selected capability',
+                handler: function () {
+                    selections = self.getSelectionModel().getSelections();
+                    if (selections.length > 0) {
+                        mediator.enableCapability(selections[0].data,
+                            function() {
+                                mediator.showMessage('Capability enabled', mediator.describeCapability(selections[0].data));
+                            }
+                        );
+                    }
+                },
+                disabled: true
             },
             {
-              text: 'Disable',
-              itemId: 'disable',
-              iconCls: icons.get('disable').cls,
-              tooltip: 'Disable selected capability',
-              handler: function () {
-                  selections = self.getSelectionModel().getSelections();
-                  if (selections.length > 0) {
-                      mediator.disableHandler(selections[0].data);
-                  }
-              },
-              disabled: true
+                text: 'Disable',
+                itemId: 'disable',
+                iconCls: icons.get('disable').cls,
+                tooltip: 'Disable selected capability',
+                handler: function () {
+                    selections = self.getSelectionModel().getSelections();
+                    if (selections.length > 0) {
+                        mediator.disableCapability(selections[0].data,
+                            function() {
+                                mediator.showMessage('Capability disabled', mediator.describeCapability(selections[0].data));
+                            }
+                        );
+                    }
+                },
+                disabled: true
             }
         ];
 

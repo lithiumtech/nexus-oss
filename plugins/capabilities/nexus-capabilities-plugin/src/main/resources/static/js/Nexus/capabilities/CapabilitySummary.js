@@ -205,7 +205,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 });
                 mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
             },
-            function(response, opts) {
+            function(response) {
                 if (response.siestaValidationError) {
                     Ext.each(response.siestaValidationError, function (error) {
                         var field = form.findField('property.' + error.id);

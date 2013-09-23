@@ -57,6 +57,32 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         });
     },
 
+    enableCapability: function (capability, successHandler, failureHandler) {
+        var self = this;
+
+        Ext.Ajax.request({
+              url: self.capabilityStore.urlOf(capability.id) + "/enable",
+              method : 'PUT',
+              callback : self.refreshHandler,
+              scope : self,
+              success : successHandler,
+              failure: failureHandler
+        });
+    },
+
+    disableCapability: function (capability, successHandler, failureHandler) {
+        var self = this;
+
+        Ext.Ajax.request({
+              url: self.capabilityStore.urlOf(capability.id) + "/disable",
+              method : 'PUT',
+              callback : self.refreshHandler,
+              scope : self,
+              success : successHandler,
+              failure: failureHandler
+        });
+    },
+
     describeCapability : function(capability) {
         var description = capability.typeName;
         if (capability.description) {
@@ -103,32 +129,6 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
                     }
                 }
             });
-    },
-
-    enableHandler: function (capability) {
-        var self = this;
-
-        if (capability) {
-            Ext.Ajax.request({
-                  callback : self.refreshHandler,
-                  scope : self,
-                  method : 'PUT',
-                  url : capability.url + "/enable"
-            });
-         }
-    },
-
-    disableHandler: function (capability) {
-        var self = this;
-
-        if (capability) {
-            Ext.Ajax.request({
-                  callback : self.refreshHandler,
-                  scope : self,
-                  method : 'PUT',
-                  url : capability.url + "/disable"
-            });
-         }
     },
 
     iconFor: function(capability) {
