@@ -22,11 +22,11 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     singleton: true,
 
     mixins: [
-        'Nexus.capabilities.Icons',
         'Nexus.LogAwareMixin'
     ],
 
     requires: [
+        'Nexus.capabilities.Icons',
         'Nexus.capabilities.CapabilityStore',
         'Nexus.capabilities.CapabilityTypeStore'
     ],
@@ -63,7 +63,7 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         Ext.Ajax.request({
               url: self.capabilityStore.urlOf(capability.id) + "/enable",
               method : 'PUT',
-              callback : self.refreshHandler,
+              callback : self.refresh(),
               scope : self,
               success : successHandler,
               failure: failureHandler
@@ -76,7 +76,19 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
         Ext.Ajax.request({
               url: self.capabilityStore.urlOf(capability.id) + "/disable",
               method : 'PUT',
-              callback : self.refreshHandler,
+              callback : self.refresh(),
+              scope : self,
+              success : successHandler,
+              failure: failureHandler
+        });
+    },
+
+    deleteCapability: function (capability, successHandler, failureHandler) {
+        var self = this;
+
+        Ext.Ajax.request({
+              url: self.capabilityStore.urlOf(capability.id),
+              method : 'DELETE',
               scope : self,
               success : successHandler,
               failure: failureHandler
@@ -95,40 +107,13 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
          Nexus.messages.show(title,message);
     },
 
-    refreshHandler: function () {
+    refresh: function () {
         var self = this;
 
         self.logDebug('Refreshing');
 
         self.capabilityStore.reload();
         self.capabilityTypeStore.reload();
-    },
-
-    deleteHandler: function (capability) {
-        var self = this;
-
-        if (capability) {}
-            description = capability.description ? ' - ' + capability.description : '';
-
-            Sonatype.utils.defaultToNo();
-            Sonatype.MessageBox.show({
-                //animEl : this.capabilitiesGridPanel.getEl(),
-                title : 'Delete Capability?',
-                msg : 'Delete the "' + capability.typeName + description + '" capability?',
-                buttons : Sonatype.MessageBox.YESNO,
-                scope : this,
-                icon : Sonatype.MessageBox.QUESTION,
-                fn : function(btnName) {
-                    if (btnName === 'yes' || btnName === 'ok') {
-                        Ext.Ajax.request({
-                              callback : self.refreshHandler,
-                              scope : self,
-                              method : 'DELETE',
-                              url : capability.url
-                        });
-                    }
-                }
-            });
     },
 
     iconFor: function(capability) {

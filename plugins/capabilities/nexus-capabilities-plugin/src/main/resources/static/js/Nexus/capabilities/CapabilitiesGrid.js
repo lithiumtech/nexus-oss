@@ -115,12 +115,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 tooltip: 'Refresh capabilities',
                 iconCls: icons.get('refresh').cls,
                 handler: function () {
-                    mediator.refreshHandler();
+                    //mediator.refresh();
                 }
                 // always enabled
             },
             {
-                text: 'Add',
+                text: 'New',
                 itemId: 'add',
                 iconCls: icons.get('capability_add').cls,
                 tooltip: 'Add a new capability',
@@ -134,10 +134,29 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 itemId: 'delete',
                 iconCls: icons.get('capability_delete').cls,
                 tooltip: 'Delete selected capability',
-                handler: function () {
+                handler: function (button) {
                     selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
-                        mediator.deleteHandler(selections[0].data);
+                        var capability = selections[0].data;
+                        Ext.Msg.show({
+                            title:'Confirm deletion?',
+                            msg: mediator.describeCapability(capability),
+                            buttons: Ext.Msg.YESNO,
+                            animEl: button.btnEl,
+                            icon: Ext.MessageBox.QUESTION,
+                            closeable: false,
+                            scope: self,
+                            fn: function(buttonName){
+                                if (buttonName === 'yes' || buttonName === 'ok') {
+                                    mediator.deleteCapability(capability,
+                                        function() {
+                                            mediator.refresh(),
+                                            mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
+                                        }
+                                    );
+                                }
+                            },
+                        });
                     }
                 },
                 disabled: true
@@ -150,9 +169,10 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 handler: function () {
                     selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
-                        mediator.enableCapability(selections[0].data,
+                        var capability = selections[0].data;
+                        mediator.enableCapability(capability,
                             function() {
-                                mediator.showMessage('Capability enabled', mediator.describeCapability(selections[0].data));
+                                mediator.showMessage('Capability enabled', mediator.describeCapability(capability));
                             }
                         );
                     }
@@ -167,9 +187,11 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 handler: function () {
                     selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
-                        mediator.disableCapability(selections[0].data,
+                        var capability = selections[0].data;
+                        mediator.disableCapability(capability,
                             function() {
-                                mediator.showMessage('Capability disabled', mediator.describeCapability(selections[0].data));
+                                mediator.refresh(),
+                                mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
                             }
                         );
                     }

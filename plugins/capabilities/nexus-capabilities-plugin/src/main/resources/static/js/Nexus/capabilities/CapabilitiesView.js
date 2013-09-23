@@ -43,7 +43,7 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
             mediator = Nexus.capabilities.CapabilitiesMediator;
 
         // force all data stores to refresh when the main capabilities view loads
-        mediator.refreshHandler();
+        mediator.refresh();
 
         var masterDetail = NX.create('Nexus.masterdetail.MasterDetail',
             NX.create('Nexus.capabilities.CapabilitiesGrid', {
