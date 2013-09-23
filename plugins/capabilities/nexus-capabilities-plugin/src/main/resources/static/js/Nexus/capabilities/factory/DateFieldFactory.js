@@ -13,30 +13,28 @@
 /*global NX, Ext, Nexus*/
 
 /**
- * 'textfield' factory.
+ * 'datefield' factory.
  *
  * @since 2.7
  */
-NX.define('Nexus.capabilities.factory.TextFieldFactory', {
+NX.define('Nexus.capabilities.factory.DateFieldFactory', {
 
-    supports: ['textfield','string','password'],
+    supports: ['datefield','date'],
 
     create : function(formField) {
       var item =  {
-          xtype : 'textfield',
+          xtype : 'datefield',
           htmlDecode : true,
           fieldLabel : formField.label,
           itemCls : formField.required ? 'required-field' : '',
           helpText : formField.helpText,
           allowBlank : formField.required ? false : true,
           regex : formField.regexValidation ? new RegExp(formField.regexValidation) : null,
+          value: new Date(),
           anchor: '96%'
       };
-      if (formField.type === 'password') {
-          item.inputType = 'password';
-      }
       if (formField.initialValue) {
-          item.value = formField.initialValue;
+          item.value = new Date(Number(formField.initialValue));
       };
       return item;
     }

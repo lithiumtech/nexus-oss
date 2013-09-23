@@ -19,6 +19,18 @@
  */
 NX.define('Nexus.capabilities.factory.CheckboxFactory', {
 
-    supports: ['checkbox']
+    supports: ['checkbox'],
+
+    create : function(formField) {
+        var item =  {
+            xtype : 'checkbox',
+            fieldLabel : formField.label,
+            helpText : formField.helpText
+        };
+        if (formField.initialValue) {
+            item.checked = Boolean('true' === formField.initialValue);
+        };
+        return item;
+    }
 
 });

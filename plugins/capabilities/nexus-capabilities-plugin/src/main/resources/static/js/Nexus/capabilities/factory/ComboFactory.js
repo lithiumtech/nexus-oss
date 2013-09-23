@@ -23,57 +23,58 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
     //    'Ext.data.JsonStore'
     //],
 
-    supports: ['combobox','repo','repo-or-group','repo-target'],
+    supports: ['combo','combobox','repo','repo-or-group','repo-target'],
 
     stores: {},
 
     create : function(formField) {
-      var self = this,
-          ST = Ext.data.SortTypes,
-          item =  {
-              xtype : 'combo',
-              fieldLabel : formField.label,
-              itemCls : formField.required ? 'required-field' : '',
-              helpText : formField.helpText,
-              name : formField.id,
-              displayField : 'name',
-              valueField : 'id',
-              editable : false,
-              forceSelection : true,
-              mode : 'local',
-              triggerAction : 'all',
-              emptyText : 'Select...',
-              selectOnFocus : true,
-              allowBlank : formField.required ? false : true,
-              anchor: '96%'
-      };
-      if (formField.initialValue) {
-        item.value = formField.initialValue;
-      };
-      if (formField.storePath) {
-        var store = self.stores[formField.storePath];
-        if (!store) {
-            var store = NX.create('Ext.data.JsonStore', {
-               url: Sonatype.config.contextPath + formField.storePath,
-               id: formField.idMapping ? formField.idMapping : 'id',
+        var self = this,
+            ST = Ext.data.SortTypes;
 
-               fields: [
-                  { name: 'id', mapping: formField.idMapping ? formField.idMapping : 'id' },
-                  { name: 'name', mapping: formField.nameMapping ? formField.nameMapping : 'name', sortType : ST.asUCString },
-               ],
+        var item = {
+            xtype : 'combo',
+            fieldLabel : formField.label,
+            itemCls : formField.required ? 'required-field' : '',
+            helpText : formField.helpText,
+            name : formField.id,
+            displayField : 'name',
+            valueField : 'id',
+            editable : false,
+            forceSelection : true,
+            mode : 'local',
+            triggerAction : 'all',
+            emptyText : 'Select...',
+            selectOnFocus : true,
+            allowBlank : formField.required ? false : true,
+            anchor: '96%'
+        };
+        if (formField.initialValue) {
+            item.value = formField.initialValue;
+        };
+        if (formField.storePath) {
+            var store = self.stores[formField.storePath];
+            if (!store) {
+                var store = NX.create('Ext.data.JsonStore', {
+                    url: Sonatype.config.contextPath + formField.storePath,
+                    id: formField.idMapping ? formField.idMapping : 'id',
 
-               sortInfo : {
-                 field : 'name',
-                 direction : 'ASC'
-               },
+                    fields: [
+                      { name: 'id', mapping: formField.idMapping ? formField.idMapping : 'id' },
+                      { name: 'name', mapping: formField.nameMapping ? formField.nameMapping : 'name', sortType : ST.asUCString },
+                    ],
 
-               autoLoad : true
-            });
-            self.stores[formField.storePath] = store;
+                    sortInfo : {
+                     field : 'name',
+                     direction : 'ASC'
+                    },
+
+                    autoLoad : true
+                });
+                self.stores[formField.storePath] = store;
+            }
+            item.store = store;
         }
-        item.store = store;
-      }
-      return item;
+        return item;
     }
 
 });

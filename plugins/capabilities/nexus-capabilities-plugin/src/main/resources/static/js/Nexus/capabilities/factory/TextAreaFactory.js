@@ -13,17 +13,17 @@
 /*global NX, Ext, Nexus*/
 
 /**
- * 'textfield' factory.
+ * 'textarea' factory.
  *
  * @since 2.7
  */
-NX.define('Nexus.capabilities.factory.TextFieldFactory', {
+NX.define('Nexus.capabilities.factory.TextAreaFactory', {
 
-    supports: ['textfield','string','password'],
+    supports: ['textarea','text-area'],
 
     create : function(formField) {
       var item =  {
-          xtype : 'textfield',
+          xtype : 'textarea',
           htmlDecode : true,
           fieldLabel : formField.label,
           itemCls : formField.required ? 'required-field' : '',
@@ -32,9 +32,6 @@ NX.define('Nexus.capabilities.factory.TextFieldFactory', {
           regex : formField.regexValidation ? new RegExp(formField.regexValidation) : null,
           anchor: '96%'
       };
-      if (formField.type === 'password') {
-          item.inputType = 'password';
-      }
       if (formField.initialValue) {
           item.value = formField.initialValue;
       };

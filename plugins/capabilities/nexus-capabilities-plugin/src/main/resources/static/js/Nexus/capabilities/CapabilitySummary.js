@@ -25,7 +25,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         'Nexus.capabilities.CapabilitiesMediator',
         'Nexus.capabilities.factory.CheckboxFactory',
         'Nexus.capabilities.factory.ComboFactory',
+        'Nexus.capabilities.factory.DateFieldFactory',
         'Nexus.capabilities.factory.NumberFieldFactory',
+        'Nexus.capabilities.factory.TextAreaFactory',
         'Nexus.capabilities.factory.TextFieldFactory'
     ],
 
@@ -115,9 +117,11 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         self.settingsCmp = self.getComponent(1);
 
         self.factories = NX.create('Ext.util.MixedCollection');
-        //self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
+        self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
         self.addFactory('Nexus.capabilities.factory.ComboFactory');
-        //self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
+        self.addFactory('Nexus.capabilities.factory.DateFieldFactory');
+        self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
+        self.addFactory('Nexus.capabilities.factory.TextAreaFactory');
         self.addFactory('Nexus.capabilities.factory.TextFieldFactory');
     },
 
@@ -206,7 +210,8 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
               if (factory) {
                   var item = Ext.apply(factory.create(formField),{
                       editable: true,
-                      name: 'property.' + formField.id
+                      name: 'property.' + formField.id,
+                      factory: factory
                   });
                   self.settings.items[self.settings.items.length] = item;
               }
