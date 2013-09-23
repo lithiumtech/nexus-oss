@@ -43,5 +43,15 @@ NX.define('Nexus.capabilities.CapabilityTypeStore', {
         });
 
         self.constructor.superclass.constructor.call(self, config);
+    },
+
+    getTypeById: function (typeId) {
+        var self = this,
+            record = self.getById(capability.typeId);
+
+        if (record) {
+            return record.data;
+        }
     }
+
 });

@@ -22,7 +22,11 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
 
     mixins: [
         'Nexus.LogAwareMixin',
-        'Nexus.capabilities.CapabilitiesMediator'
+        'Nexus.capabilities.CapabilitiesMediator',
+        'Nexus.capabilities.factory.CheckboxFactory',
+        'Nexus.capabilities.factory.ComboFactory',
+        'Nexus.capabilities.factory.NumberFieldFactory',
+        'Nexus.capabilities.factory.TextFieldFactory'
     ],
 
     /**
@@ -31,6 +35,28 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
     initComponent: function () {
         var self = this,
             mediator = Nexus.capabilities.CapabilitiesMediator;
+
+        self.enabled = {
+           xtype: 'checkbox',
+           fieldLabel: 'Enabled',
+           helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
+           name: 'enabled',
+           allowBlank: false,
+           checked: true,
+           disabled: false,
+           editable: true
+        };
+
+        self.settings = {
+            xtype: 'fieldset',
+            title : 'Settings',
+            autoHeight: false,
+            autoScroll: true,
+            collapsed: false,
+            anchor: '100% 50%',
+            labelWidth: 175,
+            items: []
+        };
 
         Ext.apply(self, {
             cls: 'nx-capabilities-CapabilitySummary',
@@ -65,26 +91,14 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                    itemCls: '',
                    name: 'stateDescription'
                 }]
-            }, {
-                xtype: 'fieldset',
-                title : 'Settings',
-                autoHeight: true,
-                collapsed: false,
-                items: [{
-                    xtype: 'checkbox',
-                    fieldLabel: 'Enabled',
-                    helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
-                    name: 'enabled',
-                    allowBlank: false,
-                    checked: true,
-                    disabled: false,
-                    editable: true
-                }]
-            },{
+            },
+                self.settings
+            ,{
                 xtype: 'fieldset',
                 title : 'Notes',
                 autoHeight: true,
                 collapsed: false,
+                labelWidth: 175,
                 items: [{
                     xtype: 'textarea',
                     htmlDecode: true,
@@ -92,7 +106,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                     itemCls: '',
                     helpText: "Optional notes about configured capability",
                     name: 'notes',
-                    width: 300,
+                    anchor: '98%',
                     allowBlank: true,
                     disabled: true,
                     editable: true
@@ -101,6 +115,14 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         });
 
         self.constructor.superclass.initComponent.apply(self, arguments);
+
+        self.settingsCmp = self.getComponent(1);
+
+        self.factories = NX.create('Ext.util.MixedCollection');
+        self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
+        self.addFactory('Nexus.capabilities.factory.ComboFactory');
+        self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
+        self.addFactory('Nexus.capabilities.factory.TextFieldFactory');
     },
 
     /**
@@ -111,11 +133,28 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
     updateRecord: function (capability) {
         var self = this,
             sp = Sonatype.lib.Permissions,
-            editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
+            editable = sp.checkPermission('nexus:capabilities', sp.EDIT),
+            mediator = Nexus.capabilities.CapabilitiesMediator,
+            capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
 
-        self.getForm().setValues(capability);
-
+        self.removeFields();
+        if (capabilityType) {
+            self.createFields(capabilityType);
+        }
+        self.doLayout();
+        self.setValues(capability);
         self.togglePermission(self.items, editable);
+    },
+
+    setValues: function (capability) {
+        var self = this,
+            formObject = Ext.apply({},capability);
+
+        Ext.each(capability.properties,function(property) {
+            formObject['property.' + property.key] = property.value;
+        });
+
+        self.getForm().setValues(formObject);
     },
 
     togglePermission: function (items, enabled) {
@@ -140,6 +179,43 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
             }
           });
       }
+    },
+
+    addFactory: function (factoryName) {
+      var self = this,
+          factory = NX.create(factoryName);
+
+      Ext.each(factory.supports, function(supported){
+          self.factories.add(supported, factory);
+      });
+    },
+
+    removeFields: function () {
+        var self = this;
+
+        self.settingsCmp.removeAll();
+        self.settings.items = [];
+    },
+
+    createFields: function (capabilityType) {
+       var self = this;
+
+       if (capabilityType.formFields) {
+          self.settings.items[0] = self.enabled;
+          Ext.each(capabilityType.formFields, function(formField) {
+              var factory = self.factories.get(formField.type);
+              if (factory) {
+                  var item = Ext.apply(factory.create(formField),{
+                      editable: true,
+                      name: 'property.' + formField.id
+                  });
+                  self.settings.items[self.settings.items.length] = item;
+              }
+          });
+          Ext.each(self.settings.items, function(item) {
+              self.settingsCmp.add(item);
+          });
+       }
     }
 
 });

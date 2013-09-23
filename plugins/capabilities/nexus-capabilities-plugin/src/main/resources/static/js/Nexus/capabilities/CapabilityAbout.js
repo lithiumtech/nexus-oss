@@ -51,9 +51,9 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
             about = '',
             mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        var capabilityTypeRecord = mediator.capabilityTypeStore.getById(capability.typeId);
-        if (capabilityTypeRecord) {
-            about = capabilityTypeRecord.data.about;
+        var capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
+        if (capabilityType) {
+            about = capabilityType.about;
         }
         self.html = about;
         if (self.body) {

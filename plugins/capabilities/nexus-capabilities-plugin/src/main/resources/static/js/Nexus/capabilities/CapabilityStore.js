@@ -41,6 +41,7 @@ NX.define('Nexus.capabilities.CapabilityStore', {
                 { name: 'typeId', mapping: 'capability.typeId'},
                 { name: 'stateDescription' },
                 { name: 'status' },
+                { name: 'properties', mapping: 'capability.properties' },
                 { name: 'url', convert: function(newValue, rec) { return storeUrl + '/' + rec.capability.id; }},
             ],
 
