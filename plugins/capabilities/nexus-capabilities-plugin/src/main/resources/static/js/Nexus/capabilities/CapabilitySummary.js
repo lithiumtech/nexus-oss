@@ -38,23 +38,13 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         var self = this,
             mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        self.enabled = {
-           xtype: 'checkbox',
-           fieldLabel: 'Enabled',
-           helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
-           name: 'enabled',
-           allowBlank: false,
-           checked: true,
-           editable: true
-        };
-
         self.settings = {
             xtype: 'fieldset',
             title: 'Settings',
             autoHeight: false,
             autoScroll: true,
             collapsed: false,
-            anchor: '100% 50%',
+            anchor: '100% 80%',
             labelWidth: 175,
             items: []
         };
@@ -94,22 +84,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
                 }]
             },
                 self.settings
-            , {
-                xtype: 'fieldset',
-                title: 'Notes',
-                autoHeight: true,
-                collapsed: false,
-                hideLabels: true,
-                items: [{
-                    xtype: 'textarea',
-                    htmlDecode: true,
-                    helpText: "Optional notes about configured capability",
-                    name: 'notes',
-                    anchor: '96%',
-                    allowBlank: true,
-                    editable: true
-                }]
-            }],
+            ],
 
             buttonAlign: 'left',
             buttons: [
@@ -179,11 +154,6 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
      * @private
      */
     factories: undefined,
-
-    /**
-     * @private
-     */
-    enabled: undefined,
 
     /**
      * @private
@@ -330,28 +300,49 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
      * @private
      */
     createFields: function (capabilityType) {
-       var self = this;
+        var self = this;
 
-       if (capabilityType.formFields) {
-          self.settings.items[0] = self.enabled;
-          Ext.each(capabilityType.formFields, function(formField) {
-              var factory = self.factories.get(formField.type);
-              if (!factory) {
-                  factory = self.factories.get('string');
-              }
-              if (factory) {
-                  var item = Ext.apply(factory.create(formField),{
-                      editable: true,
-                      name: 'property.' + formField.id,
-                      factory: factory
-                  });
-                  self.settings.items[self.settings.items.length] = item;
-              }
-          });
-          Ext.each(self.settings.items, function(item) {
-              self.settingsCmp.add(item);
-          });
-       }
+        self.settings.items[0] = {
+            xtype: 'checkbox',
+            fieldLabel: 'Enabled',
+            helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
+            name: 'enabled',
+            allowBlank: false,
+            checked: true,
+            editable: true
+        };
+
+        if (capabilityType.formFields) {
+            Ext.each(capabilityType.formFields, function(formField) {
+                var factory = self.factories.get(formField.type);
+                if (!factory) {
+                    factory = self.factories.get('string');
+                }
+                if (factory) {
+                    var item = Ext.apply(factory.create(formField),{
+                        editable: true,
+                        name: 'property.' + formField.id,
+                        factory: factory
+                    });
+                    self.settings.items[self.settings.items.length] = item;
+                }
+            });
+        }
+
+        self.settings.items[self.settings.items.length] = {
+            xtype: 'textarea',
+            fieldLabel: 'Notes',
+            htmlDecode: true,
+            helpText: "Optional notes about configured capability",
+            name: 'notes',
+            anchor: '96%',
+            allowBlank: true,
+            editable: true
+        };
+
+        Ext.each(self.settings.items, function(item) {
+            self.settingsCmp.add(item);
+        });
     }
 
 });
