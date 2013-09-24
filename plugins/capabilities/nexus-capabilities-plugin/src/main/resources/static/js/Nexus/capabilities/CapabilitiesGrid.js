@@ -192,6 +192,33 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     self.getSelectionModel().selectRecords(toSelect);
   },
 
+  /**
+   * Refreshes grid and selects a capability by id.
+   *
+   * @param capabilityId to be selected
+   *
+   * @private
+   */
+  refreshAndSelect: function (capabilityId) {
+    var self = this,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
+
+    self.getSelectionModel().clearSelections();
+    self.refresh();
+    mediator.capabilityStore.on('load',
+        function () {
+          var record = self.getStore().getById(capabilityId);
+          if (!Ext.isEmpty(record)) {
+            self.getSelectionModel().selectRecords([record]);
+          }
+        },
+        self, {single: true}
+    );
+  },
+
+  /**
+   * @private
+   */
   refresh: function () {
     var mediator = Nexus.capabilities.CapabilitiesMediator;
 
@@ -260,14 +287,18 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   addCapability: function () {
-    NX.create('Nexus.capabilities.AddCapabilityWindow').show();
+    NX.create(
+        'Nexus.capabilities.AddCapabilityWindow', this.refreshAndSelect.createDelegate(this)
+    ).show();
   },
 
   /**
    * @private
    */
   copyCapability: function (capability) {
-    NX.create('Nexus.capabilities.AddCapabilityWindow').show().importCapability(capability);
+    NX.create(
+        'Nexus.capabilities.AddCapabilityWindow', this.refreshAndSelect.createDelegate(this)
+    ).show().importCapability(capability);
   },
 
   /**

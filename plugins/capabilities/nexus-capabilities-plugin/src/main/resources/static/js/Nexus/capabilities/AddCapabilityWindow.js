@@ -31,6 +31,17 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
   ],
 
   /**
+   * @constructor
+   */
+  constructor: function (callbackOnSuccess) {
+    var self = this;
+
+    self.callbackOnSuccess = callbackOnSuccess;
+
+    self.constructor.superclass.constructor.call(self);
+  },
+
+  /**
    * @override
    */
   initComponent: function () {
@@ -162,6 +173,11 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
   /**
    * @private
    */
+  callbackOnSuccess: undefined,
+
+  /**
+   * @private
+   */
   aboutPanel: undefined,
 
   /**
@@ -215,13 +231,19 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
     capability = self.settings.exportCapability(form);
 
     mediator.addCapability(capability,
-        function () {
+        function (response) {
           mediator.showMessage(
               'Capability added', mediator.describeCapability({typeName: self.settings.capabilityType.name})
           );
-          mediator.refresh();
+          //mediator.refresh();
           mask.hide();
           self.close();
+          if (self.callbackOnSuccess) {
+            var responseObj = Ext.decode(response.responseText);
+            if (responseObj && responseObj.capability) {
+              self.callbackOnSuccess(responseObj.capability.id);
+            }
+          }
         },
         function (response) {
           self.settings.handleResponse(self.formPanel.getForm(), response);
