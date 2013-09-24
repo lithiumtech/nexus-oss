@@ -342,7 +342,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           text: 'Disable',
           iconCls: icons.get('disable').cls,
           scope: self,
-          handler: self.disableCapability.createDelegate(self,[capability])
+          handler: self.disableCapability.createDelegate(self, [capability])
         });
       }
       else {
@@ -350,7 +350,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           text: 'Enable',
           iconCls: icons.get('enable').cls,
           scope: self,
-          handler: self.enableCapability.createDelegate(self,[capability])
+          handler: self.enableCapability.createDelegate(self, [capability])
         });
       }
     }
@@ -361,13 +361,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
         text: 'Delete',
         iconCls: icons.get('capability_delete').cls,
         scope: self,
-        handler: self.deleteCapability.createDelegate(self,[capability])
+        handler: self.deleteCapability.createDelegate(self, [capability])
       });
     }
 
     e.stopEvent();
 
-    self.getSelectionModel().selectRow(index,false);
+    self.getSelectionModel().selectRow(index, false);
 
     menu.on('hide', self.hideMenu, self);
     menu.showAt(e.getXY());
