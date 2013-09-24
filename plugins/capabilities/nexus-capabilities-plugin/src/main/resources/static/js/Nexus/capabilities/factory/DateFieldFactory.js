@@ -19,24 +19,24 @@
  */
 NX.define('Nexus.capabilities.factory.DateFieldFactory', {
 
-    supports: ['datefield','date'],
+  supports: ['datefield', 'date'],
 
-    create: function(formField) {
-      var item =  {
-          xtype: 'datefield',
-          htmlDecode: true,
-          fieldLabel: formField.label,
-          itemCls: formField.required ? 'required-field' : '',
-          helpText: formField.helpText,
-          allowBlank: formField.required ? false : true,
-          regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
-          value: new Date(),
-          anchor: '96%'
-      };
-      if (formField.initialValue) {
-          item.value = new Date(Number(formField.initialValue));
-      }
-      return item;
+  create: function (formField) {
+    var item = {
+      xtype: 'datefield',
+      htmlDecode: true,
+      fieldLabel: formField.label,
+      itemCls: formField.required ? 'required-field' : '',
+      helpText: formField.helpText,
+      allowBlank: formField.required ? false : true,
+      regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
+      value: new Date(),
+      anchor: '96%'
+    };
+    if (formField.initialValue) {
+      item.value = new Date(Number(formField.initialValue));
     }
+    return item;
+  }
 
 });

@@ -18,67 +18,67 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilityView', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
 
-    requires: [
-        'Nexus.capabilities.Icons',
-        'Nexus.capabilities.CapabilitySummary',
-        'Nexus.capabilities.CapabilityStatus',
-        'Nexus.capabilities.CapabilityAbout'
-    ],
+  requires: [
+    'Nexus.capabilities.Icons',
+    'Nexus.capabilities.CapabilitySummary',
+    'Nexus.capabilities.CapabilityStatus',
+    'Nexus.capabilities.CapabilityAbout'
+  ],
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this,
-            icons = Nexus.capabilities.Icons;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this,
+        icons = Nexus.capabilities.Icons;
 
-        self.summaryView = NX.create('Nexus.capabilities.CapabilitySummary');
-        self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
-        self.aboutView = NX.create('Nexus.capabilities.CapabilityAbout');
+    self.summaryView = NX.create('Nexus.capabilities.CapabilitySummary');
+    self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
+    self.aboutView = NX.create('Nexus.capabilities.CapabilityAbout');
 
-        Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilityView',
-            header: true,
-            border: false,
-            layout: 'fit',
-            items: {
-                xtype: 'tabpanel',
-                title: 'Capability',
-                iconCls: icons.get('capability'),
-                items: [
-                    self.summaryView,
-                    self.statusView,
-                    self.aboutView
-                ],
-                activeTab: 0,
-                layoutOnTabChange: true
-            }
-        });
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilityView',
+      header: true,
+      border: false,
+      layout: 'fit',
+      items: {
+        xtype: 'tabpanel',
+        title: 'Capability',
+        iconCls: icons.get('capability'),
+        items: [
+          self.summaryView,
+          self.statusView,
+          self.aboutView
+        ],
+        activeTab: 0,
+        layoutOnTabChange: true
+      }
+    });
 
-        self.constructor.superclass.initComponent.apply(self, arguments);
-    },
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  },
 
-    /**
-     * Update the capability record.
-     *
-     * @param capability
-     */
-    updateRecord: function (capability) {
-        var self = this,
-            icons = Nexus.capabilities.Icons,
-            mediator = Nexus.capabilities.CapabilitiesMediator;
+  /**
+   * Update the capability record.
+   *
+   * @param capability
+   */
+  updateRecord: function (capability) {
+    var self = this,
+        icons = Nexus.capabilities.Icons,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        self.setTitle(mediator.describeCapability(capability), icons.iconFor(capability).cls);
+    self.setTitle(mediator.describeCapability(capability), icons.iconFor(capability).cls);
 
-        self.summaryView.updateRecord(capability);
-        self.statusView.updateRecord(capability);
-        self.aboutView.updateRecord(capability);
-    }
+    self.summaryView.updateRecord(capability);
+    self.statusView.updateRecord(capability);
+    self.aboutView.updateRecord(capability);
+  }
 
 });

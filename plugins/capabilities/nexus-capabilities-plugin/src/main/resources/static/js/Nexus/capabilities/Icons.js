@@ -1,4 +1,4 @@
-  /*
+/*
  * Sonatype Nexus (TM) Open Source Version
  * Copyright (c) 2007-2013 Sonatype, Inc.
  * All rights reserved. Includes the third-party code listed at http://links.sonatype.com/products/nexus/oss/attributions.
@@ -18,60 +18,60 @@
  * @since 2.2.2
  */
 NX.define('Nexus.capabilities.Icons', {
-    extend: 'Nexus.util.IconContainer',
-    singleton: true,
+  extend: 'Nexus.util.IconContainer',
+  singleton: true,
 
-    /**
-     * @constructor
-     */
-    constructor: function () {
-        var self = this;
+  /**
+   * @constructor
+   */
+  constructor: function () {
+    var self = this;
 
-        self.constructor.superclass.constructor.call(self, {
-            stylePrefix: 'nx-capabilities-icon-',
+    self.constructor.superclass.constructor.call(self, {
+      stylePrefix: 'nx-capabilities-icon-',
 
-            icons: {
-                capability:           'brick.png',
-                capability_add:       'brick_add.png',
-                capability_delete:    'brick_delete.png',
-                capability_new:       'brick_edit.png',
-                capability_active:    'brick_valid.png',
-                capability_passive:   'brick_error.png',
-                capability_disabled:  'brick_grey.png',
-                capability_error:     'brick_error.png',
-                warning:              'error.png',
-                refresh:              'arrow_refresh.png',
-                selectionEmpty:       '@warning',
-                enable:               '@capability_active',
-                disable:              '@capability_disabled'
-            }
-        });
-    },
+      icons: {
+        capability: 'brick.png',
+        capability_add: 'brick_add.png',
+        capability_delete: 'brick_delete.png',
+        capability_new: 'brick_edit.png',
+        capability_active: 'brick_valid.png',
+        capability_passive: 'brick_error.png',
+        capability_disabled: 'brick_grey.png',
+        capability_error: 'brick_error.png',
+        warning: 'error.png',
+        refresh: 'arrow_refresh.png',
+        selectionEmpty: '@warning',
+        enable: '@capability_active',
+        disable: '@capability_disabled'
+      }
+    });
+  },
 
-    iconFor: function(capability) {
-        var self = this,
-            typeName = capability.typeName,
-            enabled = capability.enabled,
-            active = capability.active,
-            error = capability.error,
-            iconName;
+  iconFor: function (capability) {
+    var self = this,
+        typeName = capability.typeName,
+        enabled = capability.enabled,
+        active = capability.active,
+        error = capability.error,
+        iconName;
 
-        if (!typeName) {
-            iconName = 'capability_new';
-        }
-        else if (enabled && error) {
-            iconName = 'capability_error';
-        }
-        else if (enabled && active) {
-            iconName = 'capability_active';
-        }
-        else if (enabled && !active) {
-            iconName = 'capability_passive';
-        }
-        else {
-            iconName = 'capability_disabled';
-        }
-        return self.get(iconName);
+    if (!typeName) {
+      iconName = 'capability_new';
     }
+    else if (enabled && error) {
+      iconName = 'capability_error';
+    }
+    else if (enabled && active) {
+      iconName = 'capability_active';
+    }
+    else if (enabled && !active) {
+      iconName = 'capability_passive';
+    }
+    else {
+      iconName = 'capability_disabled';
+    }
+    return self.get(iconName);
+  }
 
 });

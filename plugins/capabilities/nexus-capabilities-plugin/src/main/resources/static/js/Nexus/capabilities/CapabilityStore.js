@@ -18,55 +18,55 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilityStore', {
-    extend: 'Ext.data.JsonStore',
+  extend: 'Ext.data.JsonStore',
 
-    /**
-     * @property {String}
-     * URL of capability store.
-     */
-    url: Nexus.siesta.basePath + '/capabilities',
+  /**
+   * @property {String}
+   * URL of capability store.
+   */
+  url: Nexus.siesta.basePath + '/capabilities',
 
-    /**
-    * @constructor
-    */
-    constructor: function (config) {
-        var self = this,
-            config = config || {},
-            ST = Ext.data.SortTypes;
+  /**
+   * @constructor
+   */
+  constructor: function (config) {
+    var self = this,
+        config = config || {},
+        ST = Ext.data.SortTypes;
 
-        Ext.apply(config, {
-            url: self.url,
-            id: 'capability.id',
+    Ext.apply(config, {
+      url: self.url,
+      id: 'capability.id',
 
-            fields: [
-                { name: 'id', mapping: 'capability.id' },
-                { name: 'description', sortType: ST.asUCString },
-                { name: 'notes',  mapping: 'capability.notes', sortType: ST.asUCString },
-                { name: 'enabled', mapping: 'capability.enabled' },
-                { name: 'active' },
-                { name: 'error' },
-                { name: 'typeName' },
-                { name: 'typeId', mapping: 'capability.typeId'},
-                { name: 'stateDescription' },
-                { name: 'status' },
-                { name: 'properties', mapping: 'capability.properties' },
-                { name: '$capability', mapping: 'capability' }
-            ],
+      fields: [
+        { name: 'id', mapping: 'capability.id' },
+        { name: 'description', sortType: ST.asUCString },
+        { name: 'notes', mapping: 'capability.notes', sortType: ST.asUCString },
+        { name: 'enabled', mapping: 'capability.enabled' },
+        { name: 'active' },
+        { name: 'error' },
+        { name: 'typeName' },
+        { name: 'typeId', mapping: 'capability.typeId'},
+        { name: 'stateDescription' },
+        { name: 'status' },
+        { name: 'properties', mapping: 'capability.properties' },
+        { name: '$capability', mapping: 'capability' }
+      ],
 
-            sortInfo: {
-                field: 'typeName',
-                direction: 'ASC'
-            }
-        });
+      sortInfo: {
+        field: 'typeName',
+        direction: 'ASC'
+      }
+    });
 
-        self.constructor.superclass.constructor.call(self, config);
-    },
+    self.constructor.superclass.constructor.call(self, config);
+  },
 
-    /**
-     * Returns the url of a capability given its ID.
-     */
-    urlOf: function(id) {
-        return this.url + '/' + id;
-    }
+  /**
+   * Returns the url of a capability given its ID.
+   */
+  urlOf: function (id) {
+    return this.url + '/' + id;
+  }
 
 });

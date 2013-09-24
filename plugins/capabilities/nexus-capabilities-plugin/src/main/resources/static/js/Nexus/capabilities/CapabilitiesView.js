@@ -12,73 +12,72 @@
  */
 /*global NX, Ext, Nexus*/
 
-
 /**
  * Capabilities master/detail view.
  *
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitiesView', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
 
-    requires: [
-        'Nexus.capabilities.Icons',
-        'Nexus.capabilities.CapabilitiesMediator',
-        'Nexus.masterdetail.MasterDetail',
-        'Nexus.masterdetail.EmptySelection',
-        'Nexus.capabilities.CapabilitiesGrid',
-        'Nexus.capabilities.CapabilityView'
-    ],
+  requires: [
+    'Nexus.capabilities.Icons',
+    'Nexus.capabilities.CapabilitiesMediator',
+    'Nexus.masterdetail.MasterDetail',
+    'Nexus.masterdetail.EmptySelection',
+    'Nexus.capabilities.CapabilitiesGrid',
+    'Nexus.capabilities.CapabilityView'
+  ],
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this,
-            icons = Nexus.capabilities.Icons,
-            mediator = Nexus.capabilities.CapabilitiesMediator;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this,
+        icons = Nexus.capabilities.Icons,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        // force all data stores to refresh when the main capabilities view loads
-        mediator.refresh();
+    // force all data stores to refresh when the main capabilities view loads
+    mediator.refresh();
 
-        Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilitiesView',
-            layout: 'border',
-            items: NX.create('Nexus.masterdetail.MasterDetail',
-                NX.create('Nexus.capabilities.CapabilitiesGrid', {
-                   region: 'center'
-                }),
-                NX.create('Nexus.capabilities.CapabilityView'),
-                NX.create('Nexus.masterdetail.EmptySelection', {
-                   iconCls: icons.get('selectionEmpty').cls,
-                   entityType: 'capability'
-                })
-            )
-        });
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilitiesView',
+      layout: 'border',
+      items: NX.create('Nexus.masterdetail.MasterDetail',
+          NX.create('Nexus.capabilities.CapabilitiesGrid', {
+            region: 'center'
+          }),
+          NX.create('Nexus.capabilities.CapabilityView'),
+          NX.create('Nexus.masterdetail.EmptySelection', {
+            iconCls: icons.get('selectionEmpty').cls,
+            entityType: 'capability'
+          })
+      )
+    });
 
-        self.constructor.superclass.initComponent.apply(self, arguments);
-    }
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  }
 
 }, function () {
-    var type = this,
-        sp = Sonatype.lib.Permissions;
+  var type = this,
+      sp = Sonatype.lib.Permissions;
 
-    NX.log.debug('Adding global view: ' + type.$className);
+  NX.log.debug('Adding global view: ' + type.$className);
 
-    // install panel into main NX navigation
-    Sonatype.Events.on('nexusNavigationInit', function (panel) {
-        panel.add({
-            enabled: sp.checkPermission('nexus:capabilities', sp.READ),
-            sectionId: 'st-nexus-config',
-            title: 'Capabilities',
-            tabId: 'capabilities',
-            tabCode: type
-        });
-
-        NX.log.debug('Registered global view: ' + type.$className);
+  // install panel into main NX navigation
+  Sonatype.Events.on('nexusNavigationInit', function (panel) {
+    panel.add({
+      enabled: sp.checkPermission('nexus:capabilities', sp.READ),
+      sectionId: 'st-nexus-config',
+      title: 'Capabilities',
+      tabId: 'capabilities',
+      tabCode: type
     });
+
+    NX.log.debug('Registered global view: ' + type.$className);
+  });
 });

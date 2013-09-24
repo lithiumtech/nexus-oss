@@ -18,47 +18,47 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilityAbout', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin',
-        'Nexus.capabilities.CapabilitiesMediator'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediator'
+  ],
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this;
 
-        Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilityAbout',
-            border: false,
-            title: 'About',
-            html: ''
-        });
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilityAbout',
+      border: false,
+      title: 'About',
+      html: ''
+    });
 
-        self.constructor.superclass.initComponent.apply(self, arguments);
-    },
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  },
 
-    /**
-     * Update the capability record.
-     *
-     * @param capability
-     */
-    updateRecord: function (capability) {
-        var self = this,
-            about = '',
-            mediator = Nexus.capabilities.CapabilitiesMediator;
+  /**
+   * Update the capability record.
+   *
+   * @param capability
+   */
+  updateRecord: function (capability) {
+    var self = this,
+        about = '',
+        mediator = Nexus.capabilities.CapabilitiesMediator;
 
-        var capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
-        if (capabilityType) {
-            about = capabilityType.about;
-        }
-        self.html = about;
-        if (self.body) {
-            self.body.update(about);
-        }
+    var capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
+    if (capabilityType) {
+      about = capabilityType.about;
     }
+    self.html = about;
+    if (self.body) {
+      self.body.update(about);
+    }
+  }
 
 });

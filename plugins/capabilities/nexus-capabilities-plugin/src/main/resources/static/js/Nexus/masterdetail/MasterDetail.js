@@ -12,118 +12,117 @@
  */
 /*global NX, Ext, Nexus*/
 
-
 /**
  * Master/detail view.
  *
  * @since 2.7
  */
 NX.define('Nexus.masterdetail.MasterDetail', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
 
-    /**
-     * @property
-     */
-    master: undefined,
+  /**
+   * @property
+   */
+  master: undefined,
 
-    /**
-     * @property
-     */
-    detail: undefined,
+  /**
+   * @property
+   */
+  detail: undefined,
 
-    /**
-     * @property
-     */
-    emptySelection: undefined,
+  /**
+   * @property
+   */
+  emptySelection: undefined,
 
-    /**
-     * @constructor
-     */
-    constructor: function (master, detail, emptySelection) {
-        var self = this;
+  /**
+   * @constructor
+   */
+  constructor: function (master, detail, emptySelection) {
+    var self = this;
 
-        NX.assert(master, 'Missing master');
-        NX.assert(detail, 'Missing detail');
-        NX.assert(emptySelection, 'Missing emptySelection');
+    NX.assert(master, 'Missing master');
+    NX.assert(detail, 'Missing detail');
+    NX.assert(emptySelection, 'Missing emptySelection');
 
-        self.master = master;
-        self.detail = detail;
-        self.emptySelection = emptySelection;
+    self.master = master;
+    self.detail = detail;
+    self.emptySelection = emptySelection;
 
-        self.constructor.superclass.constructor.apply(self, arguments);
-    },
+    self.constructor.superclass.constructor.apply(self, arguments);
+  },
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this;
 
-        self.detailPanel = NX.create('Ext.Panel', {
-            region: 'south',
-            minHeight: 25, // height of panel title
-            split: true,
-            autoDestroy: false,
+    self.detailPanel = NX.create('Ext.Panel', {
+      region: 'south',
+      minHeight: 25, // height of panel title
+      split: true,
+      autoDestroy: false,
 
-            layout: 'card',
-            defaults: {
-                border: false
-            },
-            items: [
-                self.emptySelection,  // 0
-                self.detail           // 1
-            ],
-            activeItem: 0,
-            listeners: {
-                // resize detail panel height to 75% of parent on first render
-                afterrender: {
-                    single: true,
-                    fn: function() {
-                        self.detailPanel.setHeight(self.getHeight() * .6);
-                    }
-                }
-            }
-        });
-
-        Ext.apply(self, {
-            cls: 'nx-masterdetail-MasterDetail',
-            layout: 'border',
-            items: [
-                self.master,
-                self.detailPanel
-            ]
-        });
-
-        self.master.getSelectionModel().on('selectionchange', self.selectionChanged, self);
-
-        self.constructor.superclass.initComponent.apply(self, arguments);
-    },
-
-    /**
-     * Update detail panel when grid selection changes.
-     *
-     * @param sm    grid selection model
-     *
-     * @private
-     */
-    selectionChanged: function(sm) {
-        var self = this,
-            cardLayout = self.detailPanel.getLayout(),
-            selections = sm.getSelections();
-
-        self.logDebug('Selection changed:', selections.length);
-
-        if (selections.length === 0) {
-            cardLayout.setActiveItem(0);
+      layout: 'card',
+      defaults: {
+        border: false
+      },
+      items: [
+        self.emptySelection,  // 0
+        self.detail           // 1
+      ],
+      activeItem: 0,
+      listeners: {
+        // resize detail panel height to 75% of parent on first render
+        afterrender: {
+          single: true,
+          fn: function () {
+            self.detailPanel.setHeight(self.getHeight() * .6);
+          }
         }
-        else {
-            cardLayout.setActiveItem(1);
-            self.detail.updateRecord(selections[0].data);
-        }
+      }
+    });
+
+    Ext.apply(self, {
+      cls: 'nx-masterdetail-MasterDetail',
+      layout: 'border',
+      items: [
+        self.master,
+        self.detailPanel
+      ]
+    });
+
+    self.master.getSelectionModel().on('selectionchange', self.selectionChanged, self);
+
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  },
+
+  /**
+   * Update detail panel when grid selection changes.
+   *
+   * @param sm    grid selection model
+   *
+   * @private
+   */
+  selectionChanged: function (sm) {
+    var self = this,
+        cardLayout = self.detailPanel.getLayout(),
+        selections = sm.getSelections();
+
+    self.logDebug('Selection changed:', selections.length);
+
+    if (selections.length === 0) {
+      cardLayout.setActiveItem(0);
     }
+    else {
+      cardLayout.setActiveItem(1);
+      self.detail.updateRecord(selections[0].data);
+    }
+  }
 
 });

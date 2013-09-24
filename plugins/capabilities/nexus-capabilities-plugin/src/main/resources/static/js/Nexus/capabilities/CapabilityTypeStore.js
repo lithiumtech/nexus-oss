@@ -18,51 +18,51 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilityTypeStore', {
-    extend: 'Ext.data.JsonStore',
+  extend: 'Ext.data.JsonStore',
 
-    /**
-     * @property {String}
-     * URL of capability type store.
-     */
-    url: Nexus.siesta.basePath + '/capabilities/types',
+  /**
+   * @property {String}
+   * URL of capability type store.
+   */
+  url: Nexus.siesta.basePath + '/capabilities/types',
 
-    /**
-    * @constructor
-    */
-    constructor: function (config) {
-        var self = this,
-            config = config || {},
-            ST = Ext.data.SortTypes;
+  /**
+   * @constructor
+   */
+  constructor: function (config) {
+    var self = this,
+        config = config || {},
+        ST = Ext.data.SortTypes;
 
-        Ext.apply(config, {
-            url: self.url,
-            id: 'id',
+    Ext.apply(config, {
+      url: self.url,
+      id: 'id',
 
-            fields: [
-                { name: 'id' },
-                { name: 'name' },
-                { name: 'about' },
-                { name: 'formFields' }
-            ],
+      fields: [
+        { name: 'id' },
+        { name: 'name' },
+        { name: 'about' },
+        { name: 'formFields' }
+      ],
 
-            sortInfo: {
-                field: 'id',
-                direction: 'ASC'
-            }
-        });
+      sortInfo: {
+        field: 'id',
+        direction: 'ASC'
+      }
+    });
 
-        self.constructor.superclass.constructor.call(self, config);
-    },
+    self.constructor.superclass.constructor.call(self, config);
+  },
 
-    /**
-     * Returns capability type given its ID.
-     */
-    getTypeById: function (id) {
-        var record = this.getById(id);
+  /**
+   * Returns capability type given its ID.
+   */
+  getTypeById: function (id) {
+    var record = this.getById(id);
 
-        if (record) {
-            return record.data;
-        }
+    if (record) {
+      return record.data;
     }
+  }
 
 });

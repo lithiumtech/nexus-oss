@@ -12,38 +12,37 @@
  */
 /*global NX, Ext, Nexus*/
 
-
 /**
  * Master/detail empty selection.
  *
  * @since 2.7
  */
 NX.define('Nexus.masterdetail.EmptySelection', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this,
-            text = self.emptyText;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this,
+        text = self.emptyText;
 
-        if (!text) {
-          text = 'Please select a ' + self.entityType;
-        }
-
-        Ext.apply(self, {
-            cls: 'nx-masterdetail-EmptySelection',
-            title: 'Empty Selection',
-            iconCls: self.iconCls,
-            html: '<span class="nx-masterdetail-EmptySelection-text">' + text + '</span>'
-        });
-
-        self.constructor.superclass.initComponent.apply(self, arguments);
+    if (!text) {
+      text = 'Please select a ' + self.entityType;
     }
+
+    Ext.apply(self, {
+      cls: 'nx-masterdetail-EmptySelection',
+      title: 'Empty Selection',
+      iconCls: self.iconCls,
+      html: '<span class="nx-masterdetail-EmptySelection-text">' + text + '</span>'
+    });
+
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  }
 
 });

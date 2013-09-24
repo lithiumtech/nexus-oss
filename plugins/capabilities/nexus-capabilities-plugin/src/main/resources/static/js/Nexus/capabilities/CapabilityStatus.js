@@ -18,44 +18,44 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilityStatus', {
-    extend: 'Ext.Panel',
+  extend: 'Ext.Panel',
 
-    mixins: [
-        'Nexus.LogAwareMixin'
-    ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
 
-    /**
-     * @override
-     */
-    initComponent: function () {
-        var self = this;
+  /**
+   * @override
+   */
+  initComponent: function () {
+    var self = this;
 
-        Ext.apply(self, {
-            cls: 'nx-capabilities-CapabilityStatus',
-            border: false,
-            title: 'Status',
-            html: ''
-        });
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilityStatus',
+      border: false,
+      title: 'Status',
+      html: ''
+    });
 
-        self.constructor.superclass.initComponent.apply(self, arguments);
-    },
+    self.constructor.superclass.initComponent.apply(self, arguments);
+  },
 
-    /**
-     * Update the capability record.
-     *
-     * @param capability
-     */
-    updateRecord: function (capability) {
-        var self = this,
-            status = 'Capability does not provide any status.';
+  /**
+   * Update the capability record.
+   *
+   * @param capability
+   */
+  updateRecord: function (capability) {
+    var self = this,
+        status = 'Capability does not provide any status.';
 
-        if (capability.status) {
-            status = capability.status;
-        }
-        self.html = status;
-        if(self.body) {
-          self.body.update(status);
-        }
+    if (capability.status) {
+      status = capability.status;
     }
+    self.html = status;
+    if (self.body) {
+      self.body.update(status);
+    }
+  }
 
 });

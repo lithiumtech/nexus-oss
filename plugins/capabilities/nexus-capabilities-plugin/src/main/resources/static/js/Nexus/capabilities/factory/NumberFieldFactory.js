@@ -19,22 +19,22 @@
  */
 NX.define('Nexus.capabilities.factory.NumberFieldFactory', {
 
-    supports: ['numberfield','number'],
+  supports: ['numberfield', 'number'],
 
-    create: function(formField) {
-        var item =  {
-            xtype: 'numberfield',
-            fieldLabel: formField.label,
-            itemCls: formField.required ? 'required-field' : '',
-            helpText: formField.helpText,
-            allowBlank: formField.required ? false : true,
-            regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
-            anchor: '96%'
-        };
-        if (formField.initialValue) {
-            item.value = Number(formField.initialValue);
-        }
-        return item;
+  create: function (formField) {
+    var item = {
+      xtype: 'numberfield',
+      fieldLabel: formField.label,
+      itemCls: formField.required ? 'required-field' : '',
+      helpText: formField.helpText,
+      allowBlank: formField.required ? false : true,
+      regex: formField.regexValidation ? new RegExp(formField.regexValidation) : null,
+      anchor: '96%'
+    };
+    if (formField.initialValue) {
+      item.value = Number(formField.initialValue);
     }
+    return item;
+  }
 
 });
