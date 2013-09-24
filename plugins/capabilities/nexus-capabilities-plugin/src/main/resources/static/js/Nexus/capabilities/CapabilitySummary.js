@@ -142,7 +142,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           mediator.refresh();
         },
         function (response) {
-          // TODO handle errors
+          mediator.handleError(response, 'Capability could not be saved', form);
         }
     );
   }

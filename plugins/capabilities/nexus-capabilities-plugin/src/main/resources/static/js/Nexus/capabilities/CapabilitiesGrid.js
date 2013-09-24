@@ -40,6 +40,18 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
     mediator.capabilityStore.on('beforeload', self.rememberSelection, self);
     mediator.capabilityStore.on('load', self.recallSelection, self);
+    mediator.capabilityTypeStore.on('load',
+        function (store, records) {
+          var self = this,
+              sp = Sonatype.lib.Permissions,
+              canCreate = sp.checkPermission('nexus:capabilities', sp.CREATE),
+              addButton = self.getTopToolbar().getComponent('add');
+          addButton.disable();
+          if (records && records.length > 0 && canCreate) {
+            addButton.enable();
+          }
+        }, self
+    );
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilityGrid',
@@ -116,7 +128,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: function () {
             self.addCapability();
           },
-          disabled: false // TODO enable when capability type is loaded and there is at least one type
+          disabled: true
         },
         {
           text: 'Copy',
@@ -264,6 +276,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
               function () {
                 mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
                 self.refresh();
+              },
+              function (response) {
+                mediator.handleError(response, 'Capability could not be deleted');
+                if (response.status === 404) {
+                  self.refresh();
+                }
               }
           );
         }
@@ -282,6 +300,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
         function () {
           mediator.showMessage('Capability enabled', mediator.describeCapability(capability));
           self.refresh();
+        },
+        function (response) {
+          mediator.handleError(response, 'Capability could not be enabled');
+          if (response.status === 404) {
+            self.refresh();
+          }
         }
     );
   },
@@ -297,6 +321,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
         function () {
           mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
           self.refresh();
+        },
+        function (response) {
+          mediator.handleError(response, 'Capability could not be disabled');
+          if (response.status === 404) {
+            self.refresh();
+          }
         }
     );
   },

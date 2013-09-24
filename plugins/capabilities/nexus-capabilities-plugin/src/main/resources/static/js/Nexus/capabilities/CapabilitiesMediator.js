@@ -82,7 +82,6 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
       url: self.capabilityStore.urlOf(capability.id),
       method: 'PUT',
       scope: self,
-      suppressStatus: 400,
       jsonData: capability,
       success: successHandler,
       failure: failureHandler
@@ -98,7 +97,6 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id) + "/enable",
       method: 'PUT',
-      callback: self.refresh(),
       scope: self,
       success: successHandler,
       failure: failureHandler
@@ -114,7 +112,6 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id) + "/disable",
       method: 'PUT',
-      callback: self.refresh(),
       scope: self,
       success: successHandler,
       failure: failureHandler
@@ -164,6 +161,47 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
 
     self.capabilityStore.reload();
     self.capabilityTypeStore.reload();
+  },
+
+  /**
+   * Handles an REST response, eventually marking fields as invalid.
+   * @param response REST response
+   * @param title dialog error
+   * @param [form] containing fields that should be marked in case of a validation error
+   */
+  handleError: function (response, title, form) {
+    var remainingMessages = [];
+    if (response.siestaValidationError) {
+      Ext.each(response.siestaValidationError, function (error) {
+        var marked = false;
+        if (form) {
+          var field = form.findField('property.' + error.id);
+          if (!field) {
+            field = form.findField(error.id);
+          }
+          if (field) {
+            marked = true;
+            field.markInvalid(error.message);
+          }
+        }
+        if (!marked) {
+          remainingMessages.push(error.message);
+        }
+      });
+    }
+    if (response.siestaError) {
+      remainingMessages.push(response.siestaError.message);
+    }
+    if (remainingMessages.length > 0) {
+      Ext.Msg.show({
+        title: title,
+        msg: remainingMessages.join('\n'),
+        buttons: Ext.Msg.OK,
+        icon: Ext.MessageBox.ERROR,
+        closeable: false,
+        scope: self
+      });
+    }
   }
 
 });

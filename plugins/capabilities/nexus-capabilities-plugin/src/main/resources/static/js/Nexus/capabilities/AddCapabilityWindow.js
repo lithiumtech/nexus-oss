@@ -247,7 +247,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
           }
         },
         function (response) {
-          self.settings.handleResponse(self.formPanel.getForm(), response);
+          mediator.handleError(response, 'Capability could not be created', self.formPanel.getForm());
           mask.hide();
         }
     );

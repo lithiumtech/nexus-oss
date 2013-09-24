@@ -163,28 +163,6 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
   },
 
   /**
-   * Handles an REST response, eventually marking fields as invalid.
-   * @param form containing fields that should be marked in case of a validation error
-   * @param response REST response
-   */
-  handleResponse: function (form, response) {
-    if (response.siestaValidationError) {
-      Ext.each(response.siestaValidationError, function (error) {
-        var field = form.findField('property.' + error.id);
-        if (!field) {
-          field = form.findField(error.id);
-        }
-        if (field) {
-          field.markInvalid(error.message);
-        }
-        else {
-          // TODO show message box
-        }
-      });
-    }
-  },
-
-  /**
    * @private
    */
   factories: undefined,

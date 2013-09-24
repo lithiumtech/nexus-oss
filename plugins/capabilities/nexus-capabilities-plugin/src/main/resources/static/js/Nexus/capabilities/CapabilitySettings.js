@@ -117,7 +117,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           mediator.refresh();
         },
         function (response) {
-          self.settings.handleResponse(form, response);
+          mediator.handleError(response, 'Capability could not be saved', form);
         }
     );
   },
