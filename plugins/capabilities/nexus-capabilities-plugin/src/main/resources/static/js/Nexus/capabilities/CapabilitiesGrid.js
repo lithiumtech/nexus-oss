@@ -131,14 +131,14 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           disabled: true
         },
         {
-          text: 'Copy',
-          itemId: 'copy',
+          text: 'Duplicate',
+          itemId: 'duplicate',
           iconCls: icons.get('capability_add').cls,
-          tooltip: 'Copies selected capability',
+          tooltip: 'Duplicates selected capability',
           handler: function (button) {
             var selections = self.getSelectionModel().getSelections();
             if (selections.length > 0) {
-              self.copyCapability(selections[0].data, button.btnEl);
+              self.duplicateCapability(selections[0].data, button.btnEl);
             }
           },
           disabled: true
@@ -170,14 +170,14 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   selectionChanged: function (sm) {
     var self = this,
         sp = Sonatype.lib.Permissions,
-        copyButton = self.getTopToolbar().getComponent('copy'),
+        duplicateButton = self.getTopToolbar().getComponent('duplicate'),
         deleteButton = self.getTopToolbar().getComponent('delete');
 
-    copyButton.disable();
+    duplicateButton.disable();
     deleteButton.disable();
     if (sm.getCount() !== 0) {
       if (sp.checkPermission('nexus:capabilities', sp.CREATE)) {
-        copyButton.enable();
+        duplicateButton.enable();
       }
       if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
         deleteButton.enable();
@@ -343,7 +343,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   /**
    * @private
    */
-  copyCapability: function (capability) {
+  duplicateCapability: function (capability) {
     NX.create(
         'Nexus.capabilities.AddCapabilityWindow', this.refreshAndSelect.createDelegate(this)
     ).show().importCapability(capability);
@@ -405,10 +405,10 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     if (sp.checkPermission('nexus:capabilities', sp.CREATE)) {
       menu.add('-');
       menu.add({
-        text: 'Copy',
+        text: 'Duplicate',
         iconCls: icons.get('capability_add').cls,
         scope: self,
-        handler: self.copyCapability.createDelegate(self, [capability])
+        handler: self.duplicateCapability.createDelegate(self, [capability])
       });
     }
 
