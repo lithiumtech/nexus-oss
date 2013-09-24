@@ -49,31 +49,36 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
      * @private
      */
     self.formPanel = NX.create('Ext.form.FormPanel', {
-      cls: 'nx-capabilities-AddCapabilityWindow-formPanel',
       border: false,
       monitorValid: true,
       labelWidth: 175,
 
       items: [
         {
-          xtype: 'combo',
-          fieldLabel: 'Type',
-          itemCls: 'required-field',
-          helpText: "Type of configured capability",
-          name: 'typeId',
-          store: mediator.capabilityTypeStore,
-          displayField: 'name',
-          valueField: 'id',
-          forceSelection: true,
-          editable: false,
-          mode: 'local',
-          triggerAction: 'all',
-          emptyText: 'Select...',
-          selectOnFocus: true,
-          allowBlank: false,
-          anchor: '96%',
-          listeners: {
-            select: self.handleCapabilityTypeSelected.createDelegate(self)
+          xtype: 'fieldset',
+          autoHeight: true,
+          collapsed: false,
+          border: false,
+          items: {
+            xtype: 'combo',
+            fieldLabel: 'Type',
+            itemCls: 'required-field',
+            helpText: "Type of configured capability",
+            name: 'typeId',
+            store: mediator.capabilityTypeStore,
+            displayField: 'name',
+            valueField: 'id',
+            forceSelection: true,
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            emptyText: 'Select...',
+            selectOnFocus: true,
+            allowBlank: false,
+            anchor: '96%',
+            listeners: {
+              select: self.handleCapabilityTypeSelected.createDelegate(self)
+            }
           }
         },
         {
@@ -81,6 +86,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
           title: 'About',
           autoHeight: false,
           autoScroll: true,
+          collapsible: true,
           collapsed: false,
           items: self.aboutPanel
         },

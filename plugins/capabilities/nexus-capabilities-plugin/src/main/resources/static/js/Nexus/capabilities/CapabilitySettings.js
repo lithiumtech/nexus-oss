@@ -118,6 +118,11 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     }
   },
 
+  /**
+   * Exports form as a capability.
+   * @param form to be exported
+   * @returns {Object} capability
+   */
   exportCapability: function (form) {
     var self = this,
         values = form.getFieldValues();
@@ -144,6 +149,11 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     return capability;
   },
 
+  /**
+   * Imports capability into a form.
+   * @param form to set values into
+   * @param capability to import
+   */
   importCapability: function (form, capability) {
     var self = this,
         data = Ext.apply({}, capability);
@@ -165,6 +175,11 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     form.setValues(data);
   },
 
+  /**
+   * Handles an REST response, eventually marking fields as invalid.
+   * @param form containing fields that should be marked in case of a validation error
+   * @param response REST response
+   */
   handleResponse: function (form, response) {
     if (response.siestaValidationError) {
       Ext.each(response.siestaValidationError, function (error) {
@@ -179,9 +194,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           // TODO show message box
         }
       });
-      return false;
     }
-    return true;
   },
 
   /**

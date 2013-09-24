@@ -157,6 +157,8 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   },
 
   /**
+   * Enables/disables fields marked with "editable".
+   *
    * @private
    */
   togglePermission: function (items, enabled) {

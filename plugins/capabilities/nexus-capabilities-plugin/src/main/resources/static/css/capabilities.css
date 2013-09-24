@@ -15,6 +15,14 @@
  * =========================================
  */
 
+.nx-capabilities-CapabilitiesView  {
+  font: normal 11px arial,tahoma,verdana,helvetica;
+}
+
+.nx-capabilities-CapabilitiesView .x-fieldset {
+  border-width: 1px 0 0 0;
+}
+
 .nx-masterdetail-EmptySelection .x-panel-body {
     margin-top: 30px;
     padding: 10px 10px 10px 10px;
@@ -27,40 +35,28 @@
     padding-top: 20px;
 }
 
-.nx-capabilities-CapabilityAbout .x-panel-body {
-    font: normal 11px arial,tahoma,verdana,helvetica;
-}
-
 .nx-capabilities-CapabilitySummary .x-form {
   padding-right: 10px;
   padding-left: 10px;
 }
 
-.nx-capabilities-CapabilitySummary .x-fieldset {
-    border-width: 1px 0 0 0;
-}
-
 .nx-capabilities-CapabilityAbout .x-panel-body {
     padding: 10px 10px 10px 10px;
-
-    font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
 .nx-capabilities-CapabilityStatus .x-panel-body {
     padding: 10px 10px 10px 10px;
-
-    font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
-.nx-capabilities-AddCapabilityWindow-formPanel .x-panel-body {
+.nx-capabilities-AddCapabilityWindow {
   font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
-.nx-capabilities-AddCapabilityWindow-formPanel .x-form {
+.nx-capabilities-AddCapabilityWindow .x-form {
   padding-right: 10px;
   padding-left: 10px;
 }
 
-.nx-capabilities-AddCapabilityWindow-formPanel .x-fieldset {
+.nx-capabilities-AddCapabilityWindow .x-fieldset {
   border-width: 1px 0 0 0;
 }
