@@ -27,6 +27,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
   requires: [
     'Nexus.capabilities.Icons',
     'Nexus.capabilities.CapabilitySummary',
+    'Nexus.capabilities.CapabilitySettings',
     'Nexus.capabilities.CapabilityStatus',
     'Nexus.capabilities.CapabilityAbout'
   ],
@@ -39,6 +40,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
         icons = Nexus.capabilities.Icons;
 
     self.summaryView = NX.create('Nexus.capabilities.CapabilitySummary');
+    self.settingsView = NX.create('Nexus.capabilities.CapabilitySettings');
     self.statusView = NX.create('Nexus.capabilities.CapabilityStatus');
     self.aboutView = NX.create('Nexus.capabilities.CapabilityAbout');
 
@@ -50,9 +52,10 @@ NX.define('Nexus.capabilities.CapabilityView', {
       items: {
         xtype: 'tabpanel',
         title: 'Capability',
-        iconCls: icons.get('capability'),
+        iconCls: icons.get('capability').cls,
         items: [
           self.summaryView,
+          self.settingsView,
           self.statusView,
           self.aboutView
         ],
@@ -77,6 +80,7 @@ NX.define('Nexus.capabilities.CapabilityView', {
     self.setTitle(mediator.describeCapability(capability), icons.iconFor(capability).cls);
 
     self.summaryView.updateRecord(capability);
+    self.settingsView.updateRecord(capability);
     self.statusView.updateRecord(capability);
     self.aboutView.updateRecord(capability);
   }

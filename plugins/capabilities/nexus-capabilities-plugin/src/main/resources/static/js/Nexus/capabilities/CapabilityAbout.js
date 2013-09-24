@@ -33,7 +33,6 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilityAbout',
-      border: false,
       title: 'About',
       autoScroll: true,
       html: ''

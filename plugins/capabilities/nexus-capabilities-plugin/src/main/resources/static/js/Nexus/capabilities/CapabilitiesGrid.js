@@ -119,6 +119,19 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           disabled: false // TODO enable when capability type is loaded and there is at least one type
         },
         {
+          text: 'Copy',
+          itemId: 'copy',
+          iconCls: icons.get('capability_add').cls,
+          tooltip: 'Copies selected capability',
+          handler: function (button) {
+            var selections = self.getSelectionModel().getSelections();
+            if (selections.length > 0) {
+              self.copyCapability(selections[0].data, button.btnEl);
+            }
+          },
+          disabled: true
+        },
+        {
           text: 'Delete',
           itemId: 'delete',
           iconCls: icons.get('capability_delete').cls,
@@ -145,10 +158,15 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   selectionChanged: function (sm) {
     var self = this,
         sp = Sonatype.lib.Permissions,
+        copyButton = self.getTopToolbar().getComponent('copy'),
         deleteButton = self.getTopToolbar().getComponent('delete');
 
+    copyButton.disable();
     deleteButton.disable();
     if (sm.getCount() !== 0) {
+      if (sp.checkPermission('nexus:capabilities', sp.CREATE)) {
+        copyButton.enable();
+      }
       if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
         deleteButton.enable();
       }
@@ -365,7 +383,9 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     }
 
     if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
-      menu.add('-');
+      if (!sp.checkPermission('nexus:capabilities', sp.CREATE)) {
+        menu.add('-');
+      }
       menu.add({
         text: 'Delete',
         iconCls: icons.get('capability_delete').cls,

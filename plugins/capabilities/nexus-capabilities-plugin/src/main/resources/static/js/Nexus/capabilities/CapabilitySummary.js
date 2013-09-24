@@ -22,28 +22,20 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
 
   mixins: [
     'Nexus.LogAwareMixin',
-    'Nexus.capabilities.CapabilitiesMediator',
-    'Nexus.capabilities.CapabilitySettings'
+    'Nexus.capabilities.CapabilitiesMediator'
   ],
 
   /**
    * @override
    */
   initComponent: function () {
-    var self = this;
-
-    self.settings = NX.create('Nexus.capabilities.CapabilitySettings');
+    var self = this,
+        sp = Sonatype.lib.Permissions,
+        editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySummary',
       title: 'Summary',
-      region: 'center',
-      border: false,
-      collapsible: false,
-      collapsed: false,
-      layoutConfig: {
-        labelSeparator: ''
-      },
       items: [
         {
           xtype: 'fieldset',
@@ -73,7 +65,22 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
             }
           ]
         },
-        self.settings
+        {
+          xtype: 'fieldset',
+          title: 'Notes',
+          autoScroll: true,
+          collapsed: false,
+          hideLabels: true,
+          items: {
+            xtype: 'textarea',
+            htmlDecode: true,
+            helpText: "Optional notes about configured capability",
+            name: 'notes',
+            anchor: '96%',
+            allowBlank: true,
+            disabled: !editable
+          }
+        }
       ],
 
       buttonAlign: 'left',
@@ -83,7 +90,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           formBind: true,
           scope: self,
           handler: function () {
-            self.updateCapability(self.currentRecord);
+            self.updateCapability();
           }
         },
         {
@@ -92,7 +99,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.settings.importCapability(self.getForm(), self.currentRecord);
+            self.updateRecord(self.currentRecord);
           }
         }
       ]
@@ -107,15 +114,10 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
    * @param capability
    */
   updateRecord: function (capability) {
-    var self = this,
-        sp = Sonatype.lib.Permissions,
-        editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
+    var self = this;
 
     self.currentRecord = capability;
-    self.settings.importCapability(self.getForm(), capability);
-
-    self.doLayout();
-    self.togglePermission(self.items, editable);
+    self.getForm().setValues(capability);
   },
 
   /**
@@ -126,63 +128,23 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   /**
    * @private
    */
-  settings: undefined,
-
-  /**
-   * @private
-   */
-  updateCapability: function (capability) {
+  updateCapability: function () {
     var self = this,
         mediator = Nexus.capabilities.CapabilitiesMediator,
-        form = self.getForm();
+        form = self.getForm(),
+        values = form.getFieldValues();
 
-    if (!form.isValid()) {
-      return;
-    }
-
-    var capability = Ext.apply(self.settings.exportCapability(form), {id: capability.id });
+    var capability = Ext.apply(self.currentRecord.$capability, {notes: values.notes});
 
     mediator.updateCapability(capability,
         function () {
-          form.items.each(function (item) {
-            item.clearInvalid();
-          });
           mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
           mediator.refresh();
         },
         function (response) {
-          self.settings.handleResponse(form, response);
+          // TODO handle errors
         }
     );
-  },
-
-  /**
-   * Enables/disables fields marked with "editable".
-   *
-   * @private
-   */
-  togglePermission: function (items, enabled) {
-    var self = this;
-
-    if (items) {
-      var iterable = items.items;
-      if (!iterable) {
-        iterable = items;
-      }
-      Ext.each(iterable, function (item) {
-        if (item) {
-          if (item.editable) {
-            if (enabled) {
-              item.enable();
-            }
-            else {
-              item.disable();
-            }
-          }
-          self.togglePermission(item.items, enabled)
-        }
-      });
-    }
   }
 
 });

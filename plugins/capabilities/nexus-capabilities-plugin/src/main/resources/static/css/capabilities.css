@@ -15,48 +15,40 @@
  * =========================================
  */
 
-.nx-capabilities-CapabilitiesView  {
-  font: normal 11px arial,tahoma,verdana,helvetica;
+.nx-capabilities-CapabilitiesView,
+.nx-capabilities-CapabilitiesView .x-form-item,
+.nx-capabilities-CapabilitiesView .x-form-field,
+.nx-capabilities-AddCapabilityWindow,
+.nx-capabilities-AddCapabilityWindow .x-form-item,
+.nx-capabilities-AddCapabilityWindow .x-form-field {
+  font: normal 11px arial, tahoma, verdana, helvetica;
 }
 
-.nx-capabilities-CapabilitiesView .x-fieldset {
+.nx-capabilities-CapabilitiesView .x-fieldset,
+.nx-capabilities-AddCapabilityWindow .x-fieldset{
   border-width: 1px 0 0 0;
 }
 
 .nx-masterdetail-EmptySelection .x-panel-body {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
+  margin-top: 30px;
+  padding: 10px 10px 10px 10px;
 
-    font: bold 13px arial,tahoma,verdana,helvetica;
-    text-align: center;
+  font: bold 13px arial, tahoma, verdana, helvetica;
+  text-align: center;
 }
 
 .nx-masterdetail-EmptySelection-text {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
-.nx-capabilities-CapabilitySummary .x-form {
-  padding-right: 10px;
-  padding-left: 10px;
-}
-
-.nx-capabilities-CapabilityAbout .x-panel-body {
-    padding: 10px 10px 10px 10px;
-}
-
-.nx-capabilities-CapabilityStatus .x-panel-body {
-    padding: 10px 10px 10px 10px;
-}
-
-.nx-capabilities-AddCapabilityWindow {
-  font: normal 11px arial,tahoma,verdana,helvetica;
-}
-
+.nx-capabilities-CapabilitySummary .x-form,
+.nx-capabilities-CapabilitySettings .x-form,
 .nx-capabilities-AddCapabilityWindow .x-form {
   padding-right: 10px;
   padding-left: 10px;
 }
 
-.nx-capabilities-AddCapabilityWindow .x-fieldset {
-  border-width: 1px 0 0 0;
+.nx-capabilities-CapabilityAbout .x-panel-body,
+.nx-capabilities-CapabilityStatus .x-panel-body {
+  padding: 10px 10px 10px 10px;
 }

@@ -13,22 +13,17 @@
 /*global NX, Ext, Nexus*/
 
 /**
- * Capability Settings FieldSet.
+ * Capability Settings View.
  *
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitySettings', {
-  extend: 'Ext.form.FieldSet',
+  extend: 'Ext.FormPanel',
 
   mixins: [
     'Nexus.LogAwareMixin',
     'Nexus.capabilities.CapabilitiesMediator',
-    'Nexus.capabilities.factory.CheckboxFactory',
-    'Nexus.capabilities.factory.ComboFactory',
-    'Nexus.capabilities.factory.DateFieldFactory',
-    'Nexus.capabilities.factory.NumberFieldFactory',
-    'Nexus.capabilities.factory.TextAreaFactory',
-    'Nexus.capabilities.factory.TextFieldFactory'
+    'Nexus.capabilities.CapabilitySettingsFieldSet'
   ],
 
   /**
@@ -37,181 +32,123 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   initComponent: function () {
     var self = this;
 
+    self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet');
+
     Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilitySettings',
       title: 'Settings',
-      autoHeight: false,
-      autoScroll: true,
-      collapsed: false,
-      anchor: '100% 80%',
-      labelWidth: 175,
-      items: []
+      items: self.settings,
+
+      buttonAlign: 'left',
+      buttons: [
+        {
+          text: 'Save',
+          formBind: true,
+          scope: self,
+          handler: function () {
+            self.updateCapability(self.currentRecord);
+          }
+        },
+        {
+          xtype: 'link-button',
+          text: 'Discard',
+          formBind: false,
+          scope: self,
+          handler: function () {
+            self.settings.importCapability(self.getForm(), self.currentRecord);
+          }
+        }
+      ]
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
-
-    self.factories = NX.create('Ext.util.MixedCollection');
-
-    self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
-    self.addFactory('Nexus.capabilities.factory.ComboFactory');
-    self.addFactory('Nexus.capabilities.factory.DateFieldFactory');
-    self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
-    self.addFactory('Nexus.capabilities.factory.TextAreaFactory');
-    self.addFactory('Nexus.capabilities.factory.TextFieldFactory');
   },
 
   /**
-   * @property
-   */
-  capabilityType: undefined,
-
-  /**
-   * Renders fields for a capability type.
+   * Update the capability record.
    *
-   * @param capabilityTypeId id of capability type to rendered
+   * @param capability
    */
-  setCapabilityType: function (capabilityTypeId) {
+  updateRecord: function (capability) {
     var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+        sp = Sonatype.lib.Permissions,
+        editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
-    self.capabilityType = mediator.capabilityTypeStore.getTypeById(capabilityTypeId);
+    self.currentRecord = capability;
+    self.settings.importCapability(self.getForm(), capability);
 
-    self.removeAll();
-
-    if (self.capabilityType) {
-      self.add({
-        xtype: 'checkbox',
-        fieldLabel: 'Enabled',
-        helpText: 'This flag determines if the capability is currently enabled. To disable this capability for a period of time, de-select this checkbox.',
-        name: 'enabled',
-        allowBlank: false,
-        checked: true,
-        editable: true
-      });
-
-      if (self.capabilityType.formFields) {
-        Ext.each(self.capabilityType.formFields, function (formField) {
-          var factory = self.factories.get(formField.type);
-          if (!factory) {
-            factory = self.factories.get('string');
-          }
-          if (factory) {
-            var item = Ext.apply(factory.create(formField), {
-              editable: true,
-              name: 'property.' + formField.id,
-              factory: factory
-            });
-            self.add(item);
-          }
-        });
-      }
-
-      self.add({
-        xtype: 'textarea',
-        fieldLabel: 'Notes',
-        htmlDecode: true,
-        helpText: "Optional notes about configured capability",
-        name: 'notes',
-        anchor: '96%',
-        allowBlank: true,
-        editable: true
-      });
-    }
-  },
-
-  /**
-   * Exports form as a capability.
-   * @param form to be exported
-   * @returns {Object} capability
-   */
-  exportCapability: function (form) {
-    var self = this,
-        values = form.getFieldValues();
-
-    var capability = {
-      typeId: self.capabilityType.id,
-      enabled: values.enabled,
-      notes: values.notes,
-      properties: []
-    };
-
-    if (self.capabilityType && self.capabilityType.formFields) {
-      Ext.each(self.capabilityType.formFields, function (formField) {
-        var value = values['property.' + formField.id];
-        if (value) {
-          capability.properties[capability.properties.length] = {
-            key: formField.id,
-            value: String(value)
-          };
-        }
-      });
-    }
-
-    return capability;
-  },
-
-  /**
-   * Imports capability into a form.
-   * @param form to set values into
-   * @param capability to import
-   */
-  importCapability: function (form, capability) {
-    var self = this,
-        data = Ext.apply({}, capability);
-
-    self.setCapabilityType(capability.typeId);
-
-    if (self.capabilityType && self.capabilityType.formFields) {
-      Ext.each(self.capabilityType.formFields, function (formField) {
-        data['property.' + formField.id] = '';
-      });
-    }
-
-    if (capability.properties) {
-      Ext.each(capability.properties, function (property) {
-        data['property.' + property.key] = property.value;
-      });
-    }
-
-    form.setValues(data);
-  },
-
-  /**
-   * Handles an REST response, eventually marking fields as invalid.
-   * @param form containing fields that should be marked in case of a validation error
-   * @param response REST response
-   */
-  handleResponse: function (form, response) {
-    if (response.siestaValidationError) {
-      Ext.each(response.siestaValidationError, function (error) {
-        var field = form.findField('property.' + error.id);
-        if (!field) {
-          field = form.findField(error.id);
-        }
-        if (field) {
-          field.markInvalid(error.message);
-        }
-        else {
-          // TODO show message box
-        }
-      });
-    }
+    self.doLayout();
+    self.togglePermission(self.items, editable);
   },
 
   /**
    * @private
    */
-  factories: undefined,
+  currentRecord: undefined,
 
   /**
    * @private
    */
-  addFactory: function (factoryName) {
-    var self = this,
-        factory = NX.create(factoryName);
+  settings: undefined,
 
-    Ext.each(factory.supports, function (supported) {
-      self.factories.add(supported, factory);
+  /**
+   * @private
+   */
+  updateCapability: function (capability) {
+    var self = this,
+        mediator = Nexus.capabilities.CapabilitiesMediator,
+        form = self.getForm();
+
+    if (!form.isValid()) {
+      return;
+    }
+
+    var capability = Ext.apply(self.settings.exportCapability(form), {
+      id: capability.id,
+      notes: capability.notes
     });
+
+    mediator.updateCapability(capability,
+        function () {
+          form.items.each(function (item) {
+            item.clearInvalid();
+          });
+          mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
+          mediator.refresh();
+        },
+        function (response) {
+          self.settings.handleResponse(form, response);
+        }
+    );
+  },
+
+  /**
+   * Enables/disables fields marked with "requiresPermission".
+   *
+   * @private
+   */
+  togglePermission: function (items, enabled) {
+    var self = this;
+
+    if (items) {
+      var iterable = items.items;
+      if (!iterable) {
+        iterable = items;
+      }
+      Ext.each(iterable, function (item) {
+        if (item) {
+          if (item.requiresPermission) {
+            if (enabled) {
+              item.enable();
+            }
+            else {
+              item.disable();
+            }
+          }
+          self.togglePermission(item.items, enabled)
+        }
+      });
+    }
   }
 
 });

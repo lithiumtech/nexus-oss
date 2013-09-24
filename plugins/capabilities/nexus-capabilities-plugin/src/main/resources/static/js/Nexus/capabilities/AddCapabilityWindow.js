@@ -27,7 +27,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
   requires: [
     'Nexus.capabilities.Icons',
     'Nexus.capabilities.CapabilitiesMediator',
-    'Nexus.capabilities.CapabilitySettings'
+    'Nexus.capabilities.CapabilitySettingsFieldSet'
   ],
 
   /**
@@ -54,7 +54,9 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
       html: ''
     });
 
-    self.settings = NX.create('Nexus.capabilities.CapabilitySettings');
+    self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet', {
+      title: 'Settings'
+    });
 
     /**
      * @private
@@ -63,7 +65,6 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
       border: false,
       monitorValid: true,
       labelWidth: 175,
-
       items: [
         {
           xtype: 'fieldset',
@@ -137,14 +138,14 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
       // FIXME: icon isn't properly aligned ATM, disable it for now its distracting
       //iconCls: icons.get('warning').cls,
 
-      width: '50%',
+      width: 640,
       autoHeight: true,
       border: false,
 
       modal: true,
       constrain: true,
       closable: false,
-      resizable: false,
+      resizable: true,
 
       items: [
         self.formPanel

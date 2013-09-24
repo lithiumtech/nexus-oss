@@ -32,7 +32,6 @@ NX.define('Nexus.capabilities.CapabilityStatus', {
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilityStatus',
-      border: false,
       title: 'Status',
       autoScroll: true,
       html: ''
