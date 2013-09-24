@@ -52,6 +52,25 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   },
 
   /**
+   * Creates a capability via REST.
+   */
+  addCapability: function (capability, successHandler, failureHandler) {
+    var self = this;
+
+    self.logDebug('Adding capability');
+
+    Ext.Ajax.request({
+      url: self.capabilityStore.url,
+      method: 'POST',
+      scope: self,
+      suppressStatus: 400,
+      jsonData: capability,
+      success: successHandler,
+      failure: failureHandler
+    });
+  },
+
+  /**
    * Updates a capability via REST.
    */
   updateCapability: function (capability, successHandler, failureHandler) {

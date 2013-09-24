@@ -13,7 +13,7 @@
 /*global NX, Ext, Nexus*/
 
 /**
- * Capability detail view.
+ * Capability view.
  *
  * @since 2.7
  */

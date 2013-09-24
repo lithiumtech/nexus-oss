@@ -26,7 +26,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
   requires: [
     'Nexus.capabilities.Icons',
-    'Nexus.capabilities.CapabilitiesMediator'
+    'Nexus.capabilities.CapabilitiesMediator',
+    'Nexus.capabilities.AddCapabilityWindow'
   ],
 
   /**
@@ -115,7 +116,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: function () {
             self.addCapability();
           },
-          disabled: true
+          disabled: false // TODO enable when capability type is loaded and there is at least one type
         },
         {
           text: 'Delete',
@@ -299,7 +300,11 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   addCapability: function () {
+    var self = this,
+        dialog;
 
+    dialog = NX.create('Nexus.capabilities.AddCapabilityWindow');
+    dialog.show();
   },
 
   /**

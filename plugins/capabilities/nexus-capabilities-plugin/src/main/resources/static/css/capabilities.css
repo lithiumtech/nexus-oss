@@ -46,3 +46,16 @@
 
     font: normal 11px arial,tahoma,verdana,helvetica;
 }
+
+.nx-capabilities-AddCapabilityWindow-formPanel .x-panel-body {
+  font: normal 11px arial,tahoma,verdana,helvetica;
+}
+
+.nx-capabilities-AddCapabilityWindow-formPanel .x-form {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.nx-capabilities-AddCapabilityWindow-formPanel .x-fieldset {
+  border-width: 1px 0 0 0;
+}
