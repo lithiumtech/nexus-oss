@@ -133,7 +133,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
 
     Ext.apply(self, {
       cls: 'nx-capabilities-AddCapabilityWindow',
-      title: 'Add a new capability',
+      title: 'Create new capability',
 
       // FIXME: icon isn't properly aligned ATM, disable it for now its distracting
       //iconCls: icons.get('warning').cls,
