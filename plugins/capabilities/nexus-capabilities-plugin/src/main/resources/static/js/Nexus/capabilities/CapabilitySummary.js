@@ -35,8 +35,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
      * @override
      */
     initComponent: function () {
-        var self = this,
-            mediator = Nexus.capabilities.CapabilitiesMediator;
+        var self = this;
 
         self.settings = {
             xtype: 'fieldset',

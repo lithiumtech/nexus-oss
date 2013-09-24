@@ -116,7 +116,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 iconCls: icons.get('capability_delete').cls,
                 tooltip: 'Delete selected capability',
                 handler: function (button) {
-                    selections = self.getSelectionModel().getSelections();
+                    var selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
                         var capability = selections[0].data;
                         Ext.Msg.show({
@@ -131,12 +131,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                                 if (buttonName === 'yes' || buttonName === 'ok') {
                                     mediator.deleteCapability(capability,
                                         function() {
-                                            mediator.refresh(),
+                                            mediator.refresh();
                                             mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
                                         }
                                     );
                                 }
-                            },
+                            }
                         });
                     }
                 },
@@ -148,7 +148,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 iconCls: icons.get('enable').cls,
                 tooltip: 'Enable selected capability',
                 handler: function () {
-                    selections = self.getSelectionModel().getSelections();
+                    var selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
                         var capability = selections[0].data;
                         mediator.enableCapability(capability,
@@ -166,12 +166,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
                 iconCls: icons.get('disable').cls,
                 tooltip: 'Disable selected capability',
                 handler: function () {
-                    selections = self.getSelectionModel().getSelections();
+                    var selections = self.getSelectionModel().getSelections();
                     if (selections.length > 0) {
                         var capability = selections[0].data;
                         mediator.disableCapability(capability,
                             function() {
-                                mediator.refresh(),
+                                mediator.refresh();
                                 mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
                             }
                         );
@@ -202,7 +202,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
             if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
                 deleteButton.enable();
             }
-            capability = sm.selections.items[0].data;
+            var capability = sm.selections.items[0].data;
             if (sp.checkPermission('nexus:capabilities', sp.EDIT)) {
                 if (capability.enabled) {
                     disableButton.enable();

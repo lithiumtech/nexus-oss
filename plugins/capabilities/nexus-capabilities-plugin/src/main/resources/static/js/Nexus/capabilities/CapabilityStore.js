@@ -50,8 +50,7 @@ NX.define('Nexus.capabilities.CapabilityStore', {
                 { name: 'stateDescription' },
                 { name: 'status' },
                 { name: 'properties', mapping: 'capability.properties' },
-                { name: '$capability', mapping: 'capability' },
-                { name: 'url', convert: function(newValue, rec) { return self.urlOf(rec.capability.id); } },
+                { name: '$capability', mapping: 'capability' }
             ],
 
             sortInfo: {
