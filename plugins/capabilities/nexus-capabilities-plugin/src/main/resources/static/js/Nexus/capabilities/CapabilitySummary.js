@@ -92,7 +92,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.setValues(self.currentRecord);
+            self.settings.importCapability(self.getForm(), self.currentRecord);
           }
         }
       ]
@@ -112,10 +112,9 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
     self.currentRecord = capability;
+    self.settings.importCapability(self.getForm(), capability);
 
-    self.settings.setCapabilityType(capability.typeId);
     self.doLayout();
-    self.setValues(capability);
     self.togglePermission(self.items, editable);
   },
 
@@ -155,30 +154,6 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           self.settings.handleResponse(form, response);
         }
     );
-  },
-
-  /**
-   * @private
-   */
-  setValues: function (capability) {
-    var self = this,
-        formObject = Ext.apply({}, capability),
-        mediator = Nexus.capabilities.CapabilitiesMediator,
-        capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
-
-    if (capabilityType.formFields) {
-      Ext.each(capabilityType.formFields, function (formField) {
-        formObject['property.' + formField.id] = '';
-      });
-    }
-
-    if (capability.properties) {
-      Ext.each(capability.properties, function (property) {
-        formObject['property.' + property.key] = property.value;
-      });
-    }
-
-    self.getForm().setValues(formObject);
   },
 
   /**

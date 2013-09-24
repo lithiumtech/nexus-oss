@@ -144,6 +144,27 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     return capability;
   },
 
+  importCapability: function (form, capability) {
+    var self = this,
+        data = Ext.apply({}, capability);
+
+    self.setCapabilityType(capability.typeId);
+
+    if (self.capabilityType && self.capabilityType.formFields) {
+      Ext.each(self.capabilityType.formFields, function (formField) {
+        data['property.' + formField.id] = '';
+      });
+    }
+
+    if (capability.properties) {
+      Ext.each(capability.properties, function (property) {
+        data['property.' + property.key] = property.value;
+      });
+    }
+
+    form.setValues(data);
+  },
+
   handleResponse: function (form, response) {
     if (response.siestaValidationError) {
       Ext.each(response.siestaValidationError, function (error) {

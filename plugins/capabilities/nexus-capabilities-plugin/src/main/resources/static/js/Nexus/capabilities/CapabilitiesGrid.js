@@ -300,11 +300,14 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   addCapability: function () {
-    var self = this,
-        dialog;
+    NX.create('Nexus.capabilities.AddCapabilityWindow').show();
+  },
 
-    dialog = NX.create('Nexus.capabilities.AddCapabilityWindow');
-    dialog.show();
+  /**
+   * @private
+   */
+  copyCapability: function (capability) {
+    NX.create('Nexus.capabilities.AddCapabilityWindow').show().importCapability(capability);
   },
 
   /**
@@ -358,6 +361,16 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: self.enableCapability.createDelegate(self, [capability])
         });
       }
+    }
+
+    if (sp.checkPermission('nexus:capabilities', sp.CREATE)) {
+      menu.add('-');
+      menu.add({
+        text: 'Copy',
+        iconCls: icons.get('capability_add').cls,
+        scope: self,
+        handler: self.copyCapability.createDelegate(self, [capability])
+      });
     }
 
     if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {

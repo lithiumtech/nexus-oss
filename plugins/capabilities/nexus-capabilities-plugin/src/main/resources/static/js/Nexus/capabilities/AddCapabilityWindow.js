@@ -144,6 +144,15 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
     self.constructor.superclass.initComponent.apply(self, arguments);
   },
 
+  importCapability: function (capability) {
+    var self = this,
+        form = self.formPanel.getForm();
+
+    self.settings.importCapability(form, capability);
+    self.renderAbout(capability.typeId);
+    self.doLayout();
+  },
+
   /**
    * @private
    */
