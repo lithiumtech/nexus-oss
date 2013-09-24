@@ -22,13 +22,6 @@ NX.define('Nexus.capabilities.CapabilityStore', {
 
   requires: [ 'Nexus.siesta' ],
 
-  // FIXME: Is this needed as a field?
-  /**
-   * @property {String}
-   * URL of capability store.
-   */
-  url: undefined,
-
   /**
    * @constructor
    */
@@ -37,10 +30,8 @@ NX.define('Nexus.capabilities.CapabilityStore', {
         config = config || {},
         ST = Ext.data.SortTypes;
 
-    self.url = Nexus.siesta.basePath + '/capabilities';
-
     Ext.apply(config, {
-      url: self.url,
+      url: Nexus.siesta.basePath + '/capabilities',
       id: 'capability.id',
 
       fields: [
