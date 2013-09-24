@@ -104,7 +104,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           tooltip: 'Refresh capabilities',
           iconCls: icons.get('refresh').cls,
           handler: function () {
-            mediator.refresh();
+            self.refresh();
           }
         },
         {
@@ -113,7 +113,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           iconCls: icons.get('capability_add').cls,
           tooltip: 'Add a new capability',
           handler: function () {
-            mediator.addHandler();
+            self.addCapability();
           },
           disabled: true
         },
@@ -125,26 +125,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: function (button) {
             var selections = self.getSelectionModel().getSelections();
             if (selections.length > 0) {
-              var capability = selections[0].data;
-              Ext.Msg.show({
-                title: 'Confirm deletion?',
-                msg: mediator.describeCapability(capability),
-                buttons: Ext.Msg.YESNO,
-                animEl: button.btnEl,
-                icon: Ext.MessageBox.QUESTION,
-                closeable: false,
-                scope: self,
-                fn: function (buttonName) {
-                  if (buttonName === 'yes' || buttonName === 'ok') {
-                    mediator.deleteCapability(capability,
-                        function () {
-                          mediator.refresh();
-                          mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
-                        }
-                    );
-                  }
-                }
-              });
+              self.deleteCapability(selections[0].data, button.btnEl);
             }
           },
           disabled: true
@@ -157,12 +138,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: function () {
             var selections = self.getSelectionModel().getSelections();
             if (selections.length > 0) {
-              var capability = selections[0].data;
-              mediator.enableCapability(capability,
-                  function () {
-                    mediator.showMessage('Capability enabled', mediator.describeCapability(capability));
-                  }
-              );
+              self.enableCapability(selections[0].data);
             }
           },
           disabled: true
@@ -175,13 +151,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           handler: function () {
             var selections = self.getSelectionModel().getSelections();
             if (selections.length > 0) {
-              var capability = selections[0].data;
-              mediator.disableCapability(capability,
-                  function () {
-                    mediator.refresh();
-                    mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
-                  }
-              );
+              self.disableCapability(selections[0].data);
             }
           },
           disabled: true
@@ -190,6 +160,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
+
+    self.on('rowcontextmenu', self.showMenu, self);
   },
 
   /**
@@ -257,6 +229,160 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     });
 
     self.getSelectionModel().selectRecords(toSelect);
+  },
+
+  refresh: function () {
+    var mediator = Nexus.capabilities.CapabilitiesMediator;
+
+    mediator.refresh();
+  },
+
+  /**
+   * @private
+   */
+  deleteCapability: function (capability, animEl) {
+    var self = this,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
+
+    Ext.Msg.show({
+      title: 'Confirm deletion?',
+      msg: mediator.describeCapability(capability),
+      buttons: Ext.Msg.YESNO,
+      animEl: animEl,
+      icon: Ext.MessageBox.QUESTION,
+      closeable: false,
+      scope: self,
+      fn: function (buttonName) {
+        if (buttonName === 'yes' || buttonName === 'ok') {
+          mediator.deleteCapability(capability,
+              function () {
+                mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
+                self.refresh();
+              }
+          );
+        }
+      }
+    });
+  },
+
+  /**
+   * @private
+   */
+  enableCapability: function (capability) {
+    var self = this,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
+
+    mediator.enableCapability(capability,
+        function () {
+          mediator.showMessage('Capability enabled', mediator.describeCapability(capability));
+          self.refresh();
+        }
+    );
+  },
+
+  /**
+   * @private
+   */
+  disableCapability: function (capability) {
+    var self = this,
+        mediator = Nexus.capabilities.CapabilitiesMediator;
+
+    mediator.disableCapability(capability,
+        function () {
+          mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
+          self.refresh();
+        }
+    );
+  },
+
+  /**
+   * @private
+   */
+  addCapability: function () {
+
+  },
+
+  /**
+   * @private
+   * Grid row where context menu was last activated.
+   */
+  contextMenuRow: undefined,
+
+  /**
+   * @private
+   */
+  showMenu: function (grid, index, e) {
+    var self = this,
+        sp = Sonatype.lib.Permissions,
+        icons = Nexus.capabilities.Icons,
+        row = grid.view.getRow(index),
+        capability = self.store.getAt(index).data;
+
+    self.hideMenu();
+
+    self.contextMenuRow = row;
+
+    Ext.fly(row).addClass('x-node-ctx');
+
+    var menu = new Ext.menu.Menu({
+      items: [
+        {
+          text: 'Refresh',
+          iconCls: icons.get('refresh').cls,
+          scope: self,
+          handler: self.refresh.createDelegate(self)
+        }
+      ]
+    });
+
+    if (sp.checkPermission('nexus:capabilities', sp.EDIT)) {
+      menu.add('-');
+      if (capability.enabled) {
+        menu.add({
+          text: 'Disable',
+          iconCls: icons.get('disable').cls,
+          scope: self,
+          handler: self.disableCapability.createDelegate(self,[capability])
+        });
+      }
+      else {
+        menu.add({
+          text: 'Enable',
+          iconCls: icons.get('enable').cls,
+          scope: self,
+          handler: self.enableCapability.createDelegate(self,[capability])
+        });
+      }
+    }
+
+    if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
+      menu.add('-');
+      menu.add({
+        text: 'Delete',
+        iconCls: icons.get('capability_delete').cls,
+        scope: self,
+        handler: self.deleteCapability.createDelegate(self,[capability])
+      });
+    }
+
+    e.stopEvent();
+
+    self.getSelectionModel().selectRow(index,false);
+
+    menu.on('hide', self.hideMenu, self);
+    menu.showAt(e.getXY());
+  },
+
+  /**
+   * @private
+   */
+  hideMenu: function () {
+    var self = this;
+
+    if (self.contextMenuRow) {
+      Ext.fly(self.contextMenuRow).removeClass('x-node-ctx');
+      this.contextMenuRow = null;
+    }
   }
 
 });
