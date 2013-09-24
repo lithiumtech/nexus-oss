@@ -22,6 +22,7 @@ NX.define('Nexus.capabilities.CapabilityTypeStore', {
 
   requires: [ 'Nexus.siesta' ],
 
+  // FIXME: Is this needed as a field?
   /**
    * @property {String}
    * URL of capability type store.
