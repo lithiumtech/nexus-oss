@@ -31,32 +31,10 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
   ],
 
   /**
-   * URL to submit to on confirmation.
-   *
-   * @type {String}
-   */
-  url: undefined,
-
-  /**
-   * Activity name
-   *
-   * @type {String}
-   */
-  activity: undefined,
-
-  /**
-   * Confirmation message.
-   *
-   * @type {String}
-   */
-  message: undefined,
-
-  /**
    * @override
    */
   initComponent: function () {
     var self = this,
-        icons = Nexus.capabilities.Icons,
         mediator = Nexus.capabilities.CapabilitiesMediator;
 
     self.aboutPanel = NX.create('Ext.Panel', {
@@ -158,7 +136,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
       listeners: {
         show: function () {
           // auto-focus comment/description if we are showing it
-          self.formPanel.find('name', 'typeId')[0].focus(false, 100);
+          //self.formPanel.find('name', 'typeId')[0].focus(false, 100);
         }
       }
     });

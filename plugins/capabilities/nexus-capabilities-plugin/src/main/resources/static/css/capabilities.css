@@ -31,6 +31,11 @@
     font: normal 11px arial,tahoma,verdana,helvetica;
 }
 
+.nx-capabilities-CapabilitySummary .x-form {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
 .nx-capabilities-CapabilitySummary .x-fieldset {
     border-width: 1px 0 0 0;
 }
