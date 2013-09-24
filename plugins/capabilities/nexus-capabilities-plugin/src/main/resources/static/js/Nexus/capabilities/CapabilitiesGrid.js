@@ -130,32 +130,6 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
             }
           },
           disabled: true
-        },
-        {
-          text: 'Enable',
-          itemId: 'enable',
-          iconCls: icons.get('enable').cls,
-          tooltip: 'Enable selected capability',
-          handler: function () {
-            var selections = self.getSelectionModel().getSelections();
-            if (selections.length > 0) {
-              self.enableCapability(selections[0].data);
-            }
-          },
-          disabled: true
-        },
-        {
-          text: 'Disable',
-          itemId: 'disable',
-          iconCls: icons.get('disable').cls,
-          tooltip: 'Disable selected capability',
-          handler: function () {
-            var selections = self.getSelectionModel().getSelections();
-            if (selections.length > 0) {
-              self.disableCapability(selections[0].data);
-            }
-          },
-          disabled: true
         }
       ]
     });
@@ -171,26 +145,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   selectionChanged: function (sm) {
     var self = this,
         sp = Sonatype.lib.Permissions,
-        deleteButton = self.getTopToolbar().getComponent('delete'),
-        enableButton = self.getTopToolbar().getComponent('enable'),
-        disableButton = self.getTopToolbar().getComponent('disable');
+        deleteButton = self.getTopToolbar().getComponent('delete');
 
     deleteButton.disable();
-    enableButton.disable();
-    disableButton.disable();
-
     if (sm.getCount() !== 0) {
       if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
         deleteButton.enable();
-      }
-      var capability = sm.selections.items[0].data;
-      if (sp.checkPermission('nexus:capabilities', sp.EDIT)) {
-        if (capability.enabled) {
-          disableButton.enable();
-        }
-        else {
-          enableButton.enable();
-        }
       }
     }
   },
