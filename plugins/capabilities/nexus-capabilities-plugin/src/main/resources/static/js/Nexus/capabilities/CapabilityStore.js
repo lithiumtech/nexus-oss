@@ -20,6 +20,8 @@
 NX.define('Nexus.capabilities.CapabilityStore', {
   extend: 'Ext.data.JsonStore',
 
+  requirejs: [ 'nexus/siesta' ],
+
   /**
    * @property {String}
    * URL of capability store.
