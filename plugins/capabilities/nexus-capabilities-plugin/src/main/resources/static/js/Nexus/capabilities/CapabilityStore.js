@@ -20,13 +20,13 @@
 NX.define('Nexus.capabilities.CapabilityStore', {
   extend: 'Ext.data.JsonStore',
 
-  requirejs: [ 'nexus/siesta' ],
+  requires: [ 'Nexus.siesta' ],
 
   /**
    * @property {String}
    * URL of capability store.
    */
-  url: Nexus.siesta.basePath + '/capabilities',
+  url: undefined,
 
   /**
    * @constructor
@@ -35,6 +35,8 @@ NX.define('Nexus.capabilities.CapabilityStore', {
     var self = this,
         config = config || {},
         ST = Ext.data.SortTypes;
+
+    self.url = Nexus.siesta.basePath + '/capabilities';
 
     Ext.apply(config, {
       url: self.url,
