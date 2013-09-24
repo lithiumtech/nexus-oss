@@ -35,6 +35,7 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
       cls: 'nx-capabilities-CapabilityAbout',
       border: false,
       title: 'About',
+      autoScroll: true,
       html: ''
     });
 

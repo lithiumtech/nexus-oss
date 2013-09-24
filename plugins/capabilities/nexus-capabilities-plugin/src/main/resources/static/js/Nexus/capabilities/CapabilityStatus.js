@@ -34,6 +34,7 @@ NX.define('Nexus.capabilities.CapabilityStatus', {
       cls: 'nx-capabilities-CapabilityStatus',
       border: false,
       title: 'Status',
+      autoScroll: true,
       html: ''
     });
 
