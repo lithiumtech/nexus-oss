@@ -18,7 +18,7 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitySettings', {
-  extend: 'Ext.FormPanel',
+  extend: 'Ext.Panel',
 
   mixins: [
     'Nexus.LogAwareMixin',
@@ -34,11 +34,9 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
 
     self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet');
 
-    Ext.apply(self, {
-      cls: 'nx-capabilities-CapabilitySettings',
-      title: 'Settings',
+    self.formPanel = NX.create('Ext.FormPanel', {
+      border: false,
       items: self.settings,
-
       buttonAlign: 'left',
       buttons: [
         {
@@ -55,10 +53,16 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.settings.importCapability(self.getForm(), self.currentRecord);
+            self.settings.importCapability(self.formPanel.getForm(), self.currentRecord);
           }
         }
       ]
+    });
+
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilitySettings',
+      title: 'Settings',
+      items: self.formPanel,
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
@@ -75,7 +79,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
         editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
     self.currentRecord = capability;
-    self.settings.importCapability(self.getForm(), capability);
+    self.settings.importCapability(self.formPanel.getForm(), capability);
 
     self.doLayout();
     self.togglePermission(self.items, editable);
@@ -97,7 +101,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   updateCapability: function (capability) {
     var self = this,
         mediator = Nexus.capabilities.CapabilitiesMediator,
-        form = self.getForm();
+        form = self.formPanel.getForm();
 
     if (!form.isValid()) {
       return;
