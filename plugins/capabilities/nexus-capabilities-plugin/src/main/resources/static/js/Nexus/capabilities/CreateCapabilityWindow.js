@@ -195,6 +195,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
     self.renderAbout(combo.getValue());
     self.settings.setCapabilityType(combo.getValue());
     self.doLayout();
+    self.setPosition(self.getPosition());
   },
 
   /**
