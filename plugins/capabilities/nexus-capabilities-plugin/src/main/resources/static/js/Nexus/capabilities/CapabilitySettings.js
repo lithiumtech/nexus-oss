@@ -80,6 +80,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySettings',
       title: 'Settings',
+      autoScroll: true,
       items: self.formPanel,
       listeners: {
         activate: {
