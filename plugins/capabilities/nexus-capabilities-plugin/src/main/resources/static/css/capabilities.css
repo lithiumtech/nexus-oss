@@ -10,6 +10,24 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
+
+/**
+ * Nexus.masterdetail
+ * =========================================
+ */
+
+.nx-masterdetail-EmptySelection .x-panel-body {
+  margin-top: 30px;
+  padding: 10px 10px 10px 10px;
+
+  font: bold 13px arial, tahoma, verdana, helvetica;
+  text-align: center;
+}
+
+.nx-masterdetail-EmptySelection-text {
+  padding-top: 20px;
+}
+
 /**
  * Nexus.capabilities.CapabilitiesView
  * =========================================
@@ -29,23 +47,6 @@
   border-width: 1px 0 0 0;
 }
 
-.nx-masterdetail-EmptySelection .x-panel-body {
-  margin-top: 30px;
-  padding: 10px 10px 10px 10px;
-
-  font: bold 13px arial, tahoma, verdana, helvetica;
-  text-align: center;
-}
-
-.nx-masterdetail-EmptySelection-text {
-  padding-top: 20px;
-}
-
-.nx-capabilities-CapabilitySummary .x-fieldset {
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
 .nx-capabilities-CapabilitySettings .x-form,
 .nx-capabilities-CreateCapabilityWindow .x-form {
   padding-right: 10px;
@@ -57,8 +58,18 @@
   padding: 10px 10px 10px 10px;
 }
 
+/**
+ * Nexus.capabilities.CapabilitySummary
+ * =========================================
+ */
+
 .nx-capabilities-CapabilitySummary-body {
   padding: 10px;
+}
+
+.nx-capabilities-CapabilitySummary .x-fieldset {
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .nx-capabilities-CapabilitySummary-properties-entry td {
@@ -123,8 +134,11 @@
   -moz-border-radius: 5px;
 }
 
-.nx-capabilities-CapabilityGrid .red-flag .x-grid3-td-typeName {
+/**
+ * Nexus.capabilities.CapabilityGrid
+ * =========================================
+ */
+
+.nx-capabilities-CapabilityGrid .red-flag {
   border: solid 1px #D04437;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
 }
