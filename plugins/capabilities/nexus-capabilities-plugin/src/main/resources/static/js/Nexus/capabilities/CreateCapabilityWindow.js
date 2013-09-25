@@ -13,11 +13,11 @@
 /*global NX, Ext, Sonatype, Nexus*/
 
 /**
- * Window presented to user to add a new capability.
+ * Window presented to user to create a new capability.
  *
  * @since 2.7
  */
-NX.define('Nexus.capabilities.AddCapabilityWindow', {
+NX.define('Nexus.capabilities.CreateCapabilityWindow', {
   extend: 'Ext.Window',
 
   mixins: [
@@ -132,7 +132,7 @@ NX.define('Nexus.capabilities.AddCapabilityWindow', {
     });
 
     Ext.apply(self, {
-      cls: 'nx-capabilities-AddCapabilityWindow',
+      cls: 'nx-capabilities-CreateCapabilityWindow',
       title: 'Create new capability',
 
       // FIXME: icon isn't properly aligned ATM, disable it for now its distracting

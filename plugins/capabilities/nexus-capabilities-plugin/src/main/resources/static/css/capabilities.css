@@ -18,14 +18,14 @@
 .nx-capabilities-CapabilitiesView,
 .nx-capabilities-CapabilitiesView .x-form-item,
 .nx-capabilities-CapabilitiesView .x-form-field,
-.nx-capabilities-AddCapabilityWindow,
-.nx-capabilities-AddCapabilityWindow .x-form-item,
-.nx-capabilities-AddCapabilityWindow .x-form-field {
+.nx-capabilities-CreateCapabilityWindow,
+.nx-capabilities-CreateCapabilityWindow .x-form-item,
+.nx-capabilities-CreateCapabilityWindow .x-form-field {
   font: normal 11px arial, tahoma, verdana, helvetica;
 }
 
 .nx-capabilities-CapabilitiesView .x-fieldset,
-.nx-capabilities-AddCapabilityWindow .x-fieldset{
+.nx-capabilities-CreateCapabilityWindow .x-fieldset{
   border-width: 1px 0 0 0;
 }
 
@@ -43,7 +43,7 @@
 
 .nx-capabilities-CapabilitySummary .x-form,
 .nx-capabilities-CapabilitySettings .x-form,
-.nx-capabilities-AddCapabilityWindow .x-form {
+.nx-capabilities-CreateCapabilityWindow .x-form {
   padding-right: 10px;
   padding-left: 10px;
 }

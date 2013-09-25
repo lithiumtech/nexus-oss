@@ -27,7 +27,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   requires: [
     'Nexus.capabilities.Icons',
     'Nexus.capabilities.CapabilitiesMediator',
-    'Nexus.capabilities.AddCapabilityWindow'
+    'Nexus.capabilities.CreateCapabilityWindow'
   ],
 
   /**
@@ -336,7 +336,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    */
   addCapability: function () {
     NX.create(
-        'Nexus.capabilities.AddCapabilityWindow', this.refreshAndSelect.createDelegate(this)
+        'Nexus.capabilities.CreateCapabilityWindow', this.refreshAndSelect.createDelegate(this)
     ).show();
   },
 
@@ -345,7 +345,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    */
   duplicateCapability: function (capability) {
     NX.create(
-        'Nexus.capabilities.AddCapabilityWindow', this.refreshAndSelect.createDelegate(this)
+        'Nexus.capabilities.CreateCapabilityWindow', this.refreshAndSelect.createDelegate(this)
     ).show().importCapability(capability);
   },
 
