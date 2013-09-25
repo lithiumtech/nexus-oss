@@ -13,7 +13,7 @@
 /*global NX, Ext, Sonatype, Nexus*/
 
 /**
- * Capabilities mediator.
+ * Capabilities  self.mediator().
  *
  * @since 2.7
  */

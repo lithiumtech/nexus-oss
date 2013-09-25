@@ -21,7 +21,8 @@ NX.define('Nexus.capabilities.CapabilityView', {
   extend: 'Ext.Panel',
 
   mixins: [
-    'Nexus.LogAwareMixin'
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   requires: [
@@ -74,10 +75,9 @@ NX.define('Nexus.capabilities.CapabilityView', {
    */
   updateRecord: function (capability) {
     var self = this,
-        icons = Nexus.capabilities.Icons,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+        icons = Nexus.capabilities.Icons;
 
-    self.setTitle(mediator.describeCapability(capability), icons.iconFor(capability).cls);
+    self.setTitle(self.mediator().describeCapability(capability), icons.iconFor(capability).cls);
 
     self.summaryView.updateRecord(capability);
     self.settingsView.updateRecord(capability);

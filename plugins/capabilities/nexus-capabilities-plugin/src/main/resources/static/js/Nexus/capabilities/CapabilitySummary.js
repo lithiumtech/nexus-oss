@@ -21,12 +21,12 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   extend: 'Ext.Panel',
 
   mixins: [
-    'Nexus.LogAwareMixin'
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   requires: [
-    'Nexus.capabilities.Icons',
-    'Nexus.capabilities.CapabilitiesMediator'
+    'Nexus.capabilities.Icons'
   ],
 
   /**
@@ -228,19 +228,18 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
    */
   updateCapability: function () {
     var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator,
         form = self.notesPanel.getForm(),
         values = form.getFieldValues();
 
     var capability = Ext.apply(self.currentRecord.$capability, {notes: values.notes});
 
-    mediator.updateCapability(capability,
+     self.mediator().updateCapability(capability,
         function () {
-          mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
-          mediator.refresh();
+           self.mediator().showMessage('Capability saved',  self.mediator().describeCapability(self.currentRecord));
+           self.mediator().refresh();
         },
         function (response) {
-          mediator.handleError(response, 'Capability could not be saved', form);
+           self.mediator().handleError(response, 'Capability could not be saved', form);
         }
     );
   }

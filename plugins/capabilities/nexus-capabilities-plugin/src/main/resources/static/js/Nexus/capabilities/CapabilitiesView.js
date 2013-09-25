@@ -21,12 +21,12 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
   extend: 'Ext.Panel',
 
   mixins: [
-    'Nexus.LogAwareMixin'
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   requires: [
     'Nexus.capabilities.Icons',
-    'Nexus.capabilities.CapabilitiesMediator',
     'Nexus.masterdetail.MasterDetail',
     'Nexus.masterdetail.EmptySelection',
     'Nexus.capabilities.CapabilitiesGrid',
@@ -38,11 +38,10 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
    */
   initComponent: function () {
     var self = this,
-        icons = Nexus.capabilities.Icons,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+        icons = Nexus.capabilities.Icons;
 
     // force all data stores to refresh when the main capabilities view loads
-    mediator.refresh();
+     self.mediator().refresh();
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitiesView',

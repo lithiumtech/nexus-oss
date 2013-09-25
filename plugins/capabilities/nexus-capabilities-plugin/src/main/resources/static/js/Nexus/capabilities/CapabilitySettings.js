@@ -22,7 +22,10 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
 
   mixins: [
     'Nexus.LogAwareMixin',
-    'Nexus.capabilities.CapabilitiesMediator',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
+  ],
+
+  requires: [
     'Nexus.capabilities.CapabilitySettingsFieldSet'
   ],
 
@@ -102,7 +105,6 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
    */
   updateCapability: function (capability) {
     var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator,
         form = self.formPanel.getForm();
 
     if (!form.isValid()) {
@@ -114,16 +116,16 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
       notes: capability.notes
     });
 
-    mediator.updateCapability(capability,
+     self.mediator().updateCapability(capability,
         function () {
           form.items.each(function (item) {
             item.clearInvalid();
           });
-          mediator.showMessage('Capability saved', mediator.describeCapability(self.currentRecord));
-          mediator.refresh();
+           self.mediator().showMessage('Capability saved',  self.mediator().describeCapability(self.currentRecord));
+           self.mediator().refresh();
         },
         function (response) {
-          mediator.handleError(response, 'Capability could not be saved', form);
+           self.mediator().handleError(response, 'Capability could not be saved', form);
         }
     );
   },

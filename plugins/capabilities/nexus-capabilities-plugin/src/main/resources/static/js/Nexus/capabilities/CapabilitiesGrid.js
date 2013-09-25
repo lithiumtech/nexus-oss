@@ -21,12 +21,12 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   extend: 'Ext.grid.GridPanel',
 
   mixins: [
-    'Nexus.LogAwareMixin'
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   requires: [
     'Nexus.capabilities.Icons',
-    'Nexus.capabilities.CapabilitiesMediator',
     'Nexus.capabilities.CreateCapabilityWindow'
   ],
 
@@ -35,12 +35,11 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    */
   initComponent: function () {
     var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator,
         icons = Nexus.capabilities.Icons;
 
-    mediator.capabilityStore.on('beforeload', self.rememberSelection, self);
-    mediator.capabilityStore.on('load', self.recallSelection, self);
-    mediator.capabilityTypeStore.on('load',
+     self.mediator().capabilityStore.on('beforeload', self.rememberSelection, self);
+     self.mediator().capabilityStore.on('load', self.recallSelection, self);
+     self.mediator().capabilityTypeStore.on('load',
         function (store, records) {
           var self = this,
               sp = Sonatype.lib.Permissions,
@@ -55,7 +54,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilityGrid',
-      ds: mediator.capabilityStore,
+      ds:  self.mediator().capabilityStore,
       stripeRows: true,
       loadMask: {
         msg: 'Loading...',
@@ -230,12 +229,11 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   refreshAndSelect: function (capabilityId) {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
     self.getSelectionModel().clearSelections();
     self.refresh();
-    mediator.capabilityStore.on('load',
+     self.mediator().capabilityStore.on('load',
         function () {
           var record = self.getStore().getById(capabilityId);
           if (!Ext.isEmpty(record)) {
@@ -250,21 +248,18 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   refresh: function () {
-    var mediator = Nexus.capabilities.CapabilitiesMediator;
-
-    mediator.refresh();
+     this.mediator().refresh();
   },
 
   /**
    * @private
    */
   deleteCapability: function (capability, animEl) {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
     Ext.Msg.show({
       title: 'Confirm deletion?',
-      msg: mediator.describeCapability(capability),
+      msg:  self.mediator().describeCapability(capability),
       buttons: Ext.Msg.YESNO,
       animEl: animEl,
       icon: Ext.MessageBox.QUESTION,
@@ -272,13 +267,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
       scope: self,
       fn: function (buttonName) {
         if (buttonName === 'yes' || buttonName === 'ok') {
-          mediator.deleteCapability(capability,
+           self.mediator().deleteCapability(capability,
               function () {
-                mediator.showMessage('Capability deleted', mediator.describeCapability(capability));
+                 self.mediator().showMessage('Capability deleted',  self.mediator().describeCapability(capability));
                 self.refresh();
               },
               function (response) {
-                mediator.handleError(response, 'Capability could not be deleted');
+                 self.mediator().handleError(response, 'Capability could not be deleted');
                 if (response.status === 404) {
                   self.refresh();
                 }
@@ -293,16 +288,15 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   enableCapability: function (capability) {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
-    mediator.enableCapability(capability,
+     self.mediator().enableCapability(capability,
         function () {
-          mediator.showMessage('Capability enabled', mediator.describeCapability(capability));
+           self.mediator().showMessage('Capability enabled',  self.mediator().describeCapability(capability));
           self.refresh();
         },
         function (response) {
-          mediator.handleError(response, 'Capability could not be enabled');
+           self.mediator().handleError(response, 'Capability could not be enabled');
           if (response.status === 404) {
             self.refresh();
           }
@@ -314,16 +308,15 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   disableCapability: function (capability) {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
-    mediator.disableCapability(capability,
+     self.mediator().disableCapability(capability,
         function () {
-          mediator.showMessage('Capability disabled', mediator.describeCapability(capability));
+           self.mediator().showMessage('Capability disabled',  self.mediator().describeCapability(capability));
           self.refresh();
         },
         function (response) {
-          mediator.handleError(response, 'Capability could not be disabled');
+           self.mediator().handleError(response, 'Capability could not be disabled');
           if (response.status === 404) {
             self.refresh();
           }

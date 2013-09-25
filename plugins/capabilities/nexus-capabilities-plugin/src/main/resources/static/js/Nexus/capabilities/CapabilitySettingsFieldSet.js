@@ -22,7 +22,10 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
 
   mixins: [
     'Nexus.LogAwareMixin',
-    'Nexus.capabilities.CapabilitiesMediator',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
+  ],
+
+  requires: [
     'Nexus.capabilities.factory.CheckboxFactory',
     'Nexus.capabilities.factory.ComboFactory',
     'Nexus.capabilities.factory.DateFieldFactory',
@@ -68,10 +71,9 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
    * @param capabilityTypeId id of capability type to rendered
    */
   setCapabilityType: function (capabilityTypeId) {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
-    self.capabilityType = mediator.capabilityTypeStore.getTypeById(capabilityTypeId);
+    self.capabilityType =  self.mediator().capabilityTypeStore.getTypeById(capabilityTypeId);
 
     self.removeAll();
 

@@ -22,7 +22,7 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
 
   mixins: [
     'Nexus.LogAwareMixin',
-    'Nexus.capabilities.CapabilitiesMediator'
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   /**
@@ -48,10 +48,9 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
    */
   updateRecord: function (capability) {
     var self = this,
-        about = '',
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+        about = '';
 
-    var capabilityType = mediator.capabilityTypeStore.getTypeById(capability.typeId);
+    var capabilityType =  self.mediator().capabilityTypeStore.getTypeById(capability.typeId);
     if (capabilityType) {
       about = capabilityType.about;
     }

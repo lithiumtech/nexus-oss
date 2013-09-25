@@ -21,12 +21,12 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
   extend: 'Ext.Window',
 
   mixins: [
-    'Nexus.LogAwareMixin'
+    'Nexus.LogAwareMixin',
+    'Nexus.capabilities.CapabilitiesMediatorMixin'
   ],
 
   requires: [
     'Nexus.capabilities.Icons',
-    'Nexus.capabilities.CapabilitiesMediator',
     'Nexus.capabilities.CapabilitySettingsFieldSet'
   ],
 
@@ -45,8 +45,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
    * @override
    */
   initComponent: function () {
-    var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+    var self = this;
 
     self.aboutPanel = NX.create('Ext.Panel', {
       border: false,
@@ -77,7 +76,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
             itemCls: 'required-field',
             helpText: "Type of configured capability",
             name: 'typeId',
-            store: mediator.capabilityTypeStore,
+            store:  self.mediator().capabilityTypeStore,
             displayField: 'name',
             valueField: 'id',
             forceSelection: true,
@@ -203,10 +202,9 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
    */
   renderAbout: function (capabilityTypeId) {
     var self = this,
-        about = '',
-        mediator = Nexus.capabilities.CapabilitiesMediator;
+        about = '';
 
-    var capabilityType = mediator.capabilityTypeStore.getTypeById(capabilityTypeId);
+    var capabilityType =  self.mediator().capabilityTypeStore.getTypeById(capabilityTypeId);
     if (capabilityType) {
       about = capabilityType.about;
     }
@@ -221,7 +219,6 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
    */
   handleAdd: function () {
     var self = this,
-        mediator = Nexus.capabilities.CapabilitiesMediator,
         form = self.formPanel.getForm(),
         mask = NX.create('Ext.LoadMask', self.body, {
           msg: 'Please wait...'
@@ -232,10 +229,10 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
 
     capability = self.settings.exportCapability(form);
 
-    mediator.addCapability(capability,
+     self.mediator().addCapability(capability,
         function (response) {
-          mediator.showMessage(
-              'Capability added', mediator.describeCapability({typeName: self.settings.capabilityType.name})
+           self.mediator().showMessage(
+              'Capability added',  self.mediator().describeCapability({typeName: self.settings.capabilityType.name})
           );
           //mediator.refresh();
           mask.hide();
@@ -248,7 +245,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
           }
         },
         function (response) {
-          mediator.handleError(response, 'Capability could not be created', self.formPanel.getForm());
+           self.mediator().handleError(response, 'Capability could not be created', self.formPanel.getForm());
           mask.hide();
         }
     );
