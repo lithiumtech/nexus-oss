@@ -148,7 +148,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           compiled: true,
 
           statusIcon: function (capability) {
-            return icons.iconFor(capability).img; // TODO x32 variant
+            return icons.iconFor(capability).variant('x32').img;
           },
 
           statusLabel: function (capability) {
