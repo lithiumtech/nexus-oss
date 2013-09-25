@@ -103,7 +103,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
           listeners: {
             collapse: function() {
               // HACK: Fix window mask when about panel collapses
-              self.setPosition(self.getPosition());
+              self.fixMask();
             }
           }
         },
@@ -192,6 +192,16 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
   settings: undefined,
 
   /**
+   * HACK: To fix the modal dialog mask.  Unsure how better to do this, needs to be done when the dialog resizes.
+   *
+   * @private
+   */
+  fixMask: function() {
+    var self = this;
+    self.setPosition(self.getPosition());
+  },
+
+  /**
    * @private
    */
   handleCapabilityTypeSelected: function (combo) {
@@ -202,7 +212,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
     self.doLayout();
 
     // HACK: Fix window mask when capability type changes
-    self.setPosition(self.getPosition());
+    self.fixMask();
   },
 
   /**
