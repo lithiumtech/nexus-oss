@@ -83,7 +83,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
       },
       viewConfig: {
         emptyText: 'Click "Add" to configure a capability.',
-        deferEmptyText: false
+        deferEmptyText: false,
+        getRowClass: function (record, index) {
+          var capability = record.data;
+          if (capability.enabled && !capability.active) {
+            return 'red-flag';
+          }
+        }
       },
       sm: NX.create('Ext.grid.RowSelectionModel', {
         singleSelect: true,
@@ -166,6 +172,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           scope: self
         }
       }
+
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);

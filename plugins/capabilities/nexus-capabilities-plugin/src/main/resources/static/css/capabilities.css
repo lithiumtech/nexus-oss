@@ -122,3 +122,9 @@
   border-radius: 5px;
   -moz-border-radius: 5px;
 }
+
+.nx-capabilities-CapabilityGrid .red-flag .x-grid3-td-typeName {
+  border: solid 1px #D04437;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
