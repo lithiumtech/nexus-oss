@@ -40,9 +40,6 @@ NX.define('Nexus.capabilities.CapabilitiesView', {
     var self = this,
         icons = Nexus.capabilities.Icons;
 
-    // force all data stores to refresh when the main capabilities view loads
-     self.mediator().refresh();
-
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitiesView',
       layout: 'border',

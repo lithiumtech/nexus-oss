@@ -20,7 +20,11 @@
 NX.define('Nexus.capabilities.CapabilityTypeStore', {
   extend: 'Ext.data.JsonStore',
 
-  requires: [ 'Nexus.siesta' ],
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
+
+  requires: ['Nexus.siesta'],
 
   /**
    * @constructor
@@ -44,6 +48,15 @@ NX.define('Nexus.capabilities.CapabilityTypeStore', {
       sortInfo: {
         field: 'id',
         direction: 'ASC'
+      },
+
+      listeners: {
+        load: {
+          fn: function () {
+            this.logDebug('Loaded ' + self.getCount() + ' types');
+          },
+          scope: self
+        }
       }
     });
 

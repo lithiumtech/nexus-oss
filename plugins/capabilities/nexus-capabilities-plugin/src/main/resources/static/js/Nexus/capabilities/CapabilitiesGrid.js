@@ -37,24 +37,45 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     var self = this,
         icons = Nexus.capabilities.Icons;
 
-     self.mediator().capabilityStore.on('beforeload', self.rememberSelection, self);
-     self.mediator().capabilityStore.on('load', self.recallSelection, self);
-     self.mediator().capabilityTypeStore.on('load',
-        function (store, records) {
-          var self = this,
-              sp = Sonatype.lib.Permissions,
-              canCreate = sp.checkPermission('nexus:capabilities', sp.CREATE),
-              addButton = self.getTopToolbar().getComponent('add');
-          addButton.disable();
-          if (records && records.length > 0 && canCreate) {
-            addButton.enable();
-          }
-        }, self
-    );
+    self.buttonAdd = NX.create('Ext.Button', {
+      text: 'New',
+      iconCls: icons.get('capability_add').cls,
+      tooltip: 'Add a new capability',
+      handler: function () {
+        self.addCapability();
+      },
+      disabled: true
+    });
+
+    self.buttonDuplicate = NX.create('Ext.Button', {
+      text: 'Duplicate',
+      iconCls: icons.get('capability_add').cls,
+      tooltip: 'Duplicates selected capability',
+      handler: function () {
+        var selections = self.getSelectionModel().getSelections();
+        if (selections.length > 0) {
+          self.duplicateCapability(selections[0].data);
+        }
+      },
+      disabled: true
+    });
+
+    self.buttonDelete = NX.create('Ext.Button', {
+      text: 'Delete',
+      iconCls: icons.get('capability_delete').cls,
+      tooltip: 'Delete selected capability',
+      handler: function (button) {
+        var selections = self.getSelectionModel().getSelections();
+        if (selections.length > 0) {
+          self.deleteCapability(selections[0].data, button.btnEl);
+        }
+      },
+      disabled: true
+    });
 
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilityGrid',
-      ds:  self.mediator().capabilityStore,
+      ds: self.mediator().capabilityStore,
       stripeRows: true,
       loadMask: {
         msg: 'Loading...',
@@ -119,46 +140,37 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
             self.refresh();
           }
         },
-        {
-          text: 'New',
-          itemId: 'add',
-          iconCls: icons.get('capability_add').cls,
-          tooltip: 'Add a new capability',
-          handler: function () {
-            self.addCapability();
+        self.buttonAdd,
+        self.buttonDuplicate,
+        self.buttonDelete
+      ],
+
+      listeners: {
+        destroy: {
+          fn: function () {
+            self.mediator().capabilityStore.removeListener('beforeload', self.rememberSelection, self);
+            self.mediator().capabilityStore.removeListener('load', self.recallSelection, self);
+            self.mediator().capabilityTypeStore.removeListener('beforeload', self.disableAddButton, self);
+            self.mediator().capabilityTypeStore.removeListener('load', self.maybeEnableAddButton, self);
           },
-          disabled: true
+          scope: self
         },
-        {
-          text: 'Duplicate',
-          itemId: 'duplicate',
-          iconCls: icons.get('capability_add').cls,
-          tooltip: 'Duplicates selected capability',
-          handler: function () {
-            var selections = self.getSelectionModel().getSelections();
-            if (selections.length > 0) {
-              self.duplicateCapability(selections[0].data);
-            }
+        render: {
+          fn: function () {
+            self.mediator().capabilityStore.on('beforeload', self.rememberSelection, self);
+            self.mediator().capabilityStore.on('load', self.recallSelection, self);
+
+            self.mediator().capabilityTypeStore.on('beforeload', self.disableAddButton, self);
+            self.mediator().capabilityTypeStore.on('load', self.maybeEnableAddButton, self);
           },
-          disabled: true
-        },
-        {
-          text: 'Delete',
-          itemId: 'delete',
-          iconCls: icons.get('capability_delete').cls,
-          tooltip: 'Delete selected capability',
-          handler: function (button) {
-            var selections = self.getSelectionModel().getSelections();
-            if (selections.length > 0) {
-              self.deleteCapability(selections[0].data, button.btnEl);
-            }
-          },
-          disabled: true
+          scope: self
         }
-      ]
+      }
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
+
+    self.refresh();
 
     self.on('rowcontextmenu', self.showMenu, self);
   },
@@ -168,18 +180,16 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    */
   selectionChanged: function (sm) {
     var self = this,
-        sp = Sonatype.lib.Permissions,
-        duplicateButton = self.getTopToolbar().getComponent('duplicate'),
-        deleteButton = self.getTopToolbar().getComponent('delete');
+        sp = Sonatype.lib.Permissions;
 
-    duplicateButton.disable();
-    deleteButton.disable();
+    self.buttonDuplicate.disable();
+    self.buttonDelete.disable();
     if (sm.getCount() !== 0) {
       if (sp.checkPermission('nexus:capabilities', sp.CREATE)) {
-        duplicateButton.enable();
+        self.buttonDuplicate.enable();
       }
       if (sp.checkPermission('nexus:capabilities', sp.DELETE)) {
-        deleteButton.enable();
+        self.buttonDelete.enable();
       }
     }
   },
@@ -233,7 +243,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
     self.getSelectionModel().clearSelections();
     self.refresh();
-     self.mediator().capabilityStore.on('load',
+    self.mediator().capabilityStore.on('load',
         function () {
           var record = self.getStore().getById(capabilityId);
           if (!Ext.isEmpty(record)) {
@@ -248,7 +258,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
    * @private
    */
   refresh: function () {
-     this.mediator().refresh();
+    this.mediator().refresh();
   },
 
   /**
@@ -259,7 +269,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
     Ext.Msg.show({
       title: 'Confirm deletion?',
-      msg:  self.mediator().describeCapability(capability),
+      msg: self.mediator().describeCapability(capability),
       buttons: Ext.Msg.YESNO,
       animEl: animEl,
       icon: Ext.MessageBox.QUESTION,
@@ -267,13 +277,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
       scope: self,
       fn: function (buttonName) {
         if (buttonName === 'yes' || buttonName === 'ok') {
-           self.mediator().deleteCapability(capability,
+          self.mediator().deleteCapability(capability,
               function () {
-                 self.mediator().showMessage('Capability deleted',  self.mediator().describeCapability(capability));
+                self.mediator().showMessage('Capability deleted', self.mediator().describeCapability(capability));
                 self.refresh();
               },
               function (response) {
-                 self.mediator().handleError(response, 'Capability could not be deleted');
+                self.mediator().handleError(response, 'Capability could not be deleted');
                 if (response.status === 404) {
                   self.refresh();
                 }
@@ -290,13 +300,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   enableCapability: function (capability) {
     var self = this;
 
-     self.mediator().enableCapability(capability,
+    self.mediator().enableCapability(capability,
         function () {
-           self.mediator().showMessage('Capability enabled',  self.mediator().describeCapability(capability));
+          self.mediator().showMessage('Capability enabled', self.mediator().describeCapability(capability));
           self.refresh();
         },
         function (response) {
-           self.mediator().handleError(response, 'Capability could not be enabled');
+          self.mediator().handleError(response, 'Capability could not be enabled');
           if (response.status === 404) {
             self.refresh();
           }
@@ -310,13 +320,13 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   disableCapability: function (capability) {
     var self = this;
 
-     self.mediator().disableCapability(capability,
+    self.mediator().disableCapability(capability,
         function () {
-           self.mediator().showMessage('Capability disabled',  self.mediator().describeCapability(capability));
+          self.mediator().showMessage('Capability disabled', self.mediator().describeCapability(capability));
           self.refresh();
         },
         function (response) {
-           self.mediator().handleError(response, 'Capability could not be disabled');
+          self.mediator().handleError(response, 'Capability could not be disabled');
           if (response.status === 404) {
             self.refresh();
           }
@@ -434,6 +444,25 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     if (self.contextMenuRow) {
       Ext.fly(self.contextMenuRow).removeClass('x-node-ctx');
       this.contextMenuRow = null;
+    }
+  },
+
+  disableAddButton: function () {
+    var self = this;
+
+    self.buttonAdd.disable();
+  },
+
+  /**
+   * @private
+   */
+  maybeEnableAddButton: function () {
+    var self = this,
+        sp = Sonatype.lib.Permissions,
+        canCreate = sp.checkPermission('nexus:capabilities', sp.CREATE);
+
+    if (canCreate && self.mediator().capabilityTypeStore.getCount() > 0) {
+      self.buttonAdd.enable();
     }
   }
 
