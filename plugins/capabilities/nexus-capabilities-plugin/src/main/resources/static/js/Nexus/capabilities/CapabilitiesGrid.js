@@ -135,10 +135,10 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
           itemId: 'duplicate',
           iconCls: icons.get('capability_add').cls,
           tooltip: 'Duplicates selected capability',
-          handler: function (button) {
+          handler: function () {
             var selections = self.getSelectionModel().getSelections();
             if (selections.length > 0) {
-              self.duplicateCapability(selections[0].data, button.btnEl);
+              self.duplicateCapability(selections[0].data);
             }
           },
           disabled: true
