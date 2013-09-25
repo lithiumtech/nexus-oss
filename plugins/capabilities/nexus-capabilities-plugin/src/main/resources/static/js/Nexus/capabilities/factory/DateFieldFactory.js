@@ -19,8 +19,15 @@
  */
 NX.define('Nexus.capabilities.factory.DateFieldFactory', {
 
+  singleton: true,
+
   supports: ['datefield', 'date'],
 
+  /**
+   * Creates a datefield.
+   * @param formField capability type form field to create datefield for
+   * @returns {*} created datefield (never null)
+   */
   create: function (formField) {
     var item = {
       xtype: 'datefield',

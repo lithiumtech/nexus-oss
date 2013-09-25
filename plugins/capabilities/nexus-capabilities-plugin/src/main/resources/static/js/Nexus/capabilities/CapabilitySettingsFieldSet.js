@@ -52,12 +52,12 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
 
     self.factories = NX.create('Ext.util.MixedCollection');
 
-    self.addFactory('Nexus.capabilities.factory.CheckboxFactory');
-    self.addFactory('Nexus.capabilities.factory.ComboFactory');
-    self.addFactory('Nexus.capabilities.factory.DateFieldFactory');
-    self.addFactory('Nexus.capabilities.factory.NumberFieldFactory');
-    self.addFactory('Nexus.capabilities.factory.TextAreaFactory');
-    self.addFactory('Nexus.capabilities.factory.TextFieldFactory');
+    self.addFactory(Nexus.capabilities.factory.CheckboxFactory);
+    self.addFactory(Nexus.capabilities.factory.ComboFactory);
+    self.addFactory(Nexus.capabilities.factory.DateFieldFactory);
+    self.addFactory(Nexus.capabilities.factory.NumberFieldFactory);
+    self.addFactory(Nexus.capabilities.factory.TextAreaFactory);
+    self.addFactory(Nexus.capabilities.factory.TextFieldFactory);
   },
 
   /**
@@ -67,7 +67,6 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
 
   /**
    * Renders fields for a capability type.
-   *
    * @param capabilityTypeId id of capability type to rendered
    */
   setCapabilityType: function (capabilityTypeId) {
@@ -102,8 +101,10 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
             });
             if (item.xtype === 'combo' && item.store) {
               item.store.on('load', function () {
-                item.setValue(item.getValue());
-              });
+                if (item.store) {
+                  item.setValue(item.getValue());
+                }
+              }, self, {single: true});
             }
             self.add(item);
           }
@@ -176,9 +177,8 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
   /**
    * @private
    */
-  addFactory: function (factoryName) {
-    var self = this,
-        factory = NX.create(factoryName);
+  addFactory: function (factory) {
+    var self = this;
 
     Ext.each(factory.supports, function (supported) {
       self.factories.add(supported, factory);

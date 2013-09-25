@@ -19,10 +19,25 @@
  */
 NX.define('Nexus.capabilities.factory.ComboFactory', {
 
+  singleton: true,
+
+  mixins: [
+    'Nexus.LogAwareMixin'
+  ],
+
   supports: ['combo', 'combobox', 'repo', 'repo-or-group', 'repo-target'],
 
+  /**
+   * Map of stores / store url.
+   * @private
+   */
   stores: {},
 
+  /**
+   * Creates a combo.
+   * @param formField capability type form field to create combo for
+   * @returns {*} created combo (never null)
+   */
   create: function (formField) {
     var self = this,
         ST = Ext.data.SortTypes;
@@ -68,10 +83,21 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
           autoLoad: true
         });
         self.stores[formField.storePath] = store;
+        self.logDebug("Caching store for " + store.url);
       }
       item.store = store;
     }
     return item;
+  },
+
+  /**
+   * Evicts all cached stores (they will be recreated on demand).
+   */
+  evictCache: function () {
+    var self = this;
+
+    self.logDebug('Evicted all cached stores');
+    self.stores = {};
   }
 
 });

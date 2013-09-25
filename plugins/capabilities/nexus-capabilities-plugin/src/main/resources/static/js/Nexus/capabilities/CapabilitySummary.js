@@ -74,7 +74,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.updateRecord(self.currentRecord);
+            self.setCapability(self.currentRecord);
           }
         }
       ]
@@ -206,11 +206,10 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   },
 
   /**
-   * Update the capability record.
-   *
-   * @param capability
+   * Sets the current selected capability.
+   * @param capability selected
    */
-  updateRecord: function (capability) {
+  setCapability: function (capability) {
     var self = this;
 
     self.currentRecord = capability;
@@ -224,6 +223,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   currentRecord: undefined,
 
   /**
+   * Updates capability in Nexus.
    * @private
    */
   updateCapability: function () {

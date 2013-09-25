@@ -62,7 +62,6 @@ NX.define('Nexus.capabilities.Icons', {
 
   /**
    * Return the icon for the given capability.
-   *
    * @param capability
    * @return {*} Icon; never null/undefined.
    */

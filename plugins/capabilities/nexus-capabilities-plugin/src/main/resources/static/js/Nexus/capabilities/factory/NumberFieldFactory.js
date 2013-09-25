@@ -19,8 +19,15 @@
  */
 NX.define('Nexus.capabilities.factory.NumberFieldFactory', {
 
+  singleton: true,
+
   supports: ['numberfield', 'number'],
 
+  /**
+   * Creates a numberfield.
+   * @param formField capability type form field to create numberfield for
+   * @returns {*} created numberfield (never null)
+   */
   create: function (formField) {
     var item = {
       xtype: 'numberfield',

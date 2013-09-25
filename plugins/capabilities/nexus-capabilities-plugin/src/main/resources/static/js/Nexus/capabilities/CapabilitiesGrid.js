@@ -201,7 +201,6 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
   /**
    * Remember what records are selected.
-   *
    * @private
    */
   rememberSelection: function () {
@@ -210,7 +209,6 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
   /**
    * Recall selection from previous remembered selection.
-   *
    * @private
    */
   recallSelection: function () {
@@ -233,9 +231,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
 
   /**
    * Refreshes grid and selects a capability by id.
-   *
    * @param capabilityId to be selected
-   *
    * @private
    */
   refreshAndSelect: function (capabilityId) {
@@ -255,6 +251,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Refreshes data stores.
    * @private
    */
   refresh: function () {
@@ -262,6 +259,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Deletes a capability.
+   * @param capability to be deleted
    * @private
    */
   deleteCapability: function (capability, animEl) {
@@ -295,6 +294,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Enables a capability.
+   * @param capability to be enabled
    * @private
    */
   enableCapability: function (capability) {
@@ -315,6 +316,8 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Disables a capability.
+   * @param capability to be disabled
    * @private
    */
   disableCapability: function (capability) {
@@ -335,6 +338,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Opens create window.
    * @private
    */
   addCapability: function () {
@@ -344,12 +348,16 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Opens create window with pre-configured values copied from provided capability.
+   * @param capability to copy values from
    * @private
    */
   duplicateCapability: function (capability) {
-    NX.create(
-        'Nexus.capabilities.CreateCapabilityWindow', this.refreshAndSelect.createDelegate(this)
-    ).show().importCapability(capability);
+    if (capability) {
+      NX.create(
+          'Nexus.capabilities.CreateCapabilityWindow', this.refreshAndSelect.createDelegate(this)
+      ).show().importCapability(capability);
+    }
   },
 
   /**
@@ -359,6 +367,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   contextMenuRow: undefined,
 
   /**
+   * Shows context menu.
    * @private
    */
   showMenu: function (grid, index, e) {
@@ -436,6 +445,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Hides context menu.
    * @private
    */
   hideMenu: function () {
@@ -447,6 +457,10 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
     }
   },
 
+  /**
+   * Disables add button.
+   * @private
+   */
   disableAddButton: function () {
     var self = this;
 
@@ -454,6 +468,7 @@ NX.define('Nexus.capabilities.CapabilitiesGrid', {
   },
 
   /**
+   * Enables add button if user has create permission adn there is at least one capability type available.
    * @private
    */
   maybeEnableAddButton: function () {

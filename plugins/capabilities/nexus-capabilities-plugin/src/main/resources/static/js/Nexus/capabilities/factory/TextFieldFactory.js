@@ -19,8 +19,15 @@
  */
 NX.define('Nexus.capabilities.factory.TextFieldFactory', {
 
+  singleton: true,
+
   supports: ['textfield', 'string', 'password'],
 
+  /**
+   * Creates a textfield.
+   * @param formField capability type form field to create textfield for
+   * @returns {*} created textfield (never null)
+   */
   create: function (formField) {
     var item = {
       xtype: 'textfield',

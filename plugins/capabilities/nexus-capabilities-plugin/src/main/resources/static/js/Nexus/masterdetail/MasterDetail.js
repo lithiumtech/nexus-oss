@@ -104,17 +104,13 @@ NX.define('Nexus.masterdetail.MasterDetail', {
 
   /**
    * Update detail panel when grid selection changes.
-   *
    * @param sm    grid selection model
-   *
    * @private
    */
   selectionChanged: function (sm) {
     var self = this,
         cardLayout = self.detailPanel.getLayout(),
         selections = sm.getSelections();
-
-    self.logDebug('Selection changed:', selections.length);
 
     if (selections.length === 0) {
       cardLayout.setActiveItem(0);

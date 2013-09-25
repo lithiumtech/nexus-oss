@@ -30,6 +30,18 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   ],
 
   /**
+   * Current selected capability.
+   * @private
+   */
+  currentRecord: undefined,
+
+  /**
+   * Settings field set.
+   * @private
+   */
+  settings: undefined,
+
+  /**
    * @override
    */
   initComponent: function () {
@@ -50,7 +62,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           formBind: true,
           scope: self,
           handler: function () {
-            self.updateCapability(self.currentRecord);
+            self.updateCapability();
           }
         },
         {
@@ -59,7 +71,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.updateRecord(self.currentRecord);
+            self.setCapability(self.currentRecord);
           }
         }
       ]
@@ -72,7 +84,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
       listeners: {
         activate: {
           fn: function () {
-            self.updateRecord(self.currentRecord);
+            self.setCapability(self.currentRecord);
           },
           scope: self
         }
@@ -83,11 +95,10 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   },
 
   /**
-   * Update the capability record.
-   *
-   * @param capability
+   * Sets the current selected capability.
+   * @param capability selected
    */
-  updateRecord: function (capability) {
+  setCapability: function (capability) {
     var self = this,
         sp = Sonatype.lib.Permissions,
         editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
@@ -100,19 +111,11 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   },
 
   /**
-   * @private
-   */
-  currentRecord: undefined,
+   * Updates capability in Nexus.
 
-  /**
    * @private
    */
-  settings: undefined,
-
-  /**
-   * @private
-   */
-  updateCapability: function (capability) {
+  updateCapability: function () {
     var self = this,
         form = self.formPanel.getForm();
 
@@ -121,8 +124,8 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     }
 
     var capability = Ext.apply(self.settings.exportCapability(form), {
-      id: capability.id,
-      notes: capability.notes
+      id: self.currentRecord.id,
+      notes: self.currentRecord.notes
     });
 
     self.mediator().updateCapability(capability,
@@ -141,7 +144,6 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
 
   /**
    * Enables/disables fields marked with "requiresPermission".
-   *
    * @private
    */
   togglePermission: function (items, enabled) {

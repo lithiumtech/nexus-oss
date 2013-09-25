@@ -70,7 +70,6 @@ NX.define('Nexus.capabilities.CapabilityView', {
 
   /**
    * Update the capability record.
-   *
    * @param capability
    */
   updateRecord: function (capability) {
@@ -79,10 +78,10 @@ NX.define('Nexus.capabilities.CapabilityView', {
 
     self.setTitle(self.mediator().describeCapability(capability), icons.iconFor(capability).cls);
 
-    self.summaryView.updateRecord(capability);
-    self.settingsView.updateRecord(capability);
-    self.statusView.updateRecord(capability);
-    self.aboutView.updateRecord(capability);
+    self.summaryView.setCapability(capability);
+    self.settingsView.setCapability(capability);
+    self.statusView.setCapability(capability);
+    self.aboutView.setCapability(capability);
   }
 
 });

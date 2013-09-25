@@ -19,8 +19,15 @@
  */
 NX.define('Nexus.capabilities.factory.TextAreaFactory', {
 
+  singleton: true,
+
   supports: ['textarea', 'text-area'],
 
+  /**
+   * Creates a textarea.
+   * @param formField capability type form field to create textarea for
+   * @returns {*} created textarea (never null)
+   */
   create: function (formField) {
     var item = {
       xtype: 'textarea',

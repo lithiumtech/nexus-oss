@@ -42,11 +42,10 @@ NX.define('Nexus.capabilities.CapabilityAbout', {
   },
 
   /**
-   * Update the capability record.
-   *
-   * @param capability
+   * Sets the current selected capability.
+   * @param capability selected
    */
-  updateRecord: function (capability) {
+  setCapability: function (capability) {
     var self = this,
         about = '';
 

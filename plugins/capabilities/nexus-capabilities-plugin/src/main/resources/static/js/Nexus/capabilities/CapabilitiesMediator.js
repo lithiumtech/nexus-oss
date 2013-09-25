@@ -18,7 +18,7 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitiesMediator', {
-  extend: 'Ext.util.Observable',
+
   singleton: true,
 
   mixins: [
@@ -28,7 +28,8 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   requires: [
     'Nexus.capabilities.Icons',
     'Nexus.capabilities.CapabilityStore',
-    'Nexus.capabilities.CapabilityTypeStore'
+    'Nexus.capabilities.CapabilityTypeStore',
+    'Nexus.capabilities.factory.ComboFactory'
   ],
 
   /**
@@ -42,6 +43,11 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   capabilityTypeStore: undefined,
 
   /**
+   * @private
+   */
+  comboFactory: undefined,
+
+  /**
    * @constructor
    */
   constructor: function () {
@@ -49,6 +55,7 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
 
     self.capabilityStore = NX.create('Nexus.capabilities.CapabilityStore');
     self.capabilityTypeStore = NX.create('Nexus.capabilities.CapabilityTypeStore');
+    self.comboFactory = Nexus.capabilities.factory.ComboFactory;
   },
 
   /**
@@ -57,7 +64,7 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   addCapability: function (capability, successHandler, failureHandler) {
     var self = this;
 
-    self.logDebug('Adding capability');
+    self.logDebug('Adding capability: ' + Ext.encode(capability));
 
     Ext.Ajax.request({
       url: self.capabilityStore.url,
@@ -76,7 +83,7 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   updateCapability: function (capability, successHandler, failureHandler) {
     var self = this;
 
-    self.logDebug('Saving capability');
+    self.logDebug('Updating capability: ' + Ext.encode(capability));
 
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id),
@@ -94,6 +101,8 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   enableCapability: function (capability, successHandler, failureHandler) {
     var self = this;
 
+    self.logDebug('Enabling capability: ' + capability.id);
+
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id) + "/enable",
       method: 'PUT',
@@ -109,6 +118,8 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   disableCapability: function (capability, successHandler, failureHandler) {
     var self = this;
 
+    self.logDebug('Disabling capability: ' + capability.id);
+
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id) + "/disable",
       method: 'PUT',
@@ -123,6 +134,8 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
    */
   deleteCapability: function (capability, successHandler, failureHandler) {
     var self = this;
+
+    self.logDebug('Deleting capability: ' + capability.id);
 
     Ext.Ajax.request({
       url: self.capabilityStore.urlOf(capability.id),
@@ -157,10 +170,11 @@ NX.define('Nexus.capabilities.CapabilitiesMediator', {
   refresh: function () {
     var self = this;
 
-    self.logDebug('Refreshing');
+    self.logDebug('Refreshing stores');
 
     self.capabilityStore.reload();
     self.capabilityTypeStore.reload();
+    self.comboFactory.evictCache();
   },
 
   /**

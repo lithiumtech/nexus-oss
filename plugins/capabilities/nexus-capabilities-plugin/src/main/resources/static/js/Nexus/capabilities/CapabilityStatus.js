@@ -41,11 +41,10 @@ NX.define('Nexus.capabilities.CapabilityStatus', {
   },
 
   /**
-   * Update the capability record.
-   *
-   * @param capability
+   * Sets the current selected capability.
+   * @param capability selected
    */
-  updateRecord: function (capability) {
+  setCapability: function (capability) {
     var self = this,
         status = 'Capability does not provide any status.';
 

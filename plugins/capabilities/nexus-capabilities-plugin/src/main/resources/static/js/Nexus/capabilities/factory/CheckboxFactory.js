@@ -19,8 +19,15 @@
  */
 NX.define('Nexus.capabilities.factory.CheckboxFactory', {
 
+  singleton: true,
+
   supports: ['checkbox'],
 
+  /**
+   * Creates a checkbox.
+   * @param formField capability type form field to create checkbox for
+   * @returns {*} created checkbox (never null)
+   */
   create: function (formField) {
     var item = {
       xtype: 'checkbox',
