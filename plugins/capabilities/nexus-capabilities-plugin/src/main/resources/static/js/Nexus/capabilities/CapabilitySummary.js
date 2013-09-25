@@ -83,6 +83,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySummary',
       title: 'Summary',
+      autoScroll: true,
       items: [
         self.templatePanel,
         {
