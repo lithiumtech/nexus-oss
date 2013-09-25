@@ -53,6 +53,11 @@
   padding-left: 10px;
 }
 
+.nx-capabilities-CapabilitySettings .x-form-item-label,
+.nx-capabilities-CreateCapabilityWindow .x-form-item-label {
+  font-weight: bold;
+}
+
 .nx-capabilities-CapabilityAbout .x-panel-body,
 .nx-capabilities-CapabilityStatus .x-panel-body {
   padding: 10px 10px 10px 10px;

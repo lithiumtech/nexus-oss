@@ -44,7 +44,8 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
       autoHeight: false,
       autoScroll: true,
       collapsed: false,
-      labelWidth: 175,
+      labelWidth: 120,
+      labelSeparator: '',
       items: []
     });
 
