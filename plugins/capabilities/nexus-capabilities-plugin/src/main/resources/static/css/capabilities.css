@@ -25,7 +25,7 @@
 }
 
 .nx-capabilities-CapabilitiesView .x-fieldset,
-.nx-capabilities-CreateCapabilityWindow .x-fieldset{
+.nx-capabilities-CreateCapabilityWindow .x-fieldset {
   border-width: 1px 0 0 0;
 }
 
@@ -41,7 +41,11 @@
   padding-top: 20px;
 }
 
-.nx-capabilities-CapabilitySummary .x-form,
+.nx-capabilities-CapabilitySummary .x-fieldset {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 .nx-capabilities-CapabilitySettings .x-form,
 .nx-capabilities-CreateCapabilityWindow .x-form {
   padding-right: 10px;

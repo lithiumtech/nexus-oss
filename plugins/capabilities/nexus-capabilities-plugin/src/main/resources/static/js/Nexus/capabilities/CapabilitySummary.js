@@ -52,7 +52,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           htmlDecode: true,
           helpText: "Optional notes about configured capability",
           name: 'notes',
-          anchor: '96%',
+          anchor: '-20px',
           allowBlank: true,
           disabled: !editable
         }

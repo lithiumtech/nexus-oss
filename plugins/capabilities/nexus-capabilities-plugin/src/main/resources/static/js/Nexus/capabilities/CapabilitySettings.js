@@ -32,7 +32,9 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
   initComponent: function () {
     var self = this;
 
-    self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet');
+    self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet', {
+      border: false
+    });
 
     self.formPanel = NX.create('Ext.FormPanel', {
       border: false,
@@ -53,7 +55,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
           formBind: false,
           scope: self,
           handler: function () {
-            self.settings.importCapability(self.formPanel.getForm(), self.currentRecord);
+            self.updateRecord(self.currentRecord);
           }
         }
       ]
