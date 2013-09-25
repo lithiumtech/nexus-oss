@@ -99,7 +99,13 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
           autoScroll: true,
           collapsible: true,
           collapsed: false,
-          items: self.aboutPanel
+          items: self.aboutPanel,
+          listeners: {
+            collapse: function() {
+              // HACK: Fix window mask when about panel collapses
+              self.setPosition(self.getPosition());
+            }
+          }
         },
         self.settings
       ],
@@ -194,6 +200,8 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
     self.renderAbout(combo.getValue());
     self.settings.setCapabilityType(combo.getValue());
     self.doLayout();
+
+    // HACK: Fix window mask when capability type changes
     self.setPosition(self.getPosition());
   },
 
@@ -246,7 +254,7 @@ NX.define('Nexus.capabilities.CreateCapabilityWindow', {
         },
         function (response) {
            self.mediator().handleError(response, 'Capability could not be created', self.formPanel.getForm());
-          mask.hide();
+           mask.hide();
         }
     );
   },
