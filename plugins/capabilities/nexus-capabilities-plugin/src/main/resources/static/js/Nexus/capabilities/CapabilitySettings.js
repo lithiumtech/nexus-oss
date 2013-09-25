@@ -36,7 +36,8 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     var self = this;
 
     self.settings = NX.create('Nexus.capabilities.CapabilitySettingsFieldSet', {
-      border: false
+      border: false,
+      parentPanel: self
     });
 
     self.formPanel = NX.create('Ext.FormPanel', {
@@ -67,7 +68,15 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySettings',
       title: 'Settings',
-      items: self.formPanel
+      items: self.formPanel,
+      listeners: {
+        activate: {
+          fn: function () {
+            self.updateRecord(self.currentRecord);
+          },
+          scope: self
+        }
+      }
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
@@ -116,16 +125,16 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
       notes: capability.notes
     });
 
-     self.mediator().updateCapability(capability,
+    self.mediator().updateCapability(capability,
         function () {
           form.items.each(function (item) {
             item.clearInvalid();
           });
-           self.mediator().showMessage('Capability saved',  self.mediator().describeCapability(self.currentRecord));
-           self.mediator().refresh();
+          self.mediator().showMessage('Capability saved', self.mediator().describeCapability(self.currentRecord));
+          self.mediator().refresh();
         },
         function (response) {
-           self.mediator().handleError(response, 'Capability could not be saved', form);
+          self.mediator().handleError(response, 'Capability could not be saved', form);
         }
     );
   },

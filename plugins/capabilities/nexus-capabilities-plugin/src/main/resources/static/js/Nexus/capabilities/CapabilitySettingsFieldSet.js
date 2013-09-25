@@ -73,7 +73,7 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
   setCapabilityType: function (capabilityTypeId) {
     var self = this;
 
-    self.capabilityType =  self.mediator().capabilityTypeStore.getTypeById(capabilityTypeId);
+    self.capabilityType = self.mediator().capabilityTypeStore.getTypeById(capabilityTypeId);
 
     self.removeAll();
 
@@ -100,6 +100,11 @@ NX.define('Nexus.capabilities.CapabilitySettingsFieldSet', {
               name: 'property.' + formField.id,
               factory: factory
             });
+            if (item.xtype === 'combo' && item.store) {
+              item.store.on('load', function () {
+                item.setValue(item.getValue());
+              });
+            }
             self.add(item);
           }
         });

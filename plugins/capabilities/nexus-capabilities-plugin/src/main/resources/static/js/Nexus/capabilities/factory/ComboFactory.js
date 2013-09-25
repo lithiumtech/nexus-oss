@@ -27,7 +27,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
     var self = this,
         ST = Ext.data.SortTypes;
 
-    var item = {
+    var item = NX.create('Ext.form.ComboBox', {
       xtype: 'combo',
       fieldLabel: formField.label,
       itemCls: formField.required ? 'required-field' : '',
@@ -43,7 +43,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
       selectOnFocus: true,
       allowBlank: formField.required ? false : true,
       anchor: '96%'
-    };
+    });
     if (formField.initialValue) {
       item.value = formField.initialValue;
     }
@@ -53,7 +53,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
         var store = NX.create('Ext.data.JsonStore', {
           url: Sonatype.config.contextPath + formField.storePath,
           id: formField.idMapping ? formField.idMapping : 'id',
-          root : formField.storeRoot,
+          root: formField.storeRoot,
 
           fields: [
             { name: 'id', mapping: formField.idMapping ? formField.idMapping : 'id' },
