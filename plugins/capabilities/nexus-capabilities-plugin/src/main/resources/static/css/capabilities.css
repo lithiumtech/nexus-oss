@@ -52,3 +52,69 @@
 .nx-capabilities-CapabilityStatus .x-panel-body {
   padding: 10px 10px 10px 10px;
 }
+
+.nx-capabilities-CapabilitySummary-body {
+  padding: 10px;
+}
+
+.nx-capabilities-CapabilitySummary-properties-entry td {
+  padding-bottom: 4px;
+}
+
+.nx-capabilities-CapabilitySummary-properties-name {
+  font-weight: bold;
+}
+
+.nx-capabilities-CapabilitySummary-properties-value {
+  padding-left: 20px;
+}
+
+.nx-capabilities-CapabilitySummary-status {
+  height: 70px;
+  width: 70px;
+  float: right;
+  background-color: #efefef;
+  padding: 5px;
+  margin: 10px;
+
+  border: solid 1px #d3d3d3;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  box-shadow: 3px 3px 10px #888888;
+}
+
+.nx-capabilities-CapabilitySummary-status-icon img {
+  height: 32px;
+  width: 32px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+}
+
+.nx-capabilities-CapabilitySummary-status-label {
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 5px;
+}
+
+.nx-capabilities-CapabilitySummary-message {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.nx-capabilities-CapabilitySummary-message img {
+  vertical-align: bottom;
+  padding-right: 5px;
+}
+
+.nx-capabilities-CapabilitySummary-message span {
+  padding: 8px;
+
+  background-color: #DDFADE;
+  border: solid 1px #9EC49F;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}

@@ -21,7 +21,11 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   extend: 'Ext.FormPanel',
 
   mixins: [
-    'Nexus.LogAwareMixin',
+    'Nexus.LogAwareMixin'
+  ],
+
+  requires: [
+    'Nexus.capabilities.Icons',
     'Nexus.capabilities.CapabilitiesMediator'
   ],
 
@@ -33,38 +37,16 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
         sp = Sonatype.lib.Permissions,
         editable = sp.checkPermission('nexus:capabilities', sp.EDIT);
 
+    self.templatePanel = NX.create('Ext.Panel', {
+      cls: 'nx-capabilities-CapabilitySummary-template',
+      border: false
+    });
+
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySummary',
       title: 'Summary',
       items: [
-        {
-          xtype: 'fieldset',
-          autoHeight: true,
-          collapsed: false,
-          border: false,
-          items: [
-            {
-              xtype: 'displayfield',
-              fieldLabel: 'Type',
-              itemCls: '',
-              name: 'typeName'
-            },
-            {
-              xtype: 'displayfield',
-              htmlDecode: true,
-              fieldLabel: 'Description',
-              itemCls: '',
-              name: 'description'
-            },
-            {
-              xtype: 'displayfield',
-              htmlDecode: true,
-              fieldLabel: 'State',
-              itemCls: '',
-              name: 'stateDescription'
-            }
-          ]
-        },
+        self.templatePanel,
         {
           xtype: 'fieldset',
           title: 'Notes',
@@ -105,7 +87,113 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
       ]
     });
 
+    self.initTemplate();
+
     self.constructor.superclass.initComponent.apply(self, arguments);
+  },
+
+  initTemplate: function () {
+    var self = this,
+        icons = Nexus.capabilities.Icons;
+
+    self.mainTpl = NX.create('Ext.XTemplate',
+        '<div class="nx-capabilities-CapabilitySummary-body">',
+        '{[ this.status(values) ]}',
+        '{[ this.properties(values) ]}',
+        '{[ this.message(values) ]}',
+        '</div>',
+        {
+          compiled: true,
+
+          status: function (capability) {
+            return self.statusTpl.apply(capability);
+          },
+
+          properties: function (capability) {
+            var properties;
+
+            properties = [
+              { name: 'Type', value: capability.typeName },
+            ];
+            if (capability.description) {
+              properties.push({ name: 'Description', value: capability.description });
+            }
+
+            return self.propertiesTpl.apply({
+              properties: properties,
+            })
+          },
+
+          message: function (capability) {
+            if (capability.enabled && !capability.active) {
+              return self.messageTpl.apply({
+                icon: icons.get('warning').img,
+                html: '<b>' + capability.stateDescription + '</b>.'
+              });
+            }
+            return '';
+          }
+        });
+
+    self.statusTpl = NX.create('Ext.XTemplate',
+        '<div class="nx-capabilities-CapabilitySummary-status">',
+        '<div class="nx-capabilities-CapabilitySummary-status-icon">',
+        '{[ this.statusIcon(values) ]}',
+        '</div>',
+        '<div class="nx-capabilities-CapabilitySummary-status-label">',
+        '{[ this.statusLabel(values) ]}',
+        '</div>',
+        '</div>',
+        {
+          compiled: true,
+
+          statusIcon: function (capability) {
+            return icons.iconFor(capability).img; // TODO x32 variant
+          },
+
+          statusLabel: function (capability) {
+            var enabled = capability.enabled,
+                active = capability.active,
+                error = capability.error
+
+            if (enabled && error) {
+              return 'Error';
+            }
+            else if (enabled && active) {
+              return 'Active';
+            }
+            else if (enabled && !active) {
+              return 'Passive';
+            }
+            else {
+              return 'Disabled';
+            }
+          }
+        });
+
+    self.propertiesTpl = NX.create('Ext.XTemplate',
+        '<div class="nx-capabilities-CapabilitySummary-properties">',
+        '<table>',
+        '<tpl for="properties">',
+        '<tr class="nx-capabilities-CapabilitySummary-properties-entry">',
+        '<td class="nx-capabilities-CapabilitySummary-properties-name">{name}</td>',
+        '<td class="nx-capabilities-CapabilitySummary-properties-value">{value}</td>',
+        '</tr>',
+        '</tpl>',
+        '</tr>',
+        '</table>',
+        '</div>',
+        {
+          compiled: true
+        });
+
+    self.messageTpl = NX.create('Ext.XTemplate',
+        '<div class="nx-capabilities-CapabilitySummary-message">',
+        '  <span>{icon}{html}</span>',
+        '</div>',
+        {
+          compiled: true
+        });
   },
 
   /**
@@ -117,6 +205,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
     var self = this;
 
     self.currentRecord = capability;
+    self.mainTpl.overwrite(self.templatePanel.body, capability);
     self.getForm().setValues(capability);
   },
 
