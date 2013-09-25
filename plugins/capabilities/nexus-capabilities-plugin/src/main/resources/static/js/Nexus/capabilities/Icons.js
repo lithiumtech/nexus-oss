@@ -27,27 +27,45 @@ NX.define('Nexus.capabilities.Icons', {
   constructor: function () {
     var self = this;
 
+    // helper to build an icon config with variants, where variants live in directories, foo.png x16 -> x16/foo.png
+    function iconConfig(fileName, variants) {
+      var config = {};
+      if (variants === undefined) {
+        variants = ['x32', 'x16']
+      }
+      Ext.each(variants, function (variant) {
+        config[variant] = variant + '/' + fileName;
+      });
+      return config;
+    }
+
     self.constructor.superclass.constructor.call(self, {
       stylePrefix: 'nx-capabilities-icon-',
 
       icons: {
-        capability: 'brick.png',
-        capability_add: 'brick_add.png',
-        capability_delete: 'brick_delete.png',
-        capability_new: 'brick_edit.png',
-        capability_active: 'brick_valid.png',
-        capability_passive: 'brick_error.png',
-        capability_disabled: 'brick_grey.png',
-        capability_error: 'brick_error.png',
-        warning: 'error.png',
-        refresh: 'arrow_refresh.png',
-        selectionEmpty: '@warning',
-        enable: '@capability_active',
-        disable: '@capability_disabled'
+        capability:           iconConfig('brick.png'),
+        capability_add:       iconConfig('brick_add.png'),
+        capability_delete:    iconConfig('brick_delete.png'),
+        capability_new:       iconConfig('brick_edit.png'),
+        capability_active:    iconConfig('brick_valid.png'),
+        capability_passive:   iconConfig('brick_error.png'),
+        capability_disabled:  iconConfig('brick_grey.png'),
+        capability_error:     iconConfig('brick_error.png'),
+        warning:              'error.png',
+        refresh:              'arrow_refresh.png',
+        selectionEmpty:       '@warning',
+        enable:               '@capability_active',
+        disable:              '@capability_disabled'
       }
     });
   },
 
+  /**
+   * Return the icon for the given capability.
+   *
+   * @param capability
+   * @return {*} Icon; never null/undefined.
+   */
   iconFor: function (capability) {
     var self = this,
         typeName = capability.typeName,
