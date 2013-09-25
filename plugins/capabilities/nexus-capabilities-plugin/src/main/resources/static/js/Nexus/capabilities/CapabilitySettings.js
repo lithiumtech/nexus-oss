@@ -62,7 +62,7 @@ NX.define('Nexus.capabilities.CapabilitySettings', {
     Ext.apply(self, {
       cls: 'nx-capabilities-CapabilitySettings',
       title: 'Settings',
-      items: self.formPanel,
+      items: self.formPanel
     });
 
     self.constructor.superclass.initComponent.apply(self, arguments);
