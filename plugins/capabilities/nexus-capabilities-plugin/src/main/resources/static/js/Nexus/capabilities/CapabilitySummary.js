@@ -18,7 +18,7 @@
  * @since 2.7
  */
 NX.define('Nexus.capabilities.CapabilitySummary', {
-  extend: 'Ext.FormPanel',
+  extend: 'Ext.Panel',
 
   mixins: [
     'Nexus.LogAwareMixin'
@@ -42,26 +42,19 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
       border: false
     });
 
-    Ext.apply(self, {
-      cls: 'nx-capabilities-CapabilitySummary',
-      title: 'Summary',
+    self.notesPanel = NX.create('Ext.FormPanel', {
+      border: false,
+      hideLabels: true,
+
       items: [
-        self.templatePanel,
         {
-          xtype: 'fieldset',
-          title: 'Notes',
-          autoScroll: true,
-          collapsed: false,
-          hideLabels: true,
-          items: {
-            xtype: 'textarea',
-            htmlDecode: true,
-            helpText: "Optional notes about configured capability",
-            name: 'notes',
-            anchor: '96%',
-            allowBlank: true,
-            disabled: !editable
-          }
+          xtype: 'textarea',
+          htmlDecode: true,
+          helpText: "Optional notes about configured capability",
+          name: 'notes',
+          anchor: '96%',
+          allowBlank: true,
+          disabled: !editable
         }
       ],
 
@@ -83,6 +76,22 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
           handler: function () {
             self.updateRecord(self.currentRecord);
           }
+        }
+      ]
+    });
+
+    Ext.apply(self, {
+      cls: 'nx-capabilities-CapabilitySummary',
+      title: 'Summary',
+      items: [
+        self.templatePanel,
+        {
+          xtype: 'fieldset',
+          title: 'Notes',
+          autoScroll: true,
+          collapsed: false,
+          hideLabels: true,
+          items: self.notesPanel
         }
       ]
     });
@@ -206,7 +215,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
 
     self.currentRecord = capability;
     self.mainTpl.overwrite(self.templatePanel.body, capability);
-    self.getForm().setValues(capability);
+    self.notesPanel.getForm().setValues(capability);
   },
 
   /**
@@ -220,7 +229,7 @@ NX.define('Nexus.capabilities.CapabilitySummary', {
   updateCapability: function () {
     var self = this,
         mediator = Nexus.capabilities.CapabilitiesMediator,
-        form = self.getForm(),
+        form = self.notesPanel.getForm(),
         values = form.getFieldValues();
 
     var capability = Ext.apply(self.currentRecord.$capability, {notes: values.notes});
