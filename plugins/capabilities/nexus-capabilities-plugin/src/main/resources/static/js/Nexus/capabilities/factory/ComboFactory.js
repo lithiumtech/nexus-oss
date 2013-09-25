@@ -10,7 +10,7 @@
  * of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation. M2eclipse is a trademark of the
  * Eclipse Foundation. All other trademarks are the property of their respective owners.
  */
-/*global NX, Ext, Nexus*/
+/*global NX, Ext*/
 
 /**
  * 'combo' factory.
@@ -65,7 +65,7 @@ NX.define('Nexus.capabilities.factory.ComboFactory', {
     if (formField.storePath) {
       var store = self.stores[formField.storePath];
       if (!store) {
-        var store = NX.create('Ext.data.JsonStore', {
+        store = NX.create('Ext.data.JsonStore', {
           url: Sonatype.config.contextPath + formField.storePath,
           id: formField.idMapping ? formField.idMapping : 'id',
           root: formField.storeRoot,
